@@ -98,7 +98,7 @@ export default function App() {
   if (locked) return <LockScreen onUnlock={() => setLocked(false)} />
 
   return (
-    <div className="flex min-h-screen bg-[#f8f9fb] font-['Inter',system-ui,sans-serif]">
+    <div className="flex min-h-screen bg-[#f8f9fb] font-['Inter',system-ui,sans-serif] overflow-x-hidden">
       {/* Desktop Sidebar */}
       <aside className={`hidden md:flex ${collapsed ? 'w-[68px]' : 'w-48'} bg-white border-r border-gray-100 flex-col shrink-0 sticky top-0 h-screen transition-all duration-300`}>
         <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3 h-14 border-b border-gray-100 shrink-0`}>
@@ -149,7 +149,7 @@ export default function App() {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
+      <main className="flex-1 min-w-0 overflow-y-auto pb-20 md:pb-0">
         <div className="max-w-5xl mx-auto px-4 py-5 md:px-8 md:py-8 safe-area-pt">
           {tab === 'dashboard' && <Dashboard accounts={data.accounts} cards={data.cards} transactions={data.transactions} onPayCard={handlePayCard} onTransfer={(accId) => setTransferFromId(accId)} />}
           {tab === 'accounts' && <AccountManager accounts={data.accounts} onChange={updateAccounts} onTransfer={(accId) => setTransferFromId(accId)} />}
