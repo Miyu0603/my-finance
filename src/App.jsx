@@ -108,13 +108,11 @@ export default function App() {
       <aside className={`hidden md:flex ${collapsed ? 'w-[68px]' : 'w-48'} bg-white border-r border-gray-100 flex-col shrink-0 sticky top-0 h-screen transition-all duration-300`}>
         <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3 h-14 border-b border-gray-100 shrink-0`}>
           <button onClick={() => setCollapsed(c => !c)} className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition cursor-pointer shrink-0">
-            {collapsed ? <IconMenu className="w-4 h-4" /> : <IconChevronLeft className="w-4 h-4" />}
+            {collapsed ? <img src={`${import.meta.env.BASE_URL}apple-touch-icon.png`} alt="" className="w-7 h-7 rounded-lg" /> : <IconChevronLeft className="w-4 h-4" />}
           </button>
           {!collapsed && (
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shrink-0">
-                <IconWallet className="w-3.5 h-3.5" />
-              </div>
+              <img src={`${import.meta.env.BASE_URL}apple-touch-icon.png`} alt="" className="w-7 h-7 rounded-lg shrink-0" />
               <span className="font-semibold text-gray-800 text-sm truncate">財務管家</span>
             </div>
           )}
