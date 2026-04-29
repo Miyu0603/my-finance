@@ -77,7 +77,7 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
               <FormField label="發卡銀行" placeholder="中國信託" value={form.issuer} onChange={v => setForm(f => ({ ...f, issuer: v }))} />
               <div>
                 <label className="text-sm font-medium text-gray-600 block mb-1">繳款扣款帳戶</label>
-                <select className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" value={form.accountId} onChange={e => setForm(f => ({ ...f, accountId: e.target.value }))}>
+                <select className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" value={form.accountId} onChange={e => setForm(f => ({ ...f, accountId: e.target.value }))}>
                   <option value="">-- 請選擇 --</option>
                   {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.bank}{acc.lastFour ? ` (${acc.lastFour})` : ''} [${(Number(acc.balance) || 0).toLocaleString()}]</option>)}
                 </select>
@@ -174,7 +174,7 @@ function FormField({ label, placeholder, value, onChange, maxLength, type }) {
   return (
     <div className="flex-1">
       <label className="text-sm font-medium text-gray-600 block mb-1">{label}</label>
-      <input className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" placeholder={placeholder} value={value} type={type || 'text'} maxLength={maxLength} onChange={e => onChange(e.target.value)} />
+      <input className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" placeholder={placeholder} value={value} type={type || 'text'} maxLength={maxLength} onChange={e => onChange(e.target.value)} />
     </div>
   )
 }

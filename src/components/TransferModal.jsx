@@ -36,7 +36,7 @@ export default function TransferModal({ accounts, onTransfer, onClose, defaultFr
         <div className="space-y-4">
           <div>
             <label className="text-sm font-medium text-gray-600 block mb-1.5">轉出帳戶</label>
-            <select className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" value={fromId} onChange={e => setFromId(e.target.value)}>
+            <select className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" value={fromId} onChange={e => setFromId(e.target.value)}>
               <option value="">-- 請選擇 --</option>
               {accounts.map(acc => <option key={acc.id} value={acc.id}>{getLabel(acc)}</option>)}
             </select>
@@ -48,14 +48,14 @@ export default function TransferModal({ accounts, onTransfer, onClose, defaultFr
           </div>
           <div>
             <label className="text-sm font-medium text-gray-600 block mb-1.5">轉入帳戶</label>
-            <select className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" value={toId} onChange={e => setToId(e.target.value)}>
+            <select className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" value={toId} onChange={e => setToId(e.target.value)}>
               <option value="">-- 請選擇 --</option>
               {accounts.map(acc => <option key={acc.id} value={acc.id}>{getLabel(acc)}</option>)}
             </select>
           </div>
           <div>
             <label className="text-sm font-medium text-gray-600 block mb-1.5">轉帳金額</label>
-            <input className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" type="number" min="1" placeholder="請輸入金額" value={amount} onChange={e => setAmount(e.target.value)} />
+            <input className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" type="number" min="1" placeholder="請輸入金額" value={amount} onChange={e => setAmount(e.target.value)} />
           </div>
           {error && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
         </div>

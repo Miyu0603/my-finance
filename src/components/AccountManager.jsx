@@ -120,7 +120,7 @@ function FormField({ label, placeholder, value, onChange, maxLength, type }) {
   return (
     <div>
       <label className="text-sm font-medium text-gray-600 block mb-1">{label}</label>
-      <input className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" placeholder={placeholder} value={value} type={type || 'text'} maxLength={maxLength} onChange={e => onChange(e.target.value)} />
+      <input className="w-full border border-gray-200 rounded-xl px-3.5 py-2 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" placeholder={placeholder} value={value} type={type || 'text'} maxLength={maxLength} onChange={e => onChange(e.target.value)} />
     </div>
   )
 }
