@@ -82,7 +82,7 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
           <div>
             <h3 className="font-semibold text-gray-800 mb-3 text-sm">我的帳戶</h3>
             {accounts.length > 0 ? (
-              <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50">
+              <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50 overflow-hidden">
                 {accounts.map((acc, i) => {
                   const linked = accountMap[acc.id]?.cards || []
                   const isExpanded = expandedAcc === acc.id

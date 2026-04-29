@@ -144,13 +144,13 @@ html {
     color: #64748b !important;
 }
 
-/* Gradient stat cards — darken the gradients */
+/* Gradient stat cards — brighter in dark */
 .dark .bg-gradient-to-br.from-indigo-50 {
-    background: linear-gradient(to bottom right, #1e1b4b, #312e81) !important;
+    background: linear-gradient(to bottom right, #312e81, #4338ca) !important;
 }
 
 .dark .bg-gradient-to-br.from-rose-50 {
-    background: linear-gradient(to bottom right, #4c0519, #881337) !important;
+    background: linear-gradient(to bottom right, #881337, #be123c) !important;
 }
 
 .dark .bg-gradient-to-br.from-purple-50 {
@@ -250,4 +250,14 @@ html {
 
 .dark .hover\:bg-indigo-50:hover {
     background-color: rgba(99, 102, 241, .2) !important;
+}
+
+/* Nested bg-gray-50 inside account list — subtle contrast */
+.dark .divide-gray-50 .bg-gray-50 {
+    background-color: rgba(255, 255, 255, .05) !important;
+}
+
+/* Expanded account nested bg-gray-50 items */
+.dark .divide-gray-50 .bg-gray-50 {
+    background-color: rgba(255, 255, 255, .05) !important;
 }
