@@ -43,58 +43,42 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
   const totalMonthly = cards.reduce((s, c) => s + (Number(c.monthlyAmount) || 0), 0)
   const paidCount = cards.filter(c => c.monthlyAmount && isPaidThisMonth(c)).length
   const dueCount = cards.filter(c => c.monthlyAmount).length
-
   const recentTx = (transactions || []).slice(-5).reverse()
 
   return (
     <div>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">歡迎回來</h1>
-        <p className="text-gray-400 text-sm mt-1">你的財務總覽</p>
+      <div className="mb-6">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900">歡迎回來</h1>
+        <p className="text-gray-400 text-sm mt-1">我的財務總覽</p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-2xl p-5 border border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-              <IconDollar className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xl font-bold text-gray-800">${totalBalance.toLocaleString()}</div>
-              <div className="text-xs text-gray-400">帳戶總餘額</div>
-            </div>
+      {/* Stats - gradient cards with big icons */}
+      <div className="grid grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
+        <div className="bg-gradient-to-br from-indigo-50 to-blue-100 rounded-2xl p-4 md:p-5 border border-indigo-100/50 relative overflow-hidden">
+          <div className="absolute -bottom-3 -right-3 opacity-[0.08]">
+            <IconDollar className="w-20 h-20 md:w-24 md:h-24" />
+          </div>
+          <div className="relative">
+            <div className="text-lg md:text-xl font-bold text-gray-800">${totalBalance.toLocaleString()}</div>
+            <div className="text-[11px] md:text-xs text-gray-500 mt-0.5">帳戶總餘額</div>
+            <div className="text-[10px] text-gray-400 mt-1">{accounts.length} 個帳戶</div>
           </div>
         </div>
-        <div className="bg-white rounded-2xl p-5 border border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-              <IconCard className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xl font-bold text-gray-800">{cards.length} 張</div>
-              <div className="text-xs text-gray-400">信用卡</div>
-            </div>
+        <div className="bg-gradient-to-br from-rose-50 to-pink-100 rounded-2xl p-4 md:p-5 border border-rose-100/50 relative overflow-hidden">
+          <div className="absolute -bottom-3 -right-3 opacity-[0.08]">
+            <IconCalendar className="w-20 h-20 md:w-24 md:h-24" />
           </div>
-        </div>
-        <div className="bg-white rounded-2xl p-5 border border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-              <IconCalendar className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xl font-bold text-gray-800">${totalMonthly.toLocaleString()}</div>
-              <div className="text-xs text-gray-400">本月應繳 ({paidCount}/{dueCount} 已繳)</div>
-            </div>
+          <div className="relative">
+            <div className="text-lg md:text-xl font-bold text-gray-800">${totalMonthly.toLocaleString()}</div>
+            <div className="text-[11px] md:text-xs text-gray-500 mt-0.5">本月應繳</div>
+            <div className="text-[10px] text-gray-400 mt-1">{paidCount}/{dueCount} 已繳</div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        {/* Left column: accounts + cards */}
-        <div className="space-y-6">
-          {/* Accounts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+        {/* Left: accounts + recent */}
+        <div className="space-y-5">
           <div>
             <h3 className="font-semibold text-gray-800 mb-3 text-sm">我的帳戶</h3>
             {accounts.length > 0 ? (
@@ -104,56 +88,37 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
                   const isExpanded = expandedAcc === acc.id
                   return (
                     <div key={acc.id}>
-                      <button
-                        onClick={() => setExpandedAcc(isExpanded ? null : acc.id)}
-                        className="w-full flex items-center px-4 py-3 hover:bg-gray-50/50 transition cursor-pointer text-left"
-                      >
+                      <button onClick={() => setExpandedAcc(isExpanded ? null : acc.id)}
+                        className="w-full flex items-center px-3 md:px-4 py-2.5 md:py-3 hover:bg-gray-50/50 transition cursor-pointer text-left">
                         <div className={`${ICON_BG[i % ICON_BG.length]} w-8 h-8 rounded-lg flex items-center justify-center text-white shrink-0`}>
                           <IconBank className="w-4 h-4" />
                         </div>
-                        <div className="ml-3 flex-1 min-w-0">
+                        <div className="ml-2.5 flex-1 min-w-0">
                           <div className="font-medium text-gray-800 text-sm">{acc.bank}</div>
-                          <div className="text-xs text-gray-400">
-                            {acc.lastFour && `(${acc.lastFour})`}
-                            {acc.purpose && ` · ${acc.purpose}`}
-                            {linked.length > 0 && ` · ${linked.length} 張卡`}
+                          <div className="text-[11px] text-gray-400 truncate">
+                            {acc.lastFour && `(${acc.lastFour})`}{acc.purpose && ` · ${acc.purpose}`}{linked.length > 0 && ` · ${linked.length} 張卡`}
                           </div>
                         </div>
-                        <div className="font-bold text-gray-800 text-sm">${(Number(acc.balance) || 0).toLocaleString()}</div>
-                        <IconArrowRight className={`w-3.5 h-3.5 ml-2 text-gray-300 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                        <div className="font-bold text-gray-800 text-sm ml-2">${(Number(acc.balance) || 0).toLocaleString()}</div>
+                        <IconArrowRight className={`w-3 h-3 ml-1.5 text-gray-300 transition-transform shrink-0 ${isExpanded ? 'rotate-90' : ''}`} />
                       </button>
-                      {isExpanded && linked.length > 0 && (
-                        <div className="px-4 pb-3 pl-15 space-y-1.5">
-                          {linked.map(card => {
+                      {isExpanded && (
+                        <div className="px-3 md:px-4 pb-2.5 pl-[52px] md:pl-[56px] space-y-1">
+                          {linked.length > 0 ? linked.map(card => {
                             const amt = Number(card.monthlyAmount) || 0
                             const paid = isPaidThisMonth(card)
                             return (
-                              <div key={card.id} className="flex items-center text-xs bg-gray-50 rounded-lg px-3 py-2">
+                              <div key={card.id} className="flex items-center text-xs bg-gray-50 rounded-lg px-2.5 py-1.5">
                                 <IconCard className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                                <span className="ml-2 text-gray-600 flex-1">{card.name}</span>
+                                <span className="ml-1.5 text-gray-600 flex-1 truncate">{card.name}</span>
                                 {amt > 0 && <span className={`font-medium ${paid ? 'text-emerald-500' : 'text-gray-700'}`}>${amt.toLocaleString()}</span>}
                                 {paid && <IconCheck className="w-3 h-3 text-emerald-500 ml-1" />}
                               </div>
                             )
-                          })}
+                          }) : <div className="text-[11px] text-gray-300 bg-gray-50 rounded-lg px-2.5 py-1.5">尚未綁定信用卡</div>}
                           {accounts.length >= 2 && (
-                            <button
-                              onClick={(e) => { e.stopPropagation(); onTransfer(acc.id) }}
-                              className="flex items-center gap-1.5 text-xs text-indigo-500 hover:text-indigo-600 px-3 py-1.5 hover:bg-indigo-50 rounded-lg transition cursor-pointer"
-                            >
-                              <IconTransfer className="w-3.5 h-3.5" /> 從此帳戶轉帳
-                            </button>
-                          )}
-                        </div>
-                      )}
-                      {isExpanded && linked.length === 0 && (
-                        <div className="px-4 pb-3 pl-15">
-                          <div className="text-xs text-gray-300 bg-gray-50 rounded-lg px-3 py-2">尚未綁定信用卡</div>
-                          {accounts.length >= 2 && (
-                            <button
-                              onClick={(e) => { e.stopPropagation(); onTransfer(acc.id) }}
-                              className="flex items-center gap-1.5 text-xs text-indigo-500 hover:text-indigo-600 px-3 py-1.5 mt-1.5 hover:bg-indigo-50 rounded-lg transition cursor-pointer"
-                            >
+                            <button onClick={(e) => { e.stopPropagation(); onTransfer(acc.id) }}
+                              className="flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-600 px-2.5 py-1 hover:bg-indigo-50 rounded-lg transition cursor-pointer">
                               <IconTransfer className="w-3.5 h-3.5" /> 從此帳戶轉帳
                             </button>
                           )}
@@ -165,13 +130,10 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
               </div>
             ) : (
               <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center text-gray-300">
-                <IconBank className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-xs">尚無帳戶</p>
+                <IconBank className="w-8 h-8 mx-auto mb-2" /><p className="text-xs">尚無帳戶</p>
               </div>
             )}
           </div>
-
-          {/* Recent transactions */}
           {recentTx.length > 0 && (
             <div>
               <h3 className="font-semibold text-gray-800 mb-3 text-sm">近期紀錄</h3>
@@ -183,14 +145,10 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
                     const from = accounts.find(a => a.id === tx.fromId)
                     const to = accounts.find(a => a.id === tx.toId)
                     return (
-                      <div key={tx.id} className="flex items-center px-4 py-2.5 text-xs">
-                        <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0">
-                          <IconTransfer className="w-3.5 h-3.5" />
-                        </div>
-                        <div className="ml-2.5 flex-1">
-                          <span className="text-gray-700">{from?.bank || '?'} → {to?.bank || '?'}</span>
-                        </div>
-                        <span className="text-gray-500 mr-2">{dateStr}</span>
+                      <div key={tx.id} className="flex items-center px-3 md:px-4 py-2 text-xs">
+                        <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0"><IconTransfer className="w-3.5 h-3.5" /></div>
+                        <div className="ml-2 flex-1 truncate"><span className="text-gray-700">{from?.bank || '?'} → {to?.bank || '?'}</span></div>
+                        <span className="text-gray-400 mx-2">{dateStr}</span>
                         <span className="font-medium text-gray-800">${tx.amount.toLocaleString()}</span>
                       </div>
                     )
@@ -198,14 +156,10 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
                   if (tx.type === 'card-payment') {
                     const card = cards.find(c => c.id === tx.cardId)
                     return (
-                      <div key={tx.id} className="flex items-center px-4 py-2.5 text-xs">
-                        <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
-                          <IconCheck className="w-3.5 h-3.5" />
-                        </div>
-                        <div className="ml-2.5 flex-1">
-                          <span className="text-gray-700">{card?.name || '信用卡'} 繳費</span>
-                        </div>
-                        <span className="text-gray-500 mr-2">{dateStr}</span>
+                      <div key={tx.id} className="flex items-center px-3 md:px-4 py-2 text-xs">
+                        <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0"><IconCheck className="w-3.5 h-3.5" /></div>
+                        <div className="ml-2 flex-1 truncate"><span className="text-gray-700">{card?.name || '信用卡'} 繳費</span></div>
+                        <span className="text-gray-400 mx-2">{dateStr}</span>
                         <span className="font-medium text-red-500">-${tx.amount.toLocaleString()}</span>
                       </div>
                     )
@@ -217,7 +171,7 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
           )}
         </div>
 
-        {/* Right column: credit card payment schedule */}
+        {/* Right: credit card payment */}
         <div>
           <h3 className="font-semibold text-gray-800 mb-3 text-sm">信用卡繳費</h3>
           {upcomingCards.length > 0 ? (
@@ -227,40 +181,25 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
                 const amt = Number(card.monthlyAmount) || 0
                 const paid = isPaidThisMonth(card)
                 return (
-                  <div key={card.id} className="px-4 py-3 hover:bg-gray-50/30 transition">
+                  <div key={card.id} className="px-3 md:px-4 py-2.5 md:py-3 hover:bg-gray-50/30 transition">
                     <div className="flex items-center">
                       <div className={`w-8 h-8 rounded-lg ${paid ? 'bg-emerald-50 text-emerald-500' : card.daysUntil <= 3 ? 'bg-red-50 text-red-500' : 'bg-gray-50 text-gray-400'} flex items-center justify-center shrink-0`}>
                         {paid ? <IconCheck className="w-4 h-4" /> : <IconCard className="w-4 h-4" />}
                       </div>
-                      <div className="ml-3 flex-1 min-w-0">
-                        <div className="font-medium text-gray-800 text-sm">{card.name}</div>
-                        <div className="text-xs text-gray-400">
-                          {card.issuer || ''}
-                          {acc ? ` → ${acc.bank}` : ''}
-                          {` · 每月 ${card.dueDay} 號`}
-                        </div>
+                      <div className="ml-2.5 flex-1 min-w-0">
+                        <div className="font-medium text-gray-800 text-sm truncate">{card.name}</div>
+                        <div className="text-[11px] text-gray-400 truncate">{card.issuer || ''}{acc ? ` → ${acc.bank}` : ''} · 每月 {card.dueDay} 號</div>
                       </div>
-                      <div className="text-right">
+                      <div className="text-right ml-2">
                         <div className="font-semibold text-gray-700 text-sm">{amt > 0 ? `$${amt.toLocaleString()}` : '--'}</div>
-                        {paid ? (
-                          <span className="text-xs text-emerald-500">已繳</span>
-                        ) : (
-                          <span className={`text-xs ${card.daysUntil <= 3 ? 'text-red-500' : card.daysUntil <= 7 ? 'text-amber-500' : 'text-gray-400'}`}>
-                            {card.daysUntil === 0 ? '今天' : `${card.daysUntil} 天後`}
-                          </span>
-                        )}
+                        {paid ? <span className="text-[11px] text-emerald-500">已繳</span>
+                          : <span className={`text-[11px] ${card.daysUntil <= 3 ? 'text-red-500' : card.daysUntil <= 7 ? 'text-amber-500' : 'text-gray-400'}`}>{card.daysUntil === 0 ? '今天' : `${card.daysUntil} 天後`}</span>}
                       </div>
                     </div>
                     {!paid && amt > 0 && card.accountId && (
-                      <div className="mt-2 ml-11">
-                        <button
-                          onClick={() => onPayCard(card.id)}
-                          className={`text-xs font-medium px-3 py-1.5 rounded-lg transition cursor-pointer ${
-                            card.daysUntil === 0
-                              ? 'bg-red-500 text-white hover:bg-red-600'
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                          }`}
-                        >
+                      <div className="mt-1.5 ml-[42px]">
+                        <button onClick={() => onPayCard(card.id)}
+                          className={`text-xs font-medium px-3 py-1 rounded-lg transition cursor-pointer ${card.daysUntil === 0 ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                           {card.daysUntil === 0 ? '立即扣款' : '手動繳費'}
                         </button>
                       </div>
@@ -271,22 +210,19 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
             </div>
           ) : cards.length === 0 ? (
             <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center text-gray-300">
-              <IconCard className="w-8 h-8 mx-auto mb-2" />
-              <p className="text-xs">尚無信用卡</p>
+              <IconCard className="w-8 h-8 mx-auto mb-2" /><p className="text-xs">尚無信用卡</p>
             </div>
           ) : (
             <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center text-gray-300">
-              <IconCalendar className="w-8 h-8 mx-auto mb-2" />
-              <p className="text-xs">尚無繳費日設定</p>
+              <IconCalendar className="w-8 h-8 mx-auto mb-2" /><p className="text-xs">尚無繳費日設定</p>
             </div>
           )}
         </div>
       </div>
 
       {accounts.length === 0 && cards.length === 0 && (
-        <div className="text-center py-16 text-gray-300 mt-4">
-          <IconRocket className="mx-auto mb-4" />
-          <p className="text-lg font-medium text-gray-500 mb-2">開始管理你的財務</p>
+        <div className="text-center py-12 text-gray-300 mt-4">
+          <p className="text-base font-medium text-gray-500 mb-1">開始管理你的財務</p>
           <p className="text-sm">先到「銀行帳戶」新增帳戶，再到「信用卡」新增卡片</p>
         </div>
       )}
