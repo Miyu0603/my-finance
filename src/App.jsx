@@ -45,8 +45,13 @@ export default function App() {
   const [mobileNav, setMobileNav] = useState(false)
   const [transferFromId, setTransferFromId] = useState(null)
   const [locked, setLocked] = useState(() => isFaceIdEnabled())
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('dark-mode') === 'true')
 
   useEffect(() => { saveData(data) }, [data])
+  useEffect(() => {
+    localStorage.setItem('dark-mode', darkMode)
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', darkMode ? '#0f172a' : '#6366f1')
+  }, [darkMode])
 
   const updateAccounts = useCallback((accounts) => {
     setData(prev => ({ ...prev, accounts }))
@@ -95,10 +100,10 @@ export default function App() {
 
   const switchTab = (id) => { setTab(id); setMobileNav(false) }
 
-  if (locked) return <LockScreen onUnlock={() => setLocked(false)} />
+  if (locked) return <LockScreen onUnlock={() => setLocked(false)} darkMode={darkMode} />
 
   return (
-    <div className="flex min-h-screen bg-[#f8f9fb] font-['Inter',system-ui,sans-serif] overflow-x-hidden">
+    <div className={`flex min-h-screen bg-[#f8f9fb] font-['Inter',system-ui,sans-serif] overflow-x-hidden ${darkMode ? 'dark' : ''}`}>
       {/* Desktop Sidebar */}
       <aside className={`hidden md:flex ${collapsed ? 'w-[68px]' : 'w-48'} bg-white border-r border-gray-100 flex-col shrink-0 sticky top-0 h-screen transition-all duration-300`}>
         <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3 h-14 border-b border-gray-100 shrink-0`}>
@@ -154,7 +159,7 @@ export default function App() {
           {tab === 'dashboard' && <Dashboard accounts={data.accounts} cards={data.cards} transactions={data.transactions} onPayCard={handlePayCard} onTransfer={(accId) => setTransferFromId(accId)} />}
           {tab === 'accounts' && <AccountManager accounts={data.accounts} onChange={updateAccounts} onTransfer={(accId) => setTransferFromId(accId)} />}
           {tab === 'cards' && <CardManager cards={data.cards} accounts={data.accounts} onChange={updateCards} onPayCard={handlePayCard} />}
-          {tab === 'settings' && <SettingsPage data={data} setData={setData} />}
+          {tab === 'settings' && <SettingsPage data={data} setData={setData} darkMode={darkMode} setDarkMode={setDarkMode} />}
         </div>
       </main>
 
@@ -165,7 +170,9 @@ export default function App() {
   )
 }
 
-function SettingsPage({ data, setData }) {
+const IconMoon = ({ className }) => <svg className={className || "w-5 h-5"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+
+function SettingsPage({ data, setData, darkMode, setDarkMode }) {
   const [faceIdOn, setFaceIdOn] = useState(isFaceIdEnabled())
   const [faceIdSupported, setFaceIdSupported] = useState(false)
   const [setupMsg, setSetupMsg] = useState('')
@@ -212,6 +219,18 @@ function SettingsPage({ data, setData }) {
             ) : <span className="text-xs text-gray-400 shrink-0">不支援</span>}
           </div>
           {setupMsg && <p className="text-xs text-indigo-500 mt-2 ml-13">{setupMsg}</p>}
+        </div>
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 md:p-5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center shrink-0"><IconMoon className="w-5 h-5" /></div>
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-gray-800 text-sm">暗色模式</div>
+              <div className="text-xs text-gray-400">切換深色介面，保護眼睛</div>
+            </div>
+            <button onClick={() => setDarkMode(d => !d)} className={`w-12 h-7 rounded-full transition-colors cursor-pointer relative shrink-0 ${darkMode ? 'bg-violet-500' : 'bg-gray-200'}`}>
+              <div className={`w-5 h-5 rounded-full bg-white shadow-sm absolute top-1 transition-all ${darkMode ? 'left-6' : 'left-1'}`} />
+            </button>
+          </div>
         </div>
         <div className="bg-white rounded-2xl border border-gray-100 p-4 md:p-5">
           <div className="flex items-center gap-3">

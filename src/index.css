@@ -11,3 +11,152 @@ html {
 .safe-area-pt {
     padding-top: env(safe-area-inset-top, 0px);
 }
+
+/* ===== Dark Mode ===== */
+.dark {
+    color-scheme: dark;
+}
+
+/* Backgrounds */
+.dark .bg-white {
+    background-color: #1e293b;
+}
+
+.dark .bg-\[\#f8f9fb\] {
+    background-color: #0f172a;
+}
+
+.dark .bg-gray-50 {
+    background-color: #1e293b;
+}
+
+.dark .bg-gray-50\/50 {
+    background-color: rgba(30, 41, 59, .5);
+}
+
+.dark .bg-gray-100 {
+    background-color: #334155;
+}
+
+.dark .hover\:bg-gray-50:hover {
+    background-color: #334155;
+}
+
+.dark .hover\:bg-gray-50\/50:hover {
+    background-color: rgba(51, 65, 85, .5);
+}
+
+.dark .hover\:bg-gray-100:hover {
+    background-color: #475569;
+}
+
+.dark .hover\:bg-gray-200:hover {
+    background-color: #475569;
+}
+
+.dark .hover\:bg-gray-50\/30:hover {
+    background-color: rgba(51, 65, 85, .3);
+}
+
+/* Text */
+.dark .text-gray-900 {
+    color: #f1f5f9;
+}
+
+.dark .text-gray-800 {
+    color: #e2e8f0;
+}
+
+.dark .text-gray-700 {
+    color: #cbd5e1;
+}
+
+.dark .text-gray-600 {
+    color: #94a3b8;
+}
+
+.dark .text-gray-500 {
+    color: #94a3b8;
+}
+
+.dark .text-gray-400 {
+    color: #64748b;
+}
+
+.dark .text-gray-300 {
+    color: #475569;
+}
+
+/* Borders */
+.dark .border-gray-100 {
+    border-color: #334155;
+}
+
+.dark .border-gray-200 {
+    border-color: #475569;
+}
+
+.dark .border-white\/60 {
+    border-color: rgba(51, 65, 85, .6);
+}
+
+.dark .divide-gray-50> :not(:first-child) {
+    border-color: #334155;
+}
+
+/* Inputs & selects */
+.dark input,
+.dark select,
+.dark textarea {
+    background-color: #0f172a;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+    color: #64748b;
+}
+
+/* Hover overrides for action buttons */
+.dark .bg-white\/80 {
+    background-color: rgba(30, 41, 59, .8);
+}
+
+.dark .hover\:bg-white:hover {
+    background-color: #334155;
+}
+
+.dark .bg-white\/60 {
+    background-color: rgba(30, 41, 59, .6);
+}
+
+.dark .bg-white\/70 {
+    background-color: rgba(30, 41, 59, .7);
+}
+
+.dark .bg-white\/40 {
+    background-color: rgba(30, 41, 59, .4);
+}
+
+/* Modal backdrop */
+.dark .bg-black\/20 {
+    background-color: rgba(0, 0, 0, .5);
+}
+
+/* Lock screen stays white in light, dark in dark */
+.dark .lock-screen {
+    background-color: #0f172a;
+}
+
+.dark .lock-screen h1 {
+    color: #f1f5f9;
+}
+
+.dark .lock-screen p {
+    color: #64748b;
+}
+
+.dark .lock-screen .lock-faceid-btn {
+    background-color: #1e293b;
+}
