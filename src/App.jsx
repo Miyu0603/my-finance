@@ -150,7 +150,7 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
-        <div className="max-w-5xl mx-auto px-4 py-5 md:px-8 md:py-8">
+        <div className="max-w-5xl mx-auto px-4 py-5 md:px-8 md:py-8 safe-area-pt">
           {tab === 'dashboard' && <Dashboard accounts={data.accounts} cards={data.cards} transactions={data.transactions} onPayCard={handlePayCard} onTransfer={(accId) => setTransferFromId(accId)} />}
           {tab === 'accounts' && <AccountManager accounts={data.accounts} onChange={updateAccounts} onTransfer={(accId) => setTransferFromId(accId)} />}
           {tab === 'cards' && <CardManager cards={data.cards} accounts={data.accounts} onChange={updateCards} onPayCard={handlePayCard} />}
