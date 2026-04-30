@@ -80,16 +80,11 @@ export default function App() {
         if (a.id === toId) return { ...a, balance: (Number(a.balance) || 0) + amount }
         return a
       })
-      const investments = (prev.investments || []).map(a => {
-        if (a.id === fromId) return { ...a, balance: (Number(a.balance) || 0) - amount }
-        if (a.id === toId) return { ...a, balance: (Number(a.balance) || 0) + amount }
-        return a
-      })
       const tx = {
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         type: 'transfer', fromId, toId, amount, date: new Date().toISOString(),
       }
-      return { ...prev, accounts, investments, transactions: [...(prev.transactions || []), tx] }
+      return { ...prev, accounts, transactions: [...(prev.transactions || []), tx] }
     })
   }, [])
 
@@ -108,6 +103,42 @@ export default function App() {
         type, amount, accountId, category, note, date,
       }
       return { ...prev, accounts, transactions: [...(prev.transactions || []), tx] }
+    })
+  }, [])
+
+  const handleInvestTx = useCallback((txData) => {
+    setData(prev => {
+      const { type, stockId, accountId, shares, amount, date } = txData
+      const isBuy = type === 'buy'
+      // Update bank account balance
+      const accounts = prev.accounts.map(a => {
+        if (a.id === accountId) {
+          const bal = Number(a.balance) || 0
+          return { ...a, balance: isBuy ? bal - amount : bal + amount }
+        }
+        return a
+      })
+      // Update investment stock shares & cost
+      const investments = (prev.investments || []).map(inv => {
+        if (inv.id === stockId) {
+          const curShares = Number(inv.shares) || 0
+          const curCost = Number(inv.cost) || 0
+          if (isBuy) {
+            return { ...inv, shares: String(curShares + shares), cost: String(curCost + amount) }
+          } else {
+            // Sell: reduce shares, reduce cost proportionally
+            const costPerShare = curShares > 0 ? curCost / curShares : 0
+            const costReduction = costPerShare * shares
+            return { ...inv, shares: String(Math.max(0, curShares - shares)), cost: String(Math.max(0, curCost - costReduction)) }
+          }
+        }
+        return inv
+      })
+      const tx = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        type: isBuy ? 'invest-buy' : 'invest-sell', stockId, accountId, shares, amount, date,
+      }
+      return { ...prev, accounts, investments, transactions: [...(prev.transactions || []), tx] }
     })
   }, [])
 
@@ -191,14 +222,14 @@ export default function App() {
         <div className="max-w-5xl mx-auto px-4 py-5 md:px-8 md:py-8 safe-area-pt">
           {tab === 'dashboard' && <Dashboard accounts={data.accounts} cards={data.cards} transactions={data.transactions} investments={data.investments} onPayCard={handlePayCard} onTransfer={(accId) => setTransferFromId(accId)} />}
           {tab === 'accounts' && <AccountManager accounts={data.accounts} onChange={updateAccounts} onTransfer={(accId) => setTransferFromId(accId)} onTransaction={(acc) => setTransactionAccount(acc)} />}
-          {tab === 'investments' && <InvestmentManager investments={data.investments || []} onChange={updateInvestments} />}
+          {tab === 'investments' && <InvestmentManager investments={data.investments || []} accounts={data.accounts} onChange={updateInvestments} onInvestTx={handleInvestTx} />}
           {tab === 'cards' && <CardManager cards={data.cards} accounts={data.accounts} onChange={updateCards} onPayCard={handlePayCard} />}
           {tab === 'settings' && <SettingsPage data={data} setData={setData} darkMode={darkMode} setDarkMode={setDarkMode} />}
         </div>
       </main>
 
       {transferFromId !== null && (
-        <TransferModal accounts={data.accounts} investments={data.investments || []} defaultFromId={transferFromId} onTransfer={handleTransfer} onClose={() => setTransferFromId(null)} />
+        <TransferModal accounts={data.accounts} defaultFromId={transferFromId} onTransfer={handleTransfer} onClose={() => setTransferFromId(null)} />
       )}
       {transactionAccount && (
         <TransactionModal account={transactionAccount} onSubmit={handleTransaction} onClose={() => setTransactionAccount(null)} />

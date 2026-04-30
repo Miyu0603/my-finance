@@ -2,16 +2,11 @@ import { useState } from 'react'
 
 const IconTransfer = ({ className }) => <svg className={className || "w-5 h-5"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>
 
-export default function TransferModal({ accounts, investments = [], onTransfer, onClose, defaultFromId }) {
+export default function TransferModal({ accounts, onTransfer, onClose, defaultFromId }) {
     const [fromId, setFromId] = useState(defaultFromId || '')
     const [toId, setToId] = useState('')
     const [amount, setAmount] = useState('')
     const [error, setError] = useState('')
-
-    const allAccounts = [
-        ...accounts.map(a => ({ ...a, _type: 'bank' })),
-        ...investments.map(a => ({ ...a, _type: 'investment' })),
-    ]
 
     const handleSubmit = () => {
         setError('')
@@ -19,7 +14,7 @@ export default function TransferModal({ accounts, investments = [], onTransfer, 
         if (fromId === toId) return setError('轉出與轉入帳戶不能相同')
         const amt = Number(amount)
         if (!amt || amt <= 0) return setError('請輸入有效金額')
-        const fromAcc = allAccounts.find(a => a.id === fromId)
+        const fromAcc = accounts.find(a => a.id === fromId)
         if (fromAcc && (Number(fromAcc.balance) || 0) < amt) {
             return setError(`餘額不足（目前 $${(Number(fromAcc.balance) || 0).toLocaleString()}）`)
         }
@@ -27,12 +22,7 @@ export default function TransferModal({ accounts, investments = [], onTransfer, 
         onClose()
     }
 
-    const getLabel = (acc) => {
-        const prefix = acc._type === 'investment' ? '📈 ' : '🏦 '
-        const name = acc._type === 'investment' ? acc.name : acc.bank
-        const suffix = acc.lastFour ? ` (${acc.lastFour})` : ''
-        return `${prefix}${name}${suffix} - $${(Number(acc.balance) || 0).toLocaleString()}`
-    }
+    const getLabel = (acc) => `${acc.bank}${acc.lastFour ? ` (${acc.lastFour})` : ''} - $${(Number(acc.balance) || 0).toLocaleString()}`
 
     return (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
@@ -48,7 +38,7 @@ export default function TransferModal({ accounts, investments = [], onTransfer, 
                         <label className="text-sm font-medium text-gray-600 block mb-1.5">轉出帳戶</label>
                         <select className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" value={fromId} onChange={e => setFromId(e.target.value)}>
                             <option value="">-- 請選擇 --</option>
-                            {allAccounts.map(acc => <option key={acc.id} value={acc.id}>{getLabel(acc)}</option>)}
+                            {accounts.map(acc => <option key={acc.id} value={acc.id}>{getLabel(acc)}</option>)}
                         </select>
                     </div>
                     <div className="flex justify-center">
@@ -60,7 +50,7 @@ export default function TransferModal({ accounts, investments = [], onTransfer, 
                         <label className="text-sm font-medium text-gray-600 block mb-1.5">轉入帳戶</label>
                         <select className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50" value={toId} onChange={e => setToId(e.target.value)}>
                             <option value="">-- 請選擇 --</option>
-                            {allAccounts.map(acc => <option key={acc.id} value={acc.id}>{getLabel(acc)}</option>)}
+                            {accounts.map(acc => <option key={acc.id} value={acc.id}>{getLabel(acc)}</option>)}
                         </select>
                     </div>
                     <div>

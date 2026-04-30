@@ -41,7 +41,7 @@ export default function Dashboard({ accounts, cards, transactions, investments =
     .sort((a, b) => a.daysUntil - b.daysUntil)
 
   const totalBalance = accounts.reduce((s, a) => s + (Number(a.balance) || 0), 0)
-  const totalInvestment = investments.reduce((s, a) => s + (Number(a.balance) || 0), 0)
+  const totalInvestment = investments.reduce((s, a) => s + (Number(a.cost) || 0), 0)
   const totalMonthly = cards.reduce((s, c) => s + (Number(c.monthlyAmount) || 0), 0)
   const paidCount = cards.filter(c => c.monthlyAmount && isPaidThisMonth(c)).length
   const dueCount = cards.filter(c => c.monthlyAmount).length
@@ -72,8 +72,8 @@ export default function Dashboard({ accounts, cards, transactions, investments =
           </div>
           <div className="relative">
             <div className="text-lg md:text-xl font-bold text-gray-800">${totalInvestment.toLocaleString()}</div>
-            <div className="text-[11px] md:text-xs text-gray-500 mt-0.5">投資資產</div>
-            <div className="text-[10px] text-gray-400 mt-1">{investments.length} 個帳戶</div>
+            <div className="text-[11px] md:text-xs text-gray-500 mt-0.5">投資成本</div>
+            <div className="text-[10px] text-gray-400 mt-1">{investments.length} 檔持股</div>
           </div>
         </div>
         <div className="bg-gradient-to-br from-rose-50 to-pink-100 rounded-2xl p-4 md:p-5 border border-rose-100/50 relative overflow-hidden col-span-2 md:col-span-1">
