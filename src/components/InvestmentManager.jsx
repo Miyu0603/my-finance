@@ -62,14 +62,14 @@ export default function InvestmentManager({ investments, accounts, onChange, onI
                         {filtered.length > 0 && <span className="ml-2 text-gray-500 font-medium">/ 總成本 <span className="text-gray-800">${totalCost.toLocaleString()}</span></span>}
                     </p>
                 </div>
-                <button onClick={startAdd} className="flex items-center gap-1.5 bg-gray-900 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-800 transition cursor-pointer shadow-lg shadow-gray-900/20">
+                <button onClick={startAdd} className="flex items-center gap-1.5 bg-gray-900 text-white px-3 md:px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-800 transition cursor-pointer shadow-lg shadow-gray-900/20">
                     <IconPlus className="w-4 h-4" />
-                    新增
+                    <span className="hidden md:inline">新增</span>
                 </button>
             </div>
 
             {/* Market toggle */}
-            <div className="flex bg-gray-100 rounded-xl p-1 mb-5 max-w-xs">
+            <div className="flex bg-gray-100 rounded-xl p-1 mb-5">
                 <button onClick={() => setMarket('tw')}
                     className={`flex-1 py-2 rounded-lg text-sm font-medium transition cursor-pointer ${market === 'tw' ? 'bg-white text-violet-600 shadow-sm' : 'text-gray-500'}`}>
                     台股

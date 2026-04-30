@@ -63,8 +63,8 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
             {cards.length > 0 && <span className="ml-2 text-gray-500 font-medium">/ 應繳 <span className="text-gray-800">${totalMonthly.toLocaleString()}</span></span>}
           </p>
         </div>
-        <button onClick={startAdd} className="bg-gray-900 text-white px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-sm font-medium hover:bg-gray-800 transition shadow-lg shadow-gray-900/10 cursor-pointer">
-          + 新增
+        <button onClick={startAdd} className="bg-gray-900 text-white px-3 md:px-5 py-2 md:py-2.5 rounded-xl text-sm font-medium hover:bg-gray-800 transition shadow-lg shadow-gray-900/10 cursor-pointer">
+          <span className="md:hidden">+</span><span className="hidden md:inline">+ 新增</span>
         </button>
       </div>
 
