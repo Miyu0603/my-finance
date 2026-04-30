@@ -110,13 +110,13 @@ export default function App() {
 
   const handleInvestTx = useCallback((txData) => {
     setData(prev => {
-      const { type, stockId, accountId, shares, amount, date } = txData
+      const { type, stockId, stockName, accountId, shares, amount, fee = 0, date } = txData
       const isBuy = type === 'buy'
-      // Update bank account balance
+      // Buy: deduct (amount + fee) from bank; Sell: add (amount - fee) to bank
       const accounts = prev.accounts.map(a => {
         if (a.id === accountId) {
           const bal = Number(a.balance) || 0
-          return { ...a, balance: isBuy ? bal - amount : bal + amount }
+          return { ...a, balance: isBuy ? bal - (amount + fee) : bal + (amount - fee) }
         }
         return a
       })
@@ -138,7 +138,7 @@ export default function App() {
       })
       const tx = {
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-        type: isBuy ? 'invest-buy' : 'invest-sell', stockId, accountId, shares, amount, date,
+        type: isBuy ? 'invest-buy' : 'invest-sell', stockId, stockName, accountId, shares, amount, fee, date,
       }
       return { ...prev, accounts, investments, transactions: [...(prev.transactions || []), tx] }
     })

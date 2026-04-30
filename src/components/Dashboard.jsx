@@ -176,6 +176,42 @@ export default function Dashboard({ accounts, cards, transactions, investments =
                       </div>
                     )
                   }
+                  if (tx.type === 'invest-buy' || tx.type === 'invest-sell') {
+                    const isBuy = tx.type === 'invest-buy'
+                    const totalAmt = isBuy ? tx.amount + (tx.fee || 0) : tx.amount - (tx.fee || 0)
+                    return (
+                      <div key={tx.id} className="flex items-center px-3 md:px-4 py-2 text-xs">
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isBuy ? 'bg-emerald-50 text-emerald-500' : 'bg-red-50 text-red-500'}`}>
+                          <IconTrendUp className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="ml-2 flex-1 truncate"><span className="text-gray-700">{isBuy ? '買進' : '賣出'} {tx.stockName || '股票'}</span>{tx.fee > 0 && <span className="text-gray-300 ml-1">含手續費${tx.fee}</span>}</div>
+                        <span className="text-gray-400 mx-2">{dateStr}</span>
+                        <span className={`font-medium ${isBuy ? 'text-red-500' : 'text-emerald-500'}`}>{isBuy ? '-' : '+'}${totalAmt.toLocaleString()}</span>
+                      </div>
+                    )
+                  }
+                  if (tx.type === 'exchange') {
+                    return (
+                      <div key={tx.id} className="flex items-center px-3 md:px-4 py-2 text-xs">
+                        <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center shrink-0"><IconTransfer className="w-3.5 h-3.5" /></div>
+                        <div className="ml-2 flex-1 truncate"><span className="text-gray-700">換匯 {tx.fromCurrency}→{tx.toCurrency}</span></div>
+                        <span className="text-gray-400 mx-2">{dateStr}</span>
+                        <span className="font-medium text-gray-800">${tx.fromAmount.toLocaleString()}</span>
+                      </div>
+                    )
+                  }
+                  if (tx.type === 'income' || tx.type === 'expense') {
+                    return (
+                      <div key={tx.id} className="flex items-center px-3 md:px-4 py-2 text-xs">
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${tx.type === 'income' ? 'bg-emerald-50 text-emerald-500' : 'bg-red-50 text-red-500'}`}>
+                          <IconDollar className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="ml-2 flex-1 truncate"><span className="text-gray-700">{tx.category}{tx.note ? ` · ${tx.note}` : ''}</span></div>
+                        <span className="text-gray-400 mx-2">{dateStr}</span>
+                        <span className={`font-medium ${tx.type === 'income' ? 'text-emerald-500' : 'text-red-500'}`}>{tx.type === 'income' ? '+' : '-'}${tx.amount.toLocaleString()}</span>
+                      </div>
+                    )
+                  }
                   return null
                 })}
               </div>

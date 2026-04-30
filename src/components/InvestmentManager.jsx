@@ -179,23 +179,31 @@ function InvestTxModal({ stock, type, accounts, onSubmit, onClose }) {
     const [accountId, setAccountId] = useState('')
     const [shares, setShares] = useState('')
     const [amount, setAmount] = useState('')
+    const [fee, setFee] = useState('')
     const [error, setError] = useState('')
 
     const isBuy = type === 'buy'
     const title = isBuy ? `買進 ${stock.name}` : `賣出 ${stock.name}`
 
+    // Filter accounts: 台股 → TWD only, 美股 → USD only
+    const requiredCurrency = stock.market === 'tw' ? 'TWD' : 'USD'
+    const filteredAccounts = accounts.filter(a => (a.currency || 'TWD') === requiredCurrency)
+
     const handleSubmit = () => {
         setError('')
         const amt = Number(amount)
         const sh = Number(shares)
+        const f = Number(fee) || 0
         if (!sh || sh <= 0) return setError('請輸入有效股數')
         if (!amt || amt <= 0) return setError('請輸入有效金額')
         if (!accountId) return setError('請選擇帳戶')
+        if (f < 0) return setError('手續費不可為負數')
 
         if (isBuy) {
-            const acc = accounts.find(a => a.id === accountId)
-            if (acc && (Number(acc.balance) || 0) < amt) {
-                return setError(`帳戶餘額不足（目前 $${(Number(acc.balance) || 0).toLocaleString()}）`)
+            const acc = filteredAccounts.find(a => a.id === accountId)
+            const totalDeduct = amt + f
+            if (acc && (Number(acc.balance) || 0) < totalDeduct) {
+                return setError(`帳戶餘額不足（需 $${totalDeduct.toLocaleString()}，目前 $${(Number(acc.balance) || 0).toLocaleString()}）`)
             }
         } else {
             if (sh > (Number(stock.shares) || 0)) {
@@ -206,14 +214,18 @@ function InvestTxModal({ stock, type, accounts, onSubmit, onClose }) {
         onSubmit({
             type,
             stockId: stock.id,
+            stockName: stock.name,
             accountId,
             shares: sh,
             amount: amt,
+            fee: f,
             date: new Date().toISOString(),
         })
     }
 
-    const getLabel = (acc) => `${acc.bank}${acc.lastFour ? ` (${acc.lastFour})` : ''} - $${(Number(acc.balance) || 0).toLocaleString()}`
+    const CURRENCY_SYMBOL = { TWD: 'NT$', USD: '$' }
+    const sym = CURRENCY_SYMBOL[requiredCurrency] || '$'
+    const getLabel = (acc) => `${acc.bank}${acc.lastFour ? ` (${acc.lastFour})` : ''} - ${sym}${(Number(acc.balance) || 0).toLocaleString()}`
 
     return (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
@@ -233,13 +245,14 @@ function InvestTxModal({ stock, type, accounts, onSubmit, onClose }) {
                 <div className="space-y-4">
                     <div>
                         <label className="text-sm font-medium text-gray-600 block mb-1.5">
-                            {isBuy ? '扣款帳戶' : '入帳帳戶'}
+                            {isBuy ? '扣款帳戶' : '入帳帳戶'}（{requiredCurrency} 帳戶）
                         </label>
                         <select className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50"
                             value={accountId} onChange={e => setAccountId(e.target.value)}>
-                            <option value="">-- 請選擇銀行帳戶 --</option>
-                            {accounts.map(acc => <option key={acc.id} value={acc.id}>{getLabel(acc)}</option>)}
+                            <option value="">-- 請選擇 --</option>
+                            {filteredAccounts.map(acc => <option key={acc.id} value={acc.id}>{getLabel(acc)}</option>)}
                         </select>
+                        {filteredAccounts.length === 0 && <p className="text-[11px] text-amber-500 mt-1">尚無 {requiredCurrency} 帳戶，請先新增</p>}
                     </div>
                     <div>
                         <label className="text-sm font-medium text-gray-600 block mb-1.5">股數</label>
@@ -253,6 +266,13 @@ function InvestTxModal({ stock, type, accounts, onSubmit, onClose }) {
                         <input className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50"
                             type="number" min="0" placeholder={isBuy ? '實際扣款金額' : '實際入帳金額'} value={amount} onChange={e => setAmount(e.target.value)} />
                         {!isBuy && <p className="text-[11px] text-gray-400 mt-1">賣出金額可自行填寫，反映實際損益</p>}
+                    </div>
+                    <div>
+                        <label className="text-sm font-medium text-gray-600 block mb-1.5">手續費（直接扣除）</label>
+                        <input className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition bg-gray-50/50"
+                            type="number" min="0" placeholder="0" value={fee} onChange={e => setFee(e.target.value)} />
+                        {isBuy && Number(amount) > 0 && Number(fee) > 0 && <p className="text-[11px] text-gray-400 mt-1">實際扣款：{sym}{(Number(amount) + Number(fee)).toLocaleString()}</p>}
+                        {!isBuy && Number(amount) > 0 && Number(fee) > 0 && <p className="text-[11px] text-gray-400 mt-1">實際入帳：{sym}{(Number(amount) - Number(fee)).toLocaleString()}</p>}
                     </div>
                     {error && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
                 </div>
