@@ -94,51 +94,71 @@ export default function Dashboard({ accounts, cards, transactions, investments =
           <div>
             <h3 className="font-semibold text-gray-800 mb-3 text-sm">我的帳戶</h3>
             {accounts.length > 0 ? (
-              <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50 overflow-hidden">
-                {accounts.map((acc, i) => {
-                  const linked = accountMap[acc.id]?.cards || []
-                  const isExpanded = expandedAcc === acc.id
-                  return (
-                    <div key={acc.id}>
-                      <button onClick={() => setExpandedAcc(isExpanded ? null : acc.id)}
-                        className="w-full flex items-center px-3 md:px-4 py-2.5 md:py-3 hover:bg-gray-50/50 transition cursor-pointer text-left">
-                        <div className={`${ICON_BG[i % ICON_BG.length]} w-8 h-8 rounded-lg flex items-center justify-center text-white shrink-0`}>
-                          <IconBank className="w-4 h-4" />
-                        </div>
-                        <div className="ml-2.5 flex-1 min-w-0">
-                          <div className="font-medium text-gray-800 text-sm">{acc.bank}</div>
-                          <div className="text-[11px] text-gray-400 truncate">
-                            {acc.lastFour && `(${acc.lastFour})`}{acc.purpose && ` · ${acc.purpose}`}{linked.length > 0 && ` · ${linked.length} 張卡`}
+              <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                {(() => {
+                  const CSYM = { TWD: 'NT$', USD: '$', JPY: '¥', EUR: '€', GBP: '£', AUD: 'A$', CNY: '¥', HKD: 'HK$', SGD: 'S$', KRW: '₩' }
+                  const groups = []
+                  const seen = {}
+                  accounts.forEach(acc => {
+                    if (!seen[acc.bank]) { seen[acc.bank] = []; groups.push(acc.bank) }
+                    seen[acc.bank].push(acc)
+                  })
+                  return groups.map((bank, gi) => {
+                    const bankAccounts = seen[bank]
+                    const isExpanded = expandedAcc === bank
+                    const totalCards = bankAccounts.reduce((s, a) => s + (accountMap[a.id]?.cards?.length || 0), 0)
+                    const primaryAcc = bankAccounts.find(a => (a.currency || 'TWD') === 'TWD') || bankAccounts[0]
+                    const primarySym = CSYM[primaryAcc.currency || 'TWD'] || '$'
+                    const primaryBal = Number(primaryAcc.balance) || 0
+                    return (
+                      <div key={bank}>
+                        <button onClick={() => setExpandedAcc(isExpanded ? null : bank)}
+                          className="w-full flex items-center px-3 md:px-4 py-2.5 md:py-3 hover:bg-gray-50/50 transition cursor-pointer text-left">
+                          <div className={`${ICON_BG[gi % ICON_BG.length]} w-8 h-8 rounded-lg flex items-center justify-center text-white shrink-0`}>
+                            <IconBank className="w-4 h-4" />
                           </div>
-                        </div>
-                        <div className="font-bold text-gray-800 text-sm ml-2">${(Number(acc.balance) || 0).toLocaleString()}</div>
-                        <IconArrowRight className={`w-3 h-3 ml-1.5 text-gray-300 transition-transform shrink-0 ${isExpanded ? 'rotate-90' : ''}`} />
-                      </button>
-                      {isExpanded && (
-                        <div className="px-3 md:px-4 pb-2.5 pl-[52px] md:pl-[56px] space-y-1">
-                          {linked.length > 0 ? linked.map(card => {
-                            const amt = Number(card.monthlyAmount) || 0
-                            const paid = isPaidThisMonth(card)
-                            return (
-                              <div key={card.id} className="flex items-center text-xs bg-gray-50 rounded-lg px-2.5 py-1.5">
-                                <IconCard className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                                <span className="ml-1.5 text-gray-600 flex-1 truncate">{card.name}</span>
-                                {amt > 0 && <span className={`font-medium ${paid ? 'text-emerald-500' : 'text-gray-700'}`}>${amt.toLocaleString()}</span>}
-                                {paid && <IconCheck className="w-3 h-3 text-emerald-500 ml-1" />}
-                              </div>
-                            )
-                          }) : <div className="text-[11px] text-gray-300 bg-gray-50 rounded-lg px-2.5 py-1.5">尚未綁定信用卡</div>}
-                          {accounts.length >= 2 && (
-                            <button onClick={(e) => { e.stopPropagation(); onTransfer(acc.id) }}
-                              className="flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-600 px-2.5 py-1 hover:bg-indigo-50 rounded-lg transition cursor-pointer">
-                              <IconTransfer className="w-3.5 h-3.5" /> 從此帳戶轉帳
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
+                          <div className="ml-2.5 flex-1 min-w-0">
+                            <div className="font-medium text-gray-800 text-sm">{bank}</div>
+                            <div className="text-[11px] text-gray-400 truncate">
+                              {bankAccounts.length} 個帳戶{totalCards > 0 && ` · ${totalCards} 張卡`}
+                            </div>
+                          </div>
+                          <div className="font-bold text-gray-800 text-sm ml-2">{primarySym}{primaryBal.toLocaleString()}</div>
+                          <IconArrowRight className={`w-3 h-3 ml-1.5 text-gray-300 transition-transform shrink-0 ${isExpanded ? 'rotate-90' : ''}`} />
+                        </button>
+                        {isExpanded && (
+                          <div className="px-3 md:px-4 pb-2.5 pl-[52px] md:pl-[56px] space-y-1">
+                            {bankAccounts.map(acc => {
+                              const cur = acc.currency || 'TWD'
+                              const sym = CSYM[cur] || '$'
+                              return (
+                                <div key={acc.id} className="flex items-center text-xs bg-gray-50 rounded-lg px-2.5 py-1.5">
+                                  <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-gray-200 text-gray-600 shrink-0">{cur}</span>
+                                  <span className="ml-1.5 text-gray-600 flex-1 truncate">
+                                    {acc.lastFour && `···${acc.lastFour}`}{acc.purpose && ` · ${acc.purpose}`}
+                                  </span>
+                                  <span className="font-medium text-gray-700">{sym}{(Number(acc.balance) || 0).toLocaleString()}</span>
+                                </div>
+                              )
+                            })}
+                            {bankAccounts.flatMap(a => accountMap[a.id]?.cards || []).map(card => {
+                              const amt = Number(card.monthlyAmount) || 0
+                              const paid = isPaidThisMonth(card)
+                              return (
+                                <div key={card.id} className="flex items-center text-xs bg-gray-50 rounded-lg px-2.5 py-1.5">
+                                  <IconCard className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                                  <span className="ml-1.5 text-gray-600 flex-1 truncate">{card.name}</span>
+                                  {amt > 0 && <span className={`font-medium ${paid ? 'text-emerald-500' : 'text-gray-700'}`}>${amt.toLocaleString()}</span>}
+                                  {paid && <IconCheck className="w-3 h-3 text-emerald-500 ml-1" />}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })
+                })()}
               </div>
             ) : (
               <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center text-gray-300">
@@ -149,7 +169,7 @@ export default function Dashboard({ accounts, cards, transactions, investments =
           {recentTx.length > 0 && (
             <div>
               <h3 className="font-semibold text-gray-800 mb-3 text-sm">近期紀錄</h3>
-              <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50">
+              <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
                 {recentTx.map(tx => {
                   const date = new Date(tx.date)
                   const dateStr = `${date.getMonth() + 1}/${date.getDate()}`
