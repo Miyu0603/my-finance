@@ -6,6 +6,7 @@ import CardManager from './components/CardManager'
 import InvestmentManager from './components/InvestmentManager'
 import TransferModal from './components/TransferModal'
 import TransactionModal from './components/TransactionModal'
+import ExchangeModal from './components/ExchangeModal'
 import LockScreen, { setupFaceId, removeFaceId, isFaceIdEnabled, isFaceIdAvailable } from './components/LockScreen'
 
 const STORAGE_KEY = 'my-finance-data'
@@ -52,6 +53,7 @@ export default function App() {
   const [mobileNav, setMobileNav] = useState(false)
   const [transferFromId, setTransferFromId] = useState(null)
   const [transactionAccount, setTransactionAccount] = useState(null)
+  const [exchangeAccount, setExchangeAccount] = useState(null)
   const [locked, setLocked] = useState(() => isFaceIdEnabled())
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('dark-mode') === 'true')
 
@@ -142,6 +144,22 @@ export default function App() {
     })
   }, [])
 
+  const handleExchange = useCallback((exData) => {
+    setData(prev => {
+      const { fromId, toId, fromAmount, toAmount, rate, fee, fromCurrency, toCurrency, date } = exData
+      const accounts = prev.accounts.map(a => {
+        if (a.id === fromId) return { ...a, balance: (Number(a.balance) || 0) - fromAmount }
+        if (a.id === toId) return { ...a, balance: (Number(a.balance) || 0) + toAmount }
+        return a
+      })
+      const tx = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        type: 'exchange', fromId, toId, fromAmount, toAmount, rate, fee, fromCurrency, toCurrency, date,
+      }
+      return { ...prev, accounts, transactions: [...(prev.transactions || []), tx] }
+    })
+  }, [])
+
   const handlePayCard = useCallback((cardId) => {
     setData(prev => {
       const card = prev.cards.find(c => c.id === cardId)
@@ -221,7 +239,7 @@ export default function App() {
       <main className="flex-1 min-w-0 overflow-y-auto pb-20 md:pb-0">
         <div className="max-w-5xl mx-auto px-4 py-5 md:px-8 md:py-8 safe-area-pt">
           {tab === 'dashboard' && <Dashboard accounts={data.accounts} cards={data.cards} transactions={data.transactions} investments={data.investments} onPayCard={handlePayCard} onTransfer={(accId) => setTransferFromId(accId)} />}
-          {tab === 'accounts' && <AccountManager accounts={data.accounts} onChange={updateAccounts} onTransfer={(accId) => setTransferFromId(accId)} onTransaction={(acc) => setTransactionAccount(acc)} />}
+          {tab === 'accounts' && <AccountManager accounts={data.accounts} onChange={updateAccounts} onTransfer={(accId) => setTransferFromId(accId)} onTransaction={(acc) => setTransactionAccount(acc)} onExchange={(acc) => setExchangeAccount(acc)} />}
           {tab === 'investments' && <InvestmentManager investments={data.investments || []} accounts={data.accounts} onChange={updateInvestments} onInvestTx={handleInvestTx} />}
           {tab === 'cards' && <CardManager cards={data.cards} accounts={data.accounts} onChange={updateCards} onPayCard={handlePayCard} />}
           {tab === 'settings' && <SettingsPage data={data} setData={setData} darkMode={darkMode} setDarkMode={setDarkMode} />}
@@ -233,6 +251,9 @@ export default function App() {
       )}
       {transactionAccount && (
         <TransactionModal account={transactionAccount} onSubmit={handleTransaction} onClose={() => setTransactionAccount(null)} />
+      )}
+      {exchangeAccount && (
+        <ExchangeModal account={exchangeAccount} accounts={data.accounts} onExchange={handleExchange} onClose={() => setExchangeAccount(null)} />
       )}
     </div>
   )
