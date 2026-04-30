@@ -3,7 +3,9 @@ import './index.css'
 import Dashboard from './components/Dashboard'
 import AccountManager from './components/AccountManager'
 import CardManager from './components/CardManager'
+import InvestmentManager from './components/InvestmentManager'
 import TransferModal from './components/TransferModal'
+import TransactionModal from './components/TransactionModal'
 import LockScreen, { setupFaceId, removeFaceId, isFaceIdEnabled, isFaceIdAvailable } from './components/LockScreen'
 
 const STORAGE_KEY = 'my-finance-data'
@@ -11,9 +13,12 @@ const STORAGE_KEY = 'my-finance-data'
 function loadData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw)
+    if (raw) {
+      const d = JSON.parse(raw)
+      return { accounts: d.accounts || [], cards: d.cards || [], transactions: d.transactions || [], investments: d.investments || [] }
+    }
   } catch { /* ignore */ }
-  return { accounts: [], cards: [], transactions: [] }
+  return { accounts: [], cards: [], transactions: [], investments: [] }
 }
 
 function saveData(data) {
@@ -31,10 +36,12 @@ const IconFaceId = ({ className }) => <svg className={className || "w-5 h-5"} vi
 const IconShield = ({ className }) => <svg className={className || "w-5 h-5"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
 const IconTrash = ({ className }) => <svg className={className || "w-5 h-5"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
 const IconClose = ({ className }) => <svg className={className || "w-5 h-5"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+const IconTrendUp = ({ className }) => <svg className={className || "w-5 h-5"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: '總覽', Icon: IconHome },
   { id: 'accounts', label: '銀行帳戶', Icon: IconBank },
+  { id: 'investments', label: '投資', Icon: IconTrendUp },
   { id: 'cards', label: '信用卡', Icon: IconCard },
 ]
 
@@ -44,6 +51,7 @@ export default function App() {
   const [collapsed, setCollapsed] = useState(true)
   const [mobileNav, setMobileNav] = useState(false)
   const [transferFromId, setTransferFromId] = useState(null)
+  const [transactionAccount, setTransactionAccount] = useState(null)
   const [locked, setLocked] = useState(() => isFaceIdEnabled())
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('dark-mode') === 'true')
 
@@ -61,6 +69,10 @@ export default function App() {
     setData(prev => ({ ...prev, cards }))
   }, [])
 
+  const updateInvestments = useCallback((investments) => {
+    setData(prev => ({ ...prev, investments }))
+  }, [])
+
   const handleTransfer = useCallback((fromId, toId, amount) => {
     setData(prev => {
       const accounts = prev.accounts.map(a => {
@@ -68,9 +80,32 @@ export default function App() {
         if (a.id === toId) return { ...a, balance: (Number(a.balance) || 0) + amount }
         return a
       })
+      const investments = (prev.investments || []).map(a => {
+        if (a.id === fromId) return { ...a, balance: (Number(a.balance) || 0) - amount }
+        if (a.id === toId) return { ...a, balance: (Number(a.balance) || 0) + amount }
+        return a
+      })
       const tx = {
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
         type: 'transfer', fromId, toId, amount, date: new Date().toISOString(),
+      }
+      return { ...prev, accounts, investments, transactions: [...(prev.transactions || []), tx] }
+    })
+  }, [])
+
+  const handleTransaction = useCallback((txData) => {
+    setData(prev => {
+      const { type, amount, accountId, category, note, date } = txData
+      const accounts = prev.accounts.map(a => {
+        if (a.id === accountId) {
+          const bal = Number(a.balance) || 0
+          return { ...a, balance: type === 'income' ? bal + amount : bal - amount }
+        }
+        return a
+      })
+      const tx = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        type, amount, accountId, category, note, date,
       }
       return { ...prev, accounts, transactions: [...(prev.transactions || []), tx] }
     })
@@ -154,15 +189,19 @@ export default function App() {
       {/* Main Content */}
       <main className="flex-1 min-w-0 overflow-y-auto pb-20 md:pb-0">
         <div className="max-w-5xl mx-auto px-4 py-5 md:px-8 md:py-8 safe-area-pt">
-          {tab === 'dashboard' && <Dashboard accounts={data.accounts} cards={data.cards} transactions={data.transactions} onPayCard={handlePayCard} onTransfer={(accId) => setTransferFromId(accId)} />}
-          {tab === 'accounts' && <AccountManager accounts={data.accounts} onChange={updateAccounts} onTransfer={(accId) => setTransferFromId(accId)} />}
+          {tab === 'dashboard' && <Dashboard accounts={data.accounts} cards={data.cards} transactions={data.transactions} investments={data.investments} onPayCard={handlePayCard} onTransfer={(accId) => setTransferFromId(accId)} />}
+          {tab === 'accounts' && <AccountManager accounts={data.accounts} onChange={updateAccounts} onTransfer={(accId) => setTransferFromId(accId)} onTransaction={(acc) => setTransactionAccount(acc)} />}
+          {tab === 'investments' && <InvestmentManager investments={data.investments || []} onChange={updateInvestments} />}
           {tab === 'cards' && <CardManager cards={data.cards} accounts={data.accounts} onChange={updateCards} onPayCard={handlePayCard} />}
           {tab === 'settings' && <SettingsPage data={data} setData={setData} darkMode={darkMode} setDarkMode={setDarkMode} />}
         </div>
       </main>
 
       {transferFromId !== null && (
-        <TransferModal accounts={data.accounts} defaultFromId={transferFromId} onTransfer={handleTransfer} onClose={() => setTransferFromId(null)} />
+        <TransferModal accounts={data.accounts} investments={data.investments || []} defaultFromId={transferFromId} onTransfer={handleTransfer} onClose={() => setTransferFromId(null)} />
+      )}
+      {transactionAccount && (
+        <TransactionModal account={transactionAccount} onSubmit={handleTransaction} onClose={() => setTransactionAccount(null)} />
       )}
     </div>
   )
@@ -192,7 +231,7 @@ function SettingsPage({ data, setData, darkMode, setDarkMode }) {
 
   const clearAllData = () => {
     if (confirm('確定要清除所有資料嗎？此操作無法復原。')) {
-      setData({ accounts: [], cards: [], transactions: [] })
+      setData({ accounts: [], cards: [], transactions: [], investments: [] })
     }
   }
 
@@ -238,10 +277,11 @@ function SettingsPage({ data, setData, darkMode, setDarkMode }) {
         </div>
         <div className="bg-white rounded-2xl border border-gray-100 p-4 md:p-5">
           <div className="text-sm font-medium text-gray-800 mb-3">資料統計</div>
-          <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="grid grid-cols-4 gap-2 text-center">
             <div className="bg-gray-50 rounded-xl py-2.5"><div className="text-lg font-bold text-gray-800">{data.accounts.length}</div><div className="text-xs text-gray-400">帳戶</div></div>
+            <div className="bg-gray-50 rounded-xl py-2.5"><div className="text-lg font-bold text-gray-800">{(data.investments || []).length}</div><div className="text-xs text-gray-400">投資</div></div>
             <div className="bg-gray-50 rounded-xl py-2.5"><div className="text-lg font-bold text-gray-800">{data.cards.length}</div><div className="text-xs text-gray-400">信用卡</div></div>
-            <div className="bg-gray-50 rounded-xl py-2.5"><div className="text-lg font-bold text-gray-800">{(data.transactions || []).length}</div><div className="text-xs text-gray-400">交易紀錄</div></div>
+            <div className="bg-gray-50 rounded-xl py-2.5"><div className="text-lg font-bold text-gray-800">{(data.transactions || []).length}</div><div className="text-xs text-gray-400">交易</div></div>
           </div>
         </div>
         <div className="bg-white rounded-2xl border border-gray-100 p-4 md:p-5">

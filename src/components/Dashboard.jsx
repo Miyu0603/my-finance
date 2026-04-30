@@ -8,10 +8,11 @@ const IconTransfer = ({ className }) => <svg className={className || "w-5 h-5"} 
 const IconCheck = ({ className }) => <svg className={className || "w-4 h-4"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
 const IconRocket = ({ className }) => <svg className={className || "w-12 h-12"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.63 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.841M3.27 6.96L7.05 10.74m0 0a5.971 5.971 0 00-.94 3.139c.007.484.068.966.18 1.435" /></svg>
 const IconArrowRight = ({ className }) => <svg className={className || "w-4 h-4"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+const IconTrendUp = ({ className }) => <svg className={className || "w-5 h-5"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
 
 const ICON_BG = ['bg-blue-500', 'bg-emerald-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500']
 
-export default function Dashboard({ accounts, cards, transactions, onPayCard, onTransfer }) {
+export default function Dashboard({ accounts, cards, transactions, investments = [], onPayCard, onTransfer }) {
   const [expandedAcc, setExpandedAcc] = useState(null)
 
   const accountMap = {}
@@ -40,6 +41,7 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
     .sort((a, b) => a.daysUntil - b.daysUntil)
 
   const totalBalance = accounts.reduce((s, a) => s + (Number(a.balance) || 0), 0)
+  const totalInvestment = investments.reduce((s, a) => s + (Number(a.balance) || 0), 0)
   const totalMonthly = cards.reduce((s, c) => s + (Number(c.monthlyAmount) || 0), 0)
   const paidCount = cards.filter(c => c.monthlyAmount && isPaidThisMonth(c)).length
   const dueCount = cards.filter(c => c.monthlyAmount).length
@@ -53,18 +55,28 @@ export default function Dashboard({ accounts, cards, transactions, onPayCard, on
       </div>
 
       {/* Stats - gradient cards with big icons */}
-      <div className="grid grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-6 md:mb-8">
         <div className="bg-gradient-to-br from-indigo-50 to-blue-100 rounded-2xl p-4 md:p-5 border border-indigo-100/50 relative overflow-hidden">
           <div className="absolute -bottom-3 -right-3 opacity-[0.08]">
             <IconDollar className="w-20 h-20 md:w-24 md:h-24" />
           </div>
           <div className="relative">
             <div className="text-lg md:text-xl font-bold text-gray-800">${totalBalance.toLocaleString()}</div>
-            <div className="text-[11px] md:text-xs text-gray-500 mt-0.5">帳戶總餘額</div>
+            <div className="text-[11px] md:text-xs text-gray-500 mt-0.5">現金餘額</div>
             <div className="text-[10px] text-gray-400 mt-1">{accounts.length} 個帳戶</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-rose-50 to-pink-100 rounded-2xl p-4 md:p-5 border border-rose-100/50 relative overflow-hidden">
+        <div className="bg-gradient-to-br from-violet-50 to-purple-100 rounded-2xl p-4 md:p-5 border border-purple-100/50 relative overflow-hidden">
+          <div className="absolute -bottom-3 -right-3 opacity-[0.08]">
+            <IconTrendUp className="w-20 h-20 md:w-24 md:h-24" />
+          </div>
+          <div className="relative">
+            <div className="text-lg md:text-xl font-bold text-gray-800">${totalInvestment.toLocaleString()}</div>
+            <div className="text-[11px] md:text-xs text-gray-500 mt-0.5">投資資產</div>
+            <div className="text-[10px] text-gray-400 mt-1">{investments.length} 個帳戶</div>
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-rose-50 to-pink-100 rounded-2xl p-4 md:p-5 border border-rose-100/50 relative overflow-hidden col-span-2 md:col-span-1">
           <div className="absolute -bottom-3 -right-3 opacity-[0.08]">
             <IconCalendar className="w-20 h-20 md:w-24 md:h-24" />
           </div>

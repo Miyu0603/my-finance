@@ -4,6 +4,7 @@ const IconBank = ({ className }) => <svg className={className || "w-5 h-5"} fill
 const IconEdit = ({ className }) => <svg className={className || "w-4 h-4"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
 const IconTrash = ({ className }) => <svg className={className || "w-4 h-4"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
 const IconTransfer = ({ className }) => <svg className={className || "w-4 h-4"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>
+const IconReceipt = ({ className }) => <svg className={className || "w-4 h-4"} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" /></svg>
 
 const ACCOUNT_BG = [
   'bg-gradient-to-br from-blue-50 to-indigo-100',
@@ -20,7 +21,7 @@ function genId() { return Date.now().toString(36) + Math.random().toString(36).s
 
 const emptyAccount = { bank: '', lastFour: '', purpose: '', note: '', balance: '' }
 
-export default function AccountManager({ accounts, onChange, onTransfer }) {
+export default function AccountManager({ accounts, onChange, onTransfer, onTransaction }) {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(emptyAccount)
 
@@ -92,6 +93,7 @@ export default function AccountManager({ accounts, onChange, onTransfer }) {
                     <IconBank className="w-4 h-4" />
                   </div>
                   <div className="flex gap-1 md:opacity-0 md:group-hover:opacity-100 transition">
+                    <button onClick={() => onTransaction(acc)} className="w-7 h-7 rounded-lg bg-white/80 hover:bg-white flex items-center justify-center text-gray-400 hover:text-emerald-500 cursor-pointer transition" title="記帳"><IconReceipt /></button>
                     {accounts.length >= 2 && (
                       <button onClick={() => onTransfer(acc.id)} className="w-7 h-7 rounded-lg bg-white/80 hover:bg-white flex items-center justify-center text-gray-400 hover:text-indigo-500 cursor-pointer transition" title="轉帳"><IconTransfer /></button>
                     )}
