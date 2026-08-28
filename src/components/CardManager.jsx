@@ -4,7 +4,7 @@ import { genId } from '../lib/id'
 import { currencyOf, formatMoney, sumByCurrency } from '../lib/currency'
 import { daysUntilDue, isPaidThisMonth, monthlyAmountOf } from '../lib/cards'
 import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButton } from './ui'
-import { IconCard, IconEdit, IconTrash, IconCheck } from './icons'
+import { IconCard, IconEdit, IconTrash, IconCheck, IconPlus } from './icons'
 
 const SKINS = ['skin-purple', 'skin-rose', 'skin-emerald', 'skin-amber', 'skin-blue', 'skin-fuchsia']
 const ICON_BG = ['bg-violet-500', 'bg-rose-500', 'bg-emerald-500', 'bg-amber-500', 'bg-blue-500', 'bg-fuchsia-500']
@@ -66,8 +66,8 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
           )}
         </div>
         <button onClick={startAdd}
-          className="bg-solid text-on-solid px-3 md:px-5 py-2.5 md:py-3 rounded-pill text-sm font-medium hover:bg-solid-hover transition shadow-card cursor-pointer shrink-0">
-          <span className="md:hidden" aria-hidden="true">+</span>
+          className="bg-solid text-on-solid w-11 h-11 md:w-auto md:h-auto md:px-5 md:py-3 rounded-pill text-sm font-medium hover:bg-solid-hover transition shadow-card cursor-pointer shrink-0 inline-flex items-center justify-center">
+          <IconPlus className="w-5 h-5 md:hidden" />
           <span className="hidden md:inline">+ 新增</span>
           <span className="sr-only md:hidden">新增信用卡</span>
         </button>

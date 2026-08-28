@@ -59,8 +59,8 @@ export default function InvestmentManager({ investments, accounts, onChange, onI
           )}
         </div>
         <button onClick={startAdd}
-          className="flex items-center gap-1.5 bg-solid text-on-solid px-3 md:px-4 py-2.5 rounded-pill text-sm font-medium hover:bg-solid-hover transition cursor-pointer shadow-card shrink-0">
-          <IconPlus className="w-4 h-4" />
+          className="inline-flex items-center justify-center gap-1.5 bg-solid text-on-solid w-11 h-11 md:w-auto md:h-auto md:px-5 md:py-3 rounded-pill text-sm font-medium hover:bg-solid-hover transition cursor-pointer shadow-card shrink-0">
+          <IconPlus className="w-5 h-5 md:w-4 md:h-4" />
           <span className="hidden md:inline">新增</span>
           <span className="sr-only md:hidden">新增持股</span>
         </button>
