@@ -16,6 +16,16 @@ export function Modal({ title, subtitle, icon, tint = 'tint-indigo', onClose, ch
   const panelRef = useRef(null)
   const labelledBy = useId()
 
+  /*
+   * Callers pass an inline arrow for onClose, so it is a new function on every
+   * render. The focus effect below must not depend on it: it would tear down
+   * and re-run on each keystroke, and its cleanup/setup pair would drag focus
+   * back to the first field. Typing "ABC" into the third input used to put "A"
+   * there and "BC" in the first one.
+   */
+  const onCloseRef = useRef(onClose)
+  useEffect(() => { onCloseRef.current = onClose }, [onClose])
+
   useEffect(() => {
     const previouslyFocused = document.activeElement
     const panel = panelRef.current
@@ -31,7 +41,7 @@ export function Modal({ title, subtitle, icon, tint = 'tint-indigo', onClose, ch
     const onKeyDown = (e) => {
       if (!isTopMost()) return
       if (e.key === 'Escape') {
-        onClose()
+        onCloseRef.current()
         return
       }
       if (e.key !== 'Tab' || !panel) return
@@ -57,7 +67,7 @@ export function Modal({ title, subtitle, icon, tint = 'tint-indigo', onClose, ch
       document.body.style.overflow = previousOverflow
       previouslyFocused?.focus?.()
     }
-  }, [onClose])
+  }, [])
 
   return (
     <div className="fixed inset-0 bg-scrim backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto"
