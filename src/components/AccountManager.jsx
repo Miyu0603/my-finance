@@ -3,7 +3,7 @@ import { genId } from '../lib/id'
 import { num, round2 } from '../lib/money'
 import { CURRENCIES, currencyOf, formatMoney, sumByCurrency } from '../lib/currency'
 import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButton } from './ui'
-import { IconBank, IconEdit, IconTrash, IconTransfer, IconReceipt, IconExchange } from './icons'
+import { IconBank, IconEdit, IconTrash, IconTransfer, IconReceipt, IconExchange, IconPlus } from './icons'
 
 const ICON_BG = ['bg-blue-500', 'bg-emerald-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500']
 
@@ -62,8 +62,8 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
           )}
         </div>
         <button onClick={startAdd}
-          className="bg-solid text-on-solid px-3 md:px-5 py-2.5 md:py-3 rounded-pill text-sm font-medium hover:bg-solid-hover transition shadow-card cursor-pointer shrink-0">
-          <span className="md:hidden" aria-hidden="true">+</span>
+          className="bg-solid text-on-solid w-11 h-11 md:w-auto md:h-auto md:px-5 md:py-3 rounded-pill text-sm font-medium hover:bg-solid-hover transition shadow-card cursor-pointer shrink-0 inline-flex items-center justify-center">
+          <IconPlus className="w-5 h-5 md:hidden" />
           <span className="hidden md:inline">+ 新增</span>
           <span className="sr-only md:hidden">新增帳戶</span>
         </button>

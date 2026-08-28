@@ -46,36 +46,38 @@ function EmptyCard({ icon, text }) {
  * it. A finance app is allowed one big number, but not one that silently adds
  * TWD to USD.
  */
-function BalanceHero({ totals, accountCount, lastEntry, onRecord, onTransfer, onHistory }) {
+function BalanceHero({ totals, accountCount, cardCount, lastEntry, onRecord, onTransfer, onHistory }) {
   const [primary, ...rest] = totals
 
   return (
-    <section className="hero rounded-card shadow-card p-5 md:p-6 mb-4 relative overflow-hidden">
-      <div className="absolute -right-8 -top-10 w-40 h-40 rounded-full opacity-30"
-        style={{ background: 'radial-gradient(circle, rgb(255 255 255 / 0.85), transparent 70%)' }} aria-hidden="true" />
-      <div className="relative">
-        <p className="text-xs hero-soft">總資產</p>
-        <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span className="text-3xl md:text-4xl font-bold tracking-tight">
-            {primary ? formatMoney(primary.total, primary.currency) : '—'}
-          </span>
-          {rest.map(({ currency, total }) => (
-            <span key={currency} className="text-sm font-semibold hero-soft">
-              {formatMoney(total, currency)}
+    <section className="hero rounded-card shadow-card mb-4 overflow-hidden">
+      <div className="relative p-5 md:p-6">
+        <div className="absolute -right-8 -top-10 w-40 h-40 rounded-full opacity-30"
+          style={{ background: 'radial-gradient(circle, rgb(255 255 255 / 0.85), transparent 70%)' }} aria-hidden="true" />
+        <div className="relative">
+          <p className="text-xs hero-soft">總資產</p>
+          <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="text-3xl md:text-4xl font-bold tracking-tight">
+              {primary ? formatMoney(primary.total, primary.currency) : '—'}
             </span>
-          ))}
-        </div>
+            {rest.map(({ currency, total }) => (
+              <span key={currency} className="text-sm font-semibold hero-soft">
+                {formatMoney(total, currency)}
+              </span>
+            ))}
+          </div>
 
-        <div className="flex gap-2 mt-5">
-          <HeroAction icon={<IconReceipt className="w-4 h-4" />} label="記帳" onClick={onRecord} />
-          <HeroAction icon={<IconTransfer className="w-4 h-4" />} label="轉帳" onClick={onTransfer} />
-          <HeroAction icon={<IconHistory className="w-4 h-4" />} label="紀錄" onClick={onHistory} />
+          <div className="flex gap-2 mt-5">
+            <HeroAction icon={<IconReceipt className="w-4 h-4" />} label="記帳" onClick={onRecord} />
+            <HeroAction icon={<IconTransfer className="w-4 h-4" />} label="轉帳" onClick={onTransfer} />
+            <HeroAction icon={<IconHistory className="w-4 h-4" />} label="紀錄" onClick={onHistory} />
+          </div>
         </div>
-
-        <p className="text-[10px] hero-soft mt-4 pt-3 border-t border-white/25">
-          {accountCount} 個帳戶{lastEntry && ` · 最後一筆 ${lastEntry}`}
-        </p>
       </div>
+
+      <p className="hero-footer px-5 md:px-6 py-3 text-[11px] tracking-wide">
+        {accountCount} 個帳戶 · {cardCount} 張卡{lastEntry && ` · 最後一筆 ${lastEntry}`}
+      </p>
     </section>
   )
 }
@@ -146,8 +148,8 @@ export default function Dashboard({ state, onPayCard, onOpenHistory, onRecord, o
         <h1 className="text-xl md:text-2xl font-bold text-ink">我的財務總覽</h1>
       </div>
 
-      <BalanceHero totals={cashTotals} accountCount={accounts.length} lastEntry={lastEntry}
-        onRecord={onRecord} onTransfer={onTransfer} onHistory={onOpenHistory} />
+      <BalanceHero totals={cashTotals} accountCount={accounts.length} cardCount={cards.length}
+        lastEntry={lastEntry} onRecord={onRecord} onTransfer={onTransfer} onHistory={onOpenHistory} />
 
       <div className="grid grid-cols-2 gap-3 mb-6">
         <StatTile skin="skin-purple" icon={<IconTrendUp className="w-20 h-20" />}
