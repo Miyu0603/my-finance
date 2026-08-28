@@ -59,17 +59,17 @@ export default function InvestmentManager({ investments, accounts, onChange, onI
           )}
         </div>
         <button onClick={startAdd}
-          className="flex items-center gap-1.5 bg-solid text-on-solid px-3 md:px-4 py-2 rounded-xl text-sm font-medium hover:bg-solid-hover transition cursor-pointer shadow-lg shadow-black/10 shrink-0">
+          className="flex items-center gap-1.5 bg-solid text-on-solid px-3 md:px-4 py-2.5 rounded-pill text-sm font-medium hover:bg-solid-hover transition cursor-pointer shadow-card shrink-0">
           <IconPlus className="w-4 h-4" />
           <span className="hidden md:inline">新增</span>
           <span className="sr-only md:hidden">新增持股</span>
         </button>
       </div>
 
-      <div role="tablist" aria-label="市場" className="flex bg-surface-3 rounded-xl p-1 mb-5">
+      <div role="tablist" aria-label="市場" className="flex bg-surface-3 rounded-pill p-1 mb-5">
         {['tw', 'us'].map(value => (
           <button key={value} role="tab" aria-selected={market === value} onClick={() => setMarket(value)}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition cursor-pointer ${
+            className={`flex-1 py-2 rounded-pill text-sm font-medium transition cursor-pointer ${
               market === value
                 ? `bg-surface shadow-sm ${value === 'tw' ? 'text-violet-500' : 'text-blue-500'}`
                 : 'text-ink-4'}`}>
@@ -80,7 +80,7 @@ export default function InvestmentManager({ investments, accounts, onChange, onI
 
       {holdings.length === 0 ? (
         <div className="text-center py-16">
-          <div className="w-16 h-16 tint-violet rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 tint-violet rounded-card flex items-center justify-center mx-auto mb-4">
             <IconTrendUp className="w-8 h-8" />
           </div>
           <p className="text-muted text-sm">尚未新增{marketLabel(market)}持股</p>
@@ -89,13 +89,13 @@ export default function InvestmentManager({ investments, accounts, onChange, onI
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {holdings.map((inv, index) => (
-            <div key={inv.id} className={`${SKINS[market][index % 6]} skin rounded-2xl p-5 relative group overflow-hidden`}>
+            <div key={inv.id} className={`${SKINS[market][index % 6]} skin rounded-card p-5 relative group overflow-hidden`}>
               <div className="absolute -bottom-4 -right-4 opacity-[0.06]" aria-hidden="true">
                 <IconTrendUp className="w-24 h-24" />
               </div>
               <div className="relative">
                 <div className="flex items-center gap-2.5 mb-3">
-                  <div className={`${ICON_BG[market][index % 6]} w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-sm text-xs font-bold`}>
+                  <div className={`${ICON_BG[market][index % 6]} w-9 h-9 rounded-tile flex items-center justify-center text-white shadow-sm text-xs font-bold`}>
                     {market === 'tw' ? '台' : 'US'}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -169,7 +169,7 @@ export default function InvestmentManager({ investments, accounts, onChange, onI
 function CardAction({ onClick, className, children }) {
   return (
     <button onClick={onClick}
-      className={`flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg bg-surface/60 hover:bg-surface/90 transition cursor-pointer ${className}`}>
+      className={`flex items-center gap-1 text-xs px-3 py-1.5 rounded-pill veil transition cursor-pointer ${className}`}>
       {children}
     </button>
   )
@@ -209,7 +209,7 @@ function InvestTxModal({ stock, type, accounts, onSubmit, onClose }) {
       footer={
         <>
           <button onClick={submit} disabled={eligible.length === 0}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition cursor-pointer text-white disabled:opacity-40 disabled:cursor-not-allowed ${isBuy ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-red-500 hover:bg-red-600'}`}>
+            className={`flex-1 py-3 rounded-pill text-sm font-medium transition cursor-pointer text-white disabled:opacity-40 disabled:cursor-not-allowed ${isBuy ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-red-500 hover:bg-red-600'}`}>
             確認{isBuy ? '買進' : '賣出'}
           </button>
           <GhostButton onClick={onClose}>取消</GhostButton>

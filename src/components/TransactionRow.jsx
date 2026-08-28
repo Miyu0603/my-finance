@@ -10,7 +10,7 @@ export default function TransactionRow({ tx, state, onRevert, showDetail = false
   const view = describeTransaction(tx, state)
   return (
     <div className="flex items-center px-3 md:px-4 py-2.5 text-xs">
-      <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${view.tint}`}>{view.icon}</div>
+      <div className={`w-7 h-7 rounded-pill flex items-center justify-center shrink-0 ${view.tint}`}>{view.icon}</div>
       <div className="ml-2 flex-1 min-w-0">
         <div className="text-ink-3 truncate">{view.title}</div>
         {showDetail && view.detail && <div className="text-muted text-[11px] truncate">{view.detail}</div>}
@@ -19,7 +19,7 @@ export default function TransactionRow({ tx, state, onRevert, showDetail = false
       <span className={`font-medium shrink-0 ${view.amountClass}`}>{view.amount}</span>
       {onRevert && (
         <button onClick={() => onRevert(tx)} aria-label={`復原：${view.title}`} title="復原這筆紀錄"
-          className="ml-2 w-7 h-7 rounded-lg bg-surface-3 hover:bg-surface-4 flex items-center justify-center text-muted hover:text-red-500 cursor-pointer transition shrink-0">
+          className="ml-2 w-7 h-7 rounded-pill bg-surface-3 hover:bg-surface-4 flex items-center justify-center text-muted hover:text-red-500 cursor-pointer transition shrink-0">
           <IconUndo className="w-3.5 h-3.5" />
         </button>
       )}

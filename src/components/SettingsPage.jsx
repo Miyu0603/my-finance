@@ -7,9 +7,9 @@ import { IconFaceId, IconMoon, IconShield, IconTrash, IconDownload, IconUpload }
 
 function Row({ tint, icon, title, description, children }) {
   return (
-    <div className="bg-surface rounded-2xl border border-line p-4 md:p-5">
+    <div className="bg-surface rounded-card border border-line p-4 md:p-5">
       <div className="flex items-center gap-3">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${tint}`}>{icon}</div>
+        <div className={`w-10 h-10 rounded-tile flex items-center justify-center shrink-0 ${tint}`}>{icon}</div>
         <div className="flex-1 min-w-0">
           <div className="font-medium text-ink-2 text-sm">{title}</div>
           <div className="text-xs text-muted">{description}</div>
@@ -107,9 +107,9 @@ export default function SettingsPage({ state, onReplaceState, darkMode, setDarkM
           <Toggle on={darkMode} onClick={() => setDarkMode(d => !d)} label="暗色模式" accent="bg-violet-500" />
         </Row>
 
-        <div className="bg-surface rounded-2xl border border-line p-4 md:p-5">
+        <div className="bg-surface rounded-card border border-line p-4 md:p-5">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 tint-emerald">
+            <div className="w-10 h-10 rounded-tile flex items-center justify-center shrink-0 tint-emerald">
               <IconDownload className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
@@ -119,11 +119,11 @@ export default function SettingsPage({ state, onReplaceState, darkMode, setDarkM
           </div>
           <div className="flex gap-2">
             <button onClick={handleExport}
-              className="flex-1 flex items-center justify-center gap-1.5 bg-solid text-on-solid py-2.5 rounded-xl text-sm font-medium hover:bg-solid-hover transition cursor-pointer">
+              className="flex-1 flex items-center justify-center gap-1.5 bg-solid text-on-solid py-2.5 rounded-tile text-sm font-medium hover:bg-solid-hover transition cursor-pointer">
               <IconDownload className="w-4 h-4" /> 匯出備份
             </button>
             <button onClick={() => fileInputRef.current?.click()}
-              className="flex-1 flex items-center justify-center gap-1.5 bg-surface-2 text-ink-3 py-2.5 rounded-xl text-sm font-medium hover:bg-surface-3 transition cursor-pointer">
+              className="flex-1 flex items-center justify-center gap-1.5 bg-surface-2 text-ink-3 py-2.5 rounded-tile text-sm font-medium hover:bg-surface-3 transition cursor-pointer">
               <IconUpload className="w-4 h-4" /> 匯入備份
             </button>
           </div>
@@ -135,11 +135,11 @@ export default function SettingsPage({ state, onReplaceState, darkMode, setDarkM
         <Row tint="tint-blue" icon={<IconShield className="w-5 h-5" />}
           title="資料儲存" description="全部存在本機瀏覽器，不會上傳到任何伺服器" />
 
-        <div className="bg-surface rounded-2xl border border-line p-4 md:p-5">
+        <div className="bg-surface rounded-card border border-line p-4 md:p-5">
           <div className="text-sm font-medium text-ink-2 mb-3">資料統計</div>
           <div className="grid grid-cols-4 gap-2 text-center">
             {[['帳戶', counts.accounts], ['投資', counts.investments], ['信用卡', counts.cards], ['紀錄', counts.transactions]].map(([label, value]) => (
-              <div key={label} className="bg-surface-2 rounded-xl py-2.5">
+              <div key={label} className="bg-surface-2 rounded-tile py-2.5">
                 <div className="text-lg font-bold text-ink-2">{value}</div>
                 <div className="text-xs text-muted">{label}</div>
               </div>
@@ -150,7 +150,7 @@ export default function SettingsPage({ state, onReplaceState, darkMode, setDarkM
         <Row tint="tint-red" icon={<IconTrash className="w-5 h-5" />}
           title="清除所有資料" description="刪除所有帳戶、信用卡、投資及紀錄">
           <button onClick={() => setConfirming('clear')}
-            className="text-xs text-red-500 hover:text-red-600 font-medium px-3 py-1.5 rounded-lg hover:bg-red-500/10 transition cursor-pointer shrink-0">
+            className="text-xs text-red-500 hover:text-red-600 font-medium px-3.5 py-1.5 rounded-pill hover:bg-red-500/10 transition cursor-pointer shrink-0">
             清除
           </button>
         </Row>

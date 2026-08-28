@@ -66,7 +66,7 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
           )}
         </div>
         <button onClick={startAdd}
-          className="bg-solid text-on-solid px-3 md:px-5 py-2 md:py-2.5 rounded-xl text-sm font-medium hover:bg-solid-hover transition shadow-lg shadow-black/10 cursor-pointer shrink-0">
+          className="bg-solid text-on-solid px-3 md:px-5 py-2.5 md:py-3 rounded-pill text-sm font-medium hover:bg-solid-hover transition shadow-card cursor-pointer shrink-0">
           <span className="md:hidden" aria-hidden="true">+</span>
           <span className="hidden md:inline">+ 新增</span>
           <span className="sr-only md:hidden">新增信用卡</span>
@@ -111,7 +111,7 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
       )}
 
       {cards.length === 0 ? (
-        <div className="text-center py-16 text-faint">
+        <div className="text-center py-16 text-muted">
           <IconCard className="w-12 h-12 mx-auto mb-4" />
           <p className="text-sm">還沒有信用卡，點擊「新增」開始吧</p>
         </div>
@@ -123,22 +123,22 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
             const amount = monthlyAmountOf(card)
             const account = accountOf(card)
             return (
-              <div key={card.id} className={`${SKINS[index % SKINS.length]} skin rounded-2xl p-4 hover:shadow-md transition group relative overflow-hidden`}>
+              <div key={card.id} className={`${SKINS[index % SKINS.length]} skin rounded-card p-4 hover:shadow-md transition group relative overflow-hidden`}>
                 <div className="absolute -right-4 -bottom-4 opacity-[0.06]" aria-hidden="true">
                   <IconCard className="w-20 h-20" />
                 </div>
                 <div className="relative">
                   <div className="flex items-start justify-between mb-2">
-                    <div className={`${ICON_BG[index % ICON_BG.length]} w-8 h-8 rounded-lg flex items-center justify-center text-white`}>
+                    <div className={`${ICON_BG[index % ICON_BG.length]} w-8 h-8 rounded-pill flex items-center justify-center text-white`}>
                       <IconCard className="w-4 h-4" />
                     </div>
                     <div className="flex gap-1 md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100 transition">
                       <button onClick={() => startEdit(card)} aria-label={`編輯 ${card.name}`}
-                        className="w-7 h-7 rounded-lg bg-surface/80 hover:bg-surface flex items-center justify-center text-muted hover:text-ink-3 cursor-pointer transition">
+                        className="w-7 h-7 rounded-pill veil flex items-center justify-center text-muted hover:text-ink-3 cursor-pointer transition">
                         <IconEdit className="w-4 h-4" />
                       </button>
                       <button onClick={() => setDeleting(card)} aria-label={`刪除 ${card.name}`}
-                        className="w-7 h-7 rounded-lg bg-surface/80 hover:bg-surface flex items-center justify-center text-muted hover:text-red-500 cursor-pointer transition">
+                        className="w-7 h-7 rounded-pill veil flex items-center justify-center text-muted hover:text-red-500 cursor-pointer transition">
                         <IconTrash className="w-4 h-4" />
                       </button>
                     </div>
@@ -157,7 +157,7 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
                   <div className="space-y-1 mt-1.5 text-[11px]">
                     <div className="flex items-center gap-1.5">
                       <span className="text-muted">扣款</span>
-                      <span className="font-medium text-ink-3 bg-surface/60 px-1.5 py-0.5 rounded-full truncate">
+                      <span className="font-medium text-ink-3 veil px-1.5 py-0.5 rounded-full truncate">
                         {account ? `${account.bank}${account.lastFour ? ` ···${account.lastFour}` : ''}` : '未設定'}
                       </span>
                     </div>
@@ -174,12 +174,12 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
                   {amount > 0 && card.accountId && (
                     <div className="mt-2">
                       {paid ? (
-                        <p className="flex items-center gap-1 text-[11px] tint-emerald px-2.5 py-1 rounded-lg">
+                        <p className="flex items-center gap-1 text-[11px] tint-emerald px-2.5 py-1 rounded-pill">
                           <IconCheck className="w-3 h-3" /><span className="font-medium">本月已繳</span>
                         </p>
                       ) : (
                         <button onClick={() => onPayCard(card.id)}
-                          className={`w-full text-[11px] font-medium px-2.5 py-1.5 rounded-lg transition cursor-pointer ${days === 0 ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-surface/70 text-ink-3 hover:bg-surface'}`}>
+                          className={`w-full text-[11px] font-medium px-3 py-1.5 rounded-pill transition cursor-pointer ${days === 0 ? 'bg-red-500 text-white hover:bg-red-600' : 'veil text-ink-3'}`}>
                           {days === 0 ? '今天到期 — 立即繳款' : '手動繳款'}
                         </button>
                       )}
