@@ -62,7 +62,7 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
           )}
         </div>
         <button onClick={startAdd}
-          className="bg-solid text-on-solid px-3 md:px-5 py-2 md:py-2.5 rounded-xl text-sm font-medium hover:bg-solid-hover transition shadow-lg shadow-black/10 cursor-pointer shrink-0">
+          className="bg-solid text-on-solid px-3 md:px-5 py-2.5 md:py-3 rounded-pill text-sm font-medium hover:bg-solid-hover transition shadow-card cursor-pointer shrink-0">
           <span className="md:hidden" aria-hidden="true">+</span>
           <span className="hidden md:inline">+ 新增</span>
           <span className="sr-only md:hidden">新增帳戶</span>
@@ -93,16 +93,16 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
       )}
 
       {accounts.length === 0 ? (
-        <div className="text-center py-16 text-faint">
+        <div className="text-center py-16 text-muted">
           <IconBank className="w-12 h-12 mx-auto mb-4" />
           <p className="text-sm">還沒有帳戶，點擊上方「新增」開始吧</p>
         </div>
       ) : (
         <div className="space-y-4">
           {groups.map((bankName, groupIndex) => (
-            <section key={bankName} className="bg-surface rounded-2xl border border-line overflow-hidden">
+            <section key={bankName} className="bg-surface rounded-card border border-line overflow-hidden">
               <h2 className="flex items-center gap-2.5 px-4 py-3 border-b border-line">
-                <span className={`${ICON_BG[groupIndex % ICON_BG.length]} w-8 h-8 rounded-lg flex items-center justify-center text-white`}>
+                <span className={`${ICON_BG[groupIndex % ICON_BG.length]} w-8 h-8 rounded-pill flex items-center justify-center text-white`}>
                   <IconBank className="w-4 h-4" />
                 </span>
                 <span className="font-semibold text-ink-2 text-sm">{bankName}</span>
@@ -161,7 +161,7 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
 function IconAction({ label, onClick, hover, children }) {
   return (
     <button onClick={onClick} aria-label={label} title={label}
-      className={`w-7 h-7 rounded-lg bg-surface-3 hover:bg-surface-4 flex items-center justify-center text-muted cursor-pointer transition ${hover}`}>
+      className={`w-7 h-7 rounded-pill bg-surface-3 hover:bg-surface-4 flex items-center justify-center text-muted cursor-pointer transition ${hover}`}>
       {children}
     </button>
   )

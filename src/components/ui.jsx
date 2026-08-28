@@ -63,16 +63,16 @@ export function Modal({ title, subtitle, icon, tint = 'tint-indigo', onClose, ch
     <div className="fixed inset-0 bg-scrim backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto"
       onClick={onClose}>
       <div ref={panelRef} role="dialog" aria-modal="true" aria-labelledby={labelledBy}
-        className="bg-surface rounded-2xl shadow-2xl p-5 md:p-6 w-full max-w-md border border-line my-auto"
+        className="bg-surface rounded-card shadow-2xl p-5 md:p-6 w-full max-w-md border border-line my-auto"
         onClick={e => e.stopPropagation()}>
         <div className="flex items-start gap-3 mb-5">
-          {icon && <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${tint}`}>{icon}</div>}
+          {icon && <div className={`w-10 h-10 rounded-tile flex items-center justify-center shrink-0 ${tint}`}>{icon}</div>}
           <div className="flex-1 min-w-0">
             <h2 id={labelledBy} className="text-lg font-bold text-ink">{title}</h2>
             {subtitle && <p className="text-xs text-muted mt-0.5">{subtitle}</p>}
           </div>
           <button onClick={onClose} aria-label="關閉" data-modal-close
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted hover:text-ink-3 hover:bg-surface-3 transition cursor-pointer shrink-0">
+            className="w-8 h-8 rounded-pill flex items-center justify-center text-muted hover:text-ink-3 hover:bg-surface-3 transition cursor-pointer shrink-0">
             <IconClose className="w-4 h-4" />
           </button>
         </div>
@@ -86,7 +86,7 @@ export function Modal({ title, subtitle, icon, tint = 'tint-indigo', onClose, ch
 export function PrimaryButton({ children, className = '', ...rest }) {
   return (
     <button {...rest}
-      className={`flex-1 bg-solid text-on-solid py-2.5 rounded-xl text-sm font-medium hover:bg-solid-hover transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${className}`}>
+      className={`flex-1 bg-solid text-on-solid py-3 rounded-pill text-sm font-medium hover:bg-solid-hover transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${className}`}>
       {children}
     </button>
   )
@@ -95,7 +95,7 @@ export function PrimaryButton({ children, className = '', ...rest }) {
 export function GhostButton({ children, className = '', ...rest }) {
   return (
     <button {...rest}
-      className={`flex-1 bg-surface-2 text-ink-4 py-2.5 rounded-xl text-sm font-medium hover:bg-surface-3 transition cursor-pointer ${className}`}>
+      className={`flex-1 bg-surface-2 text-ink-4 py-3 rounded-pill text-sm font-medium hover:bg-surface-3 transition cursor-pointer ${className}`}>
       {children}
     </button>
   )
@@ -138,7 +138,7 @@ export function SelectField({ label, hint, value, onChange, children, ...select 
 
 export function ErrorNote({ children }) {
   if (!children) return null
-  return <p role="alert" className="text-sm text-red-500 tint-red px-3 py-2 rounded-lg">{children}</p>
+  return <p role="alert" className="text-sm text-red-500 tint-red px-3.5 py-2.5 rounded-tile">{children}</p>
 }
 
 /** Destructive actions all funnel through here — no more one-click deletes. */
@@ -148,7 +148,7 @@ export function ConfirmDialog({ title, message, detail, confirmLabel = '刪除',
       footer={
         <>
           <button onClick={() => { onConfirm(); onClose() }}
-            className="flex-1 bg-red-500 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-red-600 transition cursor-pointer">
+            className="flex-1 bg-red-500 text-white py-3 rounded-pill text-sm font-medium hover:bg-red-600 transition cursor-pointer">
             {confirmLabel}
           </button>
           <GhostButton onClick={onClose}>取消</GhostButton>

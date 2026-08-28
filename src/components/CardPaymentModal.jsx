@@ -35,7 +35,7 @@ export default function CardPaymentModal({ card, accounts, onSubmit, onClose }) 
       footer={
         <>
           <button onClick={submit} disabled={!account}
-            className="flex-1 bg-emerald-500 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-600 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
+            className="flex-1 bg-emerald-500 text-white py-3 rounded-pill text-sm font-medium hover:bg-emerald-600 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
             確認扣款
           </button>
           <GhostButton onClick={onClose}>取消</GhostButton>
@@ -43,7 +43,7 @@ export default function CardPaymentModal({ card, accounts, onSubmit, onClose }) 
       }>
       <div className="space-y-4">
         {account && (
-          <div className="bg-surface-2 rounded-xl px-4 py-3 flex items-center justify-between">
+          <div className="bg-surface-2 rounded-tile px-4 py-3 flex items-center justify-between">
             <span className="text-xs text-muted">扣款後餘額</span>
             <span className="text-sm font-medium text-ink-3">
               {formatMoney(num(account.balance) - num(amount), currency)}

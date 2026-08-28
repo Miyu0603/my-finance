@@ -42,7 +42,8 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('dark-mode', darkMode)
     document.documentElement.classList.toggle('dark', darkMode)
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', darkMode ? '#0f172a' : '#6366f1')
+    // Match the page ground so the status bar blends into the app.
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', darkMode ? '#100d1a' : '#f6f4fc')
   }, [darkMode])
 
   useEffect(() => {
@@ -113,7 +114,7 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen bg-app font-['Inter',system-ui,sans-serif] overflow-x-hidden">
-      <aside className={`hidden md:flex ${collapsed ? 'w-[68px]' : 'w-48'} bg-surface border-r border-line flex-col shrink-0 sticky top-0 h-screen transition-all duration-300`}>
+      <aside className={`hidden md:flex ${collapsed ? 'w-[76px]' : 'w-52'} bg-surface border-r border-line flex-col shrink-0 sticky top-0 h-screen transition-all duration-300`}>
         <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3 h-14 border-b border-line shrink-0`}>
           <button onClick={() => setCollapsed(c => !c)} aria-label={collapsed ? '展開側欄' : '收合側欄'} aria-expanded={!collapsed}
             className="w-8 h-8 rounded-lg flex items-center justify-center text-muted hover:text-ink-3 hover:bg-surface-2 transition cursor-pointer shrink-0">
@@ -130,7 +131,7 @@ export default function App() {
           {[...NAV_ITEMS, { id: 'settings', label: '設定', Icon: IconSettings }].map(item => (
             <button key={item.id} onClick={() => setTab(item.id)} title={collapsed ? item.label : undefined}
               aria-current={tab === item.id ? 'page' : undefined}
-              className={`w-full flex items-center ${collapsed ? 'justify-center px-0' : 'px-3'} gap-3 py-2.5 rounded-xl text-sm font-medium mb-1 transition-all cursor-pointer ${tab === item.id ? 'bg-solid text-on-solid shadow-lg shadow-black/10' : 'text-ink-4 hover:bg-surface-2 hover:text-ink-3'}`}>
+              className={`w-full flex items-center ${collapsed ? 'justify-center px-0' : 'px-3.5'} gap-3 py-3 rounded-pill text-sm font-medium mb-1.5 transition-all cursor-pointer ${tab === item.id ? 'bg-solid text-on-solid shadow-card' : 'text-ink-4 hover:bg-surface-3 hover:text-ink-2'}`}>
               <item.Icon className="w-[18px] h-[18px] shrink-0" />
               {!collapsed && <span>{item.label}</span>}
             </button>
@@ -138,20 +139,27 @@ export default function App() {
         </nav>
       </aside>
 
-      <nav aria-label="主選單" className="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-line z-40 flex safe-area-pb">
-        {[...NAV_ITEMS, { id: 'settings', label: '設定', Icon: IconSettings }].map(item => (
-          <button key={item.id} onClick={() => setTab(item.id)} aria-current={tab === item.id ? 'page' : undefined}
-            className={`flex-1 flex flex-col items-center py-2 pt-2.5 gap-0.5 text-[10px] font-medium cursor-pointer transition ${tab === item.id ? 'text-indigo-500' : 'text-muted'}`}>
-            <item.Icon className="w-5 h-5" />
-            <span>{item.label}</span>
-          </button>
-        ))}
+      {/* Floating pill nav: the active tab expands to show its label, the rest
+          stay icon-only, which is what keeps five items on a 375px screen. */}
+      <nav aria-label="主選單" className="md:hidden fixed bottom-4 left-3 right-3 z-40 safe-area-mb">
+        <div className="nav-pill flex items-center justify-between p-1.5">
+          {[...NAV_ITEMS, { id: 'settings', label: '設定', Icon: IconSettings }].map(item => (
+            <button key={item.id} onClick={() => setTab(item.id)} aria-label={item.label}
+              aria-current={tab === item.id ? 'page' : undefined}
+              className="nav-item flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-medium cursor-pointer transition-all">
+              <item.Icon className="w-[18px] h-[18px] shrink-0" />
+              {tab === item.id && <span className="whitespace-nowrap">{item.label}</span>}
+            </button>
+          ))}
+        </div>
       </nav>
 
-      <main className="flex-1 min-w-0 overflow-y-auto pb-20 md:pb-0 safe-area-pt">
+      <main className="flex-1 min-w-0 overflow-y-auto pb-28 md:pb-0 safe-area-pt">
         <div className="max-w-5xl mx-auto px-4 pt-7 pb-6 md:px-8 md:pt-10 md:pb-10">
           {tab === 'dashboard' && (
-            <Dashboard state={state} onPayCard={setPayingCardId} onOpenHistory={() => setHistoryOpen(true)} />
+            <Dashboard state={state} onPayCard={setPayingCardId} onOpenHistory={() => setHistoryOpen(true)}
+              onRecord={() => setTransactionAccount('any')} onTransfer={() => setTransferFromId('')}
+              onNavigate={setTab} />
           )}
           {tab === 'accounts' && (
             <AccountManager accounts={state.accounts} onSave={saveAccount} onRemove={removeAccount}
@@ -176,7 +184,8 @@ export default function App() {
           onTransfer={handleTransfer} onClose={() => setTransferFromId(null)} />
       )}
       {transactionAccount && (
-        <TransactionModal account={transactionAccount} onSubmit={handleTransaction} onClose={() => setTransactionAccount(null)} />
+        <TransactionModal account={transactionAccount === 'any' ? null : transactionAccount}
+          accounts={state.accounts} onSubmit={handleTransaction} onClose={() => setTransactionAccount(null)} />
       )}
       {exchangeAccount && (
         <ExchangeModal account={exchangeAccount} accounts={state.accounts}

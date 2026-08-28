@@ -1,41 +1,105 @@
 import { useState } from 'react'
-
 import { currencyOf, formatMoney, sumByCurrency } from '../lib/currency'
 import { daysUntilDue, isPaidThisMonth, monthlyAmountOf } from '../lib/cards'
 import { marketCurrency } from '../lib/ledger'
 import TransactionRow from './TransactionRow'
-import { IconBank, IconCard, IconCalendar, IconDollar, IconCheck, IconArrowRight, IconTrendUp, IconHistory } from './icons'
+import {
+  IconBank, IconCard, IconCalendar, IconCheck, IconArrowRight, IconTrendUp,
+  IconHistory, IconReceipt, IconTransfer,
+} from './icons'
 
-const ICON_BG = ['bg-blue-500', 'bg-emerald-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500']
+const ICON_BG = ['bg-violet-500', 'bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500']
 
-/** Currency totals are rendered as a stacked list — never summed into one figure. */
-function TotalsStack({ totals, empty }) {
-  if (totals.length === 0) return <div className="text-lg md:text-xl font-bold text-ink-2">{empty}</div>
+function SectionHeader({ title, actionLabel, onAction }) {
   return (
-    <div className="space-y-0.5">
-      {totals.map(({ currency, total }, index) => (
-        <div key={currency} className={index === 0 ? 'text-lg md:text-xl font-bold text-ink-2' : 'text-sm font-semibold text-ink-3'}>
-          {formatMoney(total, currency)}
-        </div>
-      ))}
+    <div className="flex items-center justify-between mb-3">
+      <h2 className="font-semibold text-ink-2 text-sm">{title}</h2>
+      {onAction && (
+        <button onClick={onAction}
+          className="flex items-center gap-1 text-xs text-ink-4 hover:text-solid transition cursor-pointer">
+          {actionLabel} <IconArrowRight className="w-3 h-3" />
+        </button>
+      )}
     </div>
   )
 }
 
-function StatCard({ skin, icon, totals, empty, label, footnote }) {
+function HeroAction({ icon, label, onClick }) {
   return (
-    <div className={`${skin} skin rounded-2xl p-4 md:p-5 relative overflow-hidden`}>
+    <button onClick={onClick}
+      className="hero-chip flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium cursor-pointer">
+      {icon}{label}
+    </button>
+  )
+}
+
+function EmptyCard({ icon, text }) {
+  return (
+    <div className="bg-surface rounded-card border border-line p-8 text-center text-muted">
+      {icon}<p className="text-xs mt-2">{text}</p>
+    </div>
+  )
+}
+
+/**
+ * The hero shows the largest currency in full size and stacks the rest beneath
+ * it. A finance app is allowed one big number, but not one that silently adds
+ * TWD to USD.
+ */
+function BalanceHero({ totals, accountCount, lastEntry, onRecord, onTransfer, onHistory }) {
+  const [primary, ...rest] = totals
+
+  return (
+    <section className="hero rounded-card shadow-card p-5 md:p-6 mb-4 relative overflow-hidden">
+      <div className="absolute -right-8 -top-10 w-40 h-40 rounded-full opacity-30"
+        style={{ background: 'radial-gradient(circle, rgb(255 255 255 / 0.85), transparent 70%)' }} aria-hidden="true" />
+      <div className="relative">
+        <p className="text-xs hero-soft">總資產</p>
+        <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span className="text-3xl md:text-4xl font-bold tracking-tight">
+            {primary ? formatMoney(primary.total, primary.currency) : '—'}
+          </span>
+          {rest.map(({ currency, total }) => (
+            <span key={currency} className="text-sm font-semibold hero-soft">
+              {formatMoney(total, currency)}
+            </span>
+          ))}
+        </div>
+
+        <div className="flex gap-2 mt-5">
+          <HeroAction icon={<IconReceipt className="w-4 h-4" />} label="記帳" onClick={onRecord} />
+          <HeroAction icon={<IconTransfer className="w-4 h-4" />} label="轉帳" onClick={onTransfer} />
+          <HeroAction icon={<IconHistory className="w-4 h-4" />} label="紀錄" onClick={onHistory} />
+        </div>
+
+        <p className="text-[10px] hero-soft mt-4 pt-3 border-t border-white/25">
+          {accountCount} 個帳戶{lastEntry && ` · 最後一筆 ${lastEntry}`}
+        </p>
+      </div>
+    </section>
+  )
+}
+
+function StatTile({ skin, icon, totals, label, footnote }) {
+  const [primary, ...rest] = totals
+  return (
+    <div className={`${skin} skin rounded-card p-4 relative overflow-hidden`}>
       <div className="absolute -bottom-3 -right-3 opacity-[0.08]" aria-hidden="true">{icon}</div>
       <div className="relative">
-        <TotalsStack totals={totals} empty={empty} />
-        <div className="text-[11px] md:text-xs text-ink-4 mt-1">{label}</div>
+        <div className="text-lg font-bold text-ink-2">
+          {primary ? formatMoney(primary.total, primary.currency) : '—'}
+        </div>
+        {rest.map(({ currency, total }) => (
+          <div key={currency} className="text-xs font-semibold text-ink-3">{formatMoney(total, currency)}</div>
+        ))}
+        <div className="text-[11px] text-ink-4 mt-1">{label}</div>
         <div className="text-[10px] text-muted mt-0.5">{footnote}</div>
       </div>
     </div>
   )
 }
 
-export default function Dashboard({ state, onPayCard, onOpenHistory }) {
+export default function Dashboard({ state, onPayCard, onOpenHistory, onRecord, onTransfer, onNavigate }) {
   const { accounts, cards, investments, transactions } = state
   const [expandedBank, setExpandedBank] = useState(null)
 
@@ -55,9 +119,8 @@ export default function Dashboard({ state, onPayCard, onOpenHistory }) {
 
   const cashTotals = sumByCurrency(accounts, currencyOf, a => a.balance)
   const investTotals = sumByCurrency(investments, i => marketCurrency(i.market), i => i.cost)
-  const unpaidCards = cards.filter(c => monthlyAmountOf(c) > 0 && !isPaidThisMonth(c))
   const dueTotals = sumByCurrency(
-    unpaidCards,
+    cards.filter(c => monthlyAmountOf(c) > 0 && !isPaidThisMonth(c)),
     card => currencyOf(accounts.find(a => a.id === card.accountId)),
     monthlyAmountOf,
   )
@@ -70,93 +133,90 @@ export default function Dashboard({ state, onPayCard, onOpenHistory }) {
     .filter(entry => entry.days !== null)
     .sort((a, b) => a.days - b.days)
 
-  const recentTx = transactions.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5)
+  const sortedTx = transactions.slice().sort((a, b) => new Date(b.date) - new Date(a.date))
+  const recentTx = sortedTx.slice(0, 5)
+  const lastEntry = sortedTx[0]
+    ? new Date(sortedTx[0].date).toLocaleDateString('zh-TW', { month: 'numeric', day: 'numeric' })
+    : null
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-bold text-ink">歡迎回來</h1>
-        <p className="text-muted text-sm mt-1">我的財務總覽</p>
+      <div className="mb-5">
+        <p className="text-muted text-sm">歡迎回來</p>
+        <h1 className="text-xl md:text-2xl font-bold text-ink">我的財務總覽</h1>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-6 md:mb-8">
-        <StatCard skin="skin-indigo" icon={<IconDollar className="w-20 h-20 md:w-24 md:h-24" />}
-          totals={cashTotals} empty="—" label="現金餘額" footnote={`${accounts.length} 個帳戶`} />
-        <StatCard skin="skin-purple" icon={<IconTrendUp className="w-20 h-20 md:w-24 md:h-24" />}
-          totals={investTotals} empty="—" label="投資成本" footnote={`${investments.length} 檔持股`} />
-        <div className="col-span-2 md:col-span-1">
-          <StatCard skin="skin-rose" icon={<IconCalendar className="w-20 h-20 md:w-24 md:h-24" />}
-            totals={dueTotals} empty="—" label="本月待繳"
-            footnote={`${paidCount}/${payableCards.length} 已繳`} />
-        </div>
+      <BalanceHero totals={cashTotals} accountCount={accounts.length} lastEntry={lastEntry}
+        onRecord={onRecord} onTransfer={onTransfer} onHistory={onOpenHistory} />
+
+      <div className="grid grid-cols-2 gap-3 mb-6">
+        <StatTile skin="skin-purple" icon={<IconTrendUp className="w-20 h-20" />}
+          totals={investTotals} label="投資成本" footnote={`${investments.length} 檔持股`} />
+        <StatTile skin="skin-rose" icon={<IconCalendar className="w-20 h-20" />}
+          totals={dueTotals} label="本月待繳" footnote={`${paidCount}/${payableCards.length} 已繳`} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-        <div className="space-y-5">
+        <div className="space-y-6">
           <section>
-            <h2 className="font-semibold text-ink-2 mb-3 text-sm">我的帳戶</h2>
+            <SectionHeader title="我的帳戶" actionLabel="全部" onAction={accounts.length ? () => onNavigate('accounts') : undefined} />
             {accounts.length === 0 ? (
-              <div className="bg-surface rounded-2xl border border-line p-8 text-center text-faint">
-                <IconBank className="w-8 h-8 mx-auto mb-2" /><p className="text-xs">尚無帳戶</p>
-              </div>
+              <EmptyCard icon={<IconBank className="w-8 h-8 mx-auto" />} text="尚無帳戶" />
             ) : (
-              <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+              // A horizontal rail keeps every bank one swipe away instead of
+              // pushing the rest of the dashboard off the screen.
+              <div className="rail -mx-4 px-4 md:mx-0 md:px-0">
                 {bankOrder.map((bank, index) => {
                   const bankAccounts = byBank.get(bank)
-                  const expanded = expandedBank === bank
                   const bankTotals = sumByCurrency(bankAccounts, currencyOf, a => a.balance)
                   const cardCount = bankAccounts.reduce((sum, a) => sum + (cardsByAccount.get(a.id)?.length || 0), 0)
+                  const expanded = expandedBank === bank
                   return (
-                    <div key={bank} className="border-t border-line-soft first:border-t-0">
-                      <button onClick={() => setExpandedBank(expanded ? null : bank)} aria-expanded={expanded}
-                        className="w-full flex items-center px-3 md:px-4 py-2.5 md:py-3 hover:bg-surface-2 transition cursor-pointer text-left">
-                        <span className={`${ICON_BG[index % ICON_BG.length]} w-8 h-8 rounded-lg flex items-center justify-center text-white shrink-0`}>
-                          <IconBank className="w-4 h-4" />
+                    <button key={bank} onClick={() => setExpandedBank(expanded ? null : bank)}
+                      aria-expanded={expanded} aria-label={`${bank}，${bankAccounts.length} 個帳戶`}
+                      className={`w-44 text-left bg-surface rounded-card border p-4 transition cursor-pointer ${expanded ? 'border-solid shadow-card' : 'border-line hover:border-line-2'}`}>
+                      <span className={`${ICON_BG[index % ICON_BG.length]} w-9 h-9 rounded-tile flex items-center justify-center text-white mb-3`}>
+                        <IconBank className="w-4 h-4" />
+                      </span>
+                      <span className="block font-medium text-ink-2 text-sm truncate">{bank}</span>
+                      <span className="block text-[11px] text-muted mb-2">
+                        {bankAccounts.length} 個帳戶{cardCount > 0 && ` · ${cardCount} 張卡`}
+                      </span>
+                      {bankTotals.map(({ currency, total }) => (
+                        <span key={currency} className="block font-bold text-ink-2 text-sm">
+                          {formatMoney(total, currency)}
                         </span>
-                        <span className="ml-2.5 flex-1 min-w-0">
-                          <span className="block font-medium text-ink-2 text-sm">{bank}</span>
-                          <span className="block text-[11px] text-muted truncate">
-                            {bankAccounts.length} 個帳戶{cardCount > 0 && ` · ${cardCount} 張卡`}
-                          </span>
+                      ))}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
+            {expandedBank && byBank.has(expandedBank) && (
+              <div className="bg-surface rounded-card border border-line p-3 mt-3 space-y-1.5">
+                {byBank.get(expandedBank).map(account => (
+                  <div key={account.id} className="flex items-center text-xs bg-surface-2 rounded-tile px-3 py-2">
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold tint-neutral shrink-0">{currencyOf(account)}</span>
+                    <span className="ml-2 text-ink-4 flex-1 truncate">
+                      {account.lastFour && `···${account.lastFour}`}{account.purpose && ` · ${account.purpose}`}
+                    </span>
+                    <span className="font-medium text-ink-3">{formatMoney(account.balance, currencyOf(account))}</span>
+                  </div>
+                ))}
+                {byBank.get(expandedBank).flatMap(a => cardsByAccount.get(a.id) || []).map(card => {
+                  const amount = monthlyAmountOf(card)
+                  const paid = isPaidThisMonth(card)
+                  return (
+                    <div key={card.id} className="flex items-center text-xs bg-surface-2 rounded-tile px-3 py-2">
+                      <IconCard className="w-3.5 h-3.5 text-muted shrink-0" />
+                      <span className="ml-2 text-ink-4 flex-1 truncate">{card.name}</span>
+                      {amount > 0 && (
+                        <span className={`font-medium ${paid ? 'text-emerald-500' : 'text-ink-3'}`}>
+                          {formatMoney(amount, currencyOf(accounts.find(a => a.id === card.accountId)))}
                         </span>
-                        <span className="text-right ml-2">
-                          {bankTotals.map(({ currency, total }) => (
-                            <span key={currency} className="block font-bold text-ink-2 text-sm">
-                              {formatMoney(total, currency)}
-                            </span>
-                          ))}
-                        </span>
-                        <IconArrowRight className={`w-3 h-3 ml-1.5 text-faint transition-transform shrink-0 ${expanded ? 'rotate-90' : ''}`} />
-                      </button>
-                      {expanded && (
-                        <div className="px-3 md:px-4 pb-2.5 pl-[52px] md:pl-[56px] space-y-1">
-                          {bankAccounts.map(account => (
-                            <div key={account.id} className="flex items-center text-xs bg-surface-2 rounded-lg px-2.5 py-1.5">
-                              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold tint-neutral shrink-0">{currencyOf(account)}</span>
-                              <span className="ml-1.5 text-ink-4 flex-1 truncate">
-                                {account.lastFour && `···${account.lastFour}`}{account.purpose && ` · ${account.purpose}`}
-                              </span>
-                              <span className="font-medium text-ink-3">{formatMoney(account.balance, currencyOf(account))}</span>
-                            </div>
-                          ))}
-                          {bankAccounts.flatMap(a => cardsByAccount.get(a.id) || []).map(card => {
-                            const amount = monthlyAmountOf(card)
-                            const paid = isPaidThisMonth(card)
-                            return (
-                              <div key={card.id} className="flex items-center text-xs bg-surface-2 rounded-lg px-2.5 py-1.5">
-                                <IconCard className="w-3.5 h-3.5 text-muted shrink-0" />
-                                <span className="ml-1.5 text-ink-4 flex-1 truncate">{card.name}</span>
-                                {amount > 0 && (
-                                  <span className={`font-medium ${paid ? 'text-emerald-500' : 'text-ink-3'}`}>
-                                    {formatMoney(amount, currencyOf(accounts.find(a => a.id === card.accountId)))}
-                                  </span>
-                                )}
-                                {paid && <IconCheck className="w-3 h-3 text-emerald-500 ml-1" />}
-                              </div>
-                            )
-                          })}
-                        </div>
                       )}
+                      {paid && <IconCheck className="w-3 h-3 text-emerald-500 ml-1" />}
                     </div>
                   )
                 })}
@@ -165,45 +225,40 @@ export default function Dashboard({ state, onPayCard, onOpenHistory }) {
           </section>
 
           <section>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="font-semibold text-ink-2 text-sm">近期紀錄</h2>
-              {transactions.length > 0 && (
-                <button onClick={onOpenHistory}
-                  className="flex items-center gap-1 text-xs text-ink-4 hover:text-ink-2 transition cursor-pointer">
-                  <IconHistory className="w-3.5 h-3.5" /> 全部紀錄（{transactions.length}）
-                </button>
-              )}
-            </div>
+            <SectionHeader title="近期紀錄"
+              actionLabel={`全部 ${transactions.length}`}
+              onAction={transactions.length ? onOpenHistory : undefined} />
             {recentTx.length === 0 ? (
-              <div className="bg-surface rounded-2xl border border-line p-8 text-center text-faint">
-                <IconHistory className="w-8 h-8 mx-auto mb-2" /><p className="text-xs">尚無紀錄</p>
-              </div>
+              <EmptyCard icon={<IconHistory className="w-8 h-8 mx-auto" />} text="尚無紀錄" />
             ) : (
-              <div className="bg-surface rounded-2xl border border-line overflow-hidden divide-y divide-[var(--color-line-soft)]">
-                {recentTx.map(tx => <TransactionRow key={tx.id} tx={tx} state={state} />)}
+              <div className="bg-surface rounded-card border border-line overflow-hidden">
+                {recentTx.map(tx => (
+                  <div key={tx.id} className="border-t border-line-soft first:border-t-0">
+                    <TransactionRow tx={tx} state={state} />
+                  </div>
+                ))}
               </div>
             )}
           </section>
         </div>
 
         <section>
-          <h2 className="font-semibold text-ink-2 mb-3 text-sm">信用卡繳費</h2>
+          <SectionHeader title="信用卡繳費" actionLabel="全部"
+            onAction={cards.length ? () => onNavigate('cards') : undefined} />
           {upcomingCards.length === 0 ? (
-            <div className="bg-surface rounded-2xl border border-line p-8 text-center text-faint">
-              {cards.length === 0
-                ? <><IconCard className="w-8 h-8 mx-auto mb-2" /><p className="text-xs">尚無信用卡</p></>
-                : <><IconCalendar className="w-8 h-8 mx-auto mb-2" /><p className="text-xs">尚無繳費日設定</p></>}
-            </div>
+            <EmptyCard
+              icon={cards.length === 0 ? <IconCard className="w-8 h-8 mx-auto" /> : <IconCalendar className="w-8 h-8 mx-auto" />}
+              text={cards.length === 0 ? '尚無信用卡' : '尚無繳費日設定'} />
           ) : (
-            <div className="bg-surface rounded-2xl border border-line">
+            <div className="bg-surface rounded-card border border-line overflow-hidden">
               {upcomingCards.map(({ card, days }) => {
                 const account = accounts.find(a => a.id === card.accountId)
                 const amount = monthlyAmountOf(card)
                 const paid = isPaidThisMonth(card)
                 return (
-                  <div key={card.id} className="px-3 md:px-4 py-2.5 md:py-3 border-t border-line-soft first:border-t-0 hover:bg-surface-2 transition">
+                  <div key={card.id} className="px-4 py-3 border-t border-line-soft first:border-t-0 hover:bg-surface-2 transition">
                     <div className="flex items-center">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${paid ? 'tint-emerald' : days <= 3 ? 'tint-red' : 'tint-neutral'}`}>
+                      <div className={`w-9 h-9 rounded-tile flex items-center justify-center shrink-0 ${paid ? 'tint-emerald' : days <= 3 ? 'tint-red' : 'tint-neutral'}`}>
                         {paid ? <IconCheck className="w-4 h-4" /> : <IconCard className="w-4 h-4" />}
                       </div>
                       <div className="ml-2.5 flex-1 min-w-0">
@@ -224,9 +279,9 @@ export default function Dashboard({ state, onPayCard, onOpenHistory }) {
                       </div>
                     </div>
                     {!paid && amount > 0 && card.accountId && (
-                      <div className="mt-1.5 ml-[42px]">
+                      <div className="mt-2 ml-[46px]">
                         <button onClick={() => onPayCard(card.id)}
-                          className={`text-xs font-medium px-3 py-1 rounded-lg transition cursor-pointer ${days === 0 ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-surface-3 text-ink-4 hover:bg-surface-4'}`}>
+                          className={`text-xs font-medium px-3.5 py-1.5 rounded-pill transition cursor-pointer ${days === 0 ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-surface-3 text-ink-3 hover:bg-surface-4'}`}>
                           {days === 0 ? '立即繳款' : '手動繳款'}
                         </button>
                       </div>

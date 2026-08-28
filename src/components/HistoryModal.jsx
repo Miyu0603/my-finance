@@ -42,7 +42,7 @@ export default function HistoryModal({ state, onRevert, onClose }) {
       <div className="flex flex-wrap gap-1.5 mb-3">
         {FILTERS.map(item => (
           <button key={item.id} onClick={() => setFilter(item.id)} aria-pressed={filter === item.id}
-            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer ${
+            className={`px-3 py-1.5 rounded-pill text-xs font-medium transition cursor-pointer ${
               filter === item.id ? 'bg-solid text-on-solid' : 'bg-surface-3 text-ink-4 hover:bg-surface-4'}`}>
             {item.label}
           </button>
@@ -56,7 +56,7 @@ export default function HistoryModal({ state, onRevert, onClose }) {
           {grouped.map(([day, rows]) => (
             <section key={day} className="mb-3">
               <h3 className="text-[11px] font-medium text-muted px-3 md:px-4 mb-1">{day}</h3>
-              <div className="bg-surface-2 rounded-xl overflow-hidden">
+              <div className="bg-surface-2 rounded-tile overflow-hidden">
                 {rows.map(tx => (
                   <TransactionRow key={tx.id} tx={tx} state={state} showDetail onRevert={setReverting} />
                 ))}

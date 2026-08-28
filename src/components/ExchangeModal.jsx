@@ -44,14 +44,14 @@ export default function ExchangeModal({ account, accounts, onExchange, onClose }
       footer={
         <>
           <button onClick={submit} disabled={targets.length === 0}
-            className="flex-1 bg-amber-500 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-amber-600 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
+            className="flex-1 bg-amber-500 text-white py-3 rounded-pill text-sm font-medium hover:bg-amber-600 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
             確認換匯
           </button>
           <GhostButton onClick={onClose}>取消</GhostButton>
         </>
       }>
       <div className="space-y-4">
-        <div className="bg-surface-2 rounded-xl px-4 py-3">
+        <div className="bg-surface-2 rounded-tile px-4 py-3">
           <div className="text-[11px] text-muted mb-0.5">從</div>
           <div className="text-sm font-medium text-ink-3">
             {fromCurrency}{account.lastFour ? ` ···${account.lastFour}` : ''}
@@ -79,7 +79,7 @@ export default function ExchangeModal({ account, accounts, onExchange, onClose }
           placeholder="0" value={fee} onChange={setFee} />
 
         {received > 0 && (
-          <div className="tint-emerald rounded-xl px-4 py-3 text-sm">
+          <div className="tint-emerald rounded-tile px-4 py-3 text-sm">
             <div className="font-medium">預計換入：{formatMoney(received, toCurrency)}</div>
             {feeValue > 0 && (
               <div className="text-xs opacity-80 mt-0.5">

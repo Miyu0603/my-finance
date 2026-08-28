@@ -33,7 +33,7 @@ export default function LockScreen({ onUnlock }) {
   return (
     <div className="fixed inset-0 bg-app flex flex-col items-center justify-center select-none">
       <div className="flex flex-col items-center px-6 text-center">
-        <img src={`${import.meta.env.BASE_URL}apple-touch-icon.png`} alt="" className="w-24 h-24 rounded-3xl shadow-lg mb-6" />
+        <img src={`${import.meta.env.BASE_URL}apple-touch-icon.png`} alt="" className="w-24 h-24 rounded-card shadow-lg mb-6" />
         <h1 className="text-2xl font-bold mb-1 text-ink">財務管家</h1>
         <p className="text-sm mb-10 text-muted">請驗證身分以繼續使用</p>
 
@@ -46,7 +46,7 @@ export default function LockScreen({ onUnlock }) {
 
         <p className="text-sm text-ink-4" role="status">{attempting ? '驗證中…' : '點擊使用 Face ID 解鎖'}</p>
 
-        {error && <p role="alert" className="mt-4 tint-red rounded-xl px-4 py-2 text-sm">{error}</p>}
+        {error && <p role="alert" className="mt-4 tint-red rounded-tile px-4 py-2 text-sm">{error}</p>}
 
         {/*
           Kept as a recovery path: biometrics can break (new device, reset
