@@ -3,7 +3,7 @@ import { genId } from '../lib/id'
 import { num, round2 } from '../lib/money'
 import { CURRENCIES, currencyOf, formatMoney, sumByCurrency } from '../lib/currency'
 import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButton } from './ui'
-import { IconBank, IconEdit, IconTrash, IconTransfer, IconReceipt, IconExchange, IconPlus } from './icons'
+import { IconBank, IconEdit, IconTrash, IconTransfer, IconReceipt, IconExchange, IconPlus, IconDots } from './icons'
 
 const ICON_BG = ['bg-blue-500', 'bg-emerald-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500']
 
@@ -13,6 +13,7 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(emptyAccount)
   const [deleting, setDeleting] = useState(null)
+  const [actionsFor, setActionsFor] = useState(null)
 
   const startAdd = () => { setForm(emptyAccount); setEditing('new') }
   const startEdit = (account) => {
@@ -43,6 +44,28 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
   // Exchange needs a same-bank account in a *different* currency to land in.
   const exchangeTargets = (account) =>
     accounts.filter(a => a.bank === account.bank && a.id !== account.id && currencyOf(a) !== currencyOf(account))
+
+  /** One definition of what you can do to an account, rendered two ways. */
+  const actionsFor_ = (account) => {
+    const currency = currencyOf(account)
+    const list = [
+      { id: 'record', label: '記帳', hover: 'hover:text-emerald-500', tint: 'tint-emerald',
+        icon: <IconReceipt className="w-4 h-4" />, run: () => onTransaction(account) },
+    ]
+    if (exchangeTargets(account).length > 0) {
+      list.push({ id: 'exchange', label: '換匯', hover: 'hover:text-amber-500', tint: 'tint-amber',
+        icon: <IconExchange className="w-4 h-4" />, run: () => onExchange(account) })
+    }
+    if (accounts.some(a => a.id !== account.id && currencyOf(a) === currency)) {
+      list.push({ id: 'transfer', label: '轉帳', hover: 'hover:text-indigo-500', tint: 'tint-indigo',
+        icon: <IconTransfer className="w-4 h-4" />, run: () => onTransfer(account.id) })
+    }
+    list.push({ id: 'edit', label: '編輯', hover: 'hover:text-ink-3', tint: 'tint-neutral',
+      icon: <IconEdit className="w-4 h-4" />, run: () => startEdit(account) })
+    list.push({ id: 'delete', label: '刪除', hover: 'hover:text-red-500', tint: 'tint-red',
+      icon: <IconTrash className="w-4 h-4" />, run: () => setDeleting(account) })
+    return list
+  }
 
   return (
     <div>
@@ -127,17 +150,19 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
                       <div className="text-right mr-2 text-sm font-bold text-ink-2">
                         {formatMoney(account.balance, currency)}
                       </div>
-                      <div className="flex gap-1 md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100 transition shrink-0">
-                        <IconAction label={`為 ${label} 記帳`} onClick={() => onTransaction(account)} hover="hover:text-emerald-500"><IconReceipt className="w-4 h-4" /></IconAction>
-                        {exchangeTargets(account).length > 0 && (
-                          <IconAction label={`從 ${label} 換匯`} onClick={() => onExchange(account)} hover="hover:text-amber-500"><IconExchange className="w-4 h-4" /></IconAction>
-                        )}
-                        {accounts.some(a => a.id !== account.id && currencyOf(a) === currency) && (
-                          <IconAction label={`從 ${label} 轉帳`} onClick={() => onTransfer(account.id)} hover="hover:text-indigo-500"><IconTransfer className="w-4 h-4" /></IconAction>
-                        )}
-                        <IconAction label={`編輯 ${label}`} onClick={() => startEdit(account)} hover="hover:text-ink-3"><IconEdit className="w-4 h-4" /></IconAction>
-                        <IconAction label={`刪除 ${label}`} onClick={() => setDeleting(account)} hover="hover:text-red-500"><IconTrash className="w-4 h-4" /></IconAction>
+                      {/* Five 28px buttons left the account name 14px wide on a
+                          phone, so they collapse into one sheet below md. */}
+                      <div className="hidden md:flex gap-1 md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100 transition shrink-0">
+                        {actionsFor_(account).map(action => (
+                          <IconAction key={action.id} label={`${action.label} ${label}`} onClick={action.run} hover={action.hover}>
+                            {action.icon}
+                          </IconAction>
+                        ))}
                       </div>
+                      <button onClick={() => setActionsFor(account)} aria-label={`${label} 的操作`}
+                        className="md:hidden w-9 h-9 rounded-pill bg-surface-3 hover:bg-surface-4 flex items-center justify-center text-ink-4 cursor-pointer transition shrink-0">
+                        <IconDots className="w-4 h-4" />
+                      </button>
                     </div>
                   )
                 })}
@@ -145,6 +170,24 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
             </section>
           ))}
         </div>
+      )}
+
+      {actionsFor && (
+        <Modal title={`${actionsFor.bank}${actionsFor.lastFour ? ` ···${actionsFor.lastFour}` : ''}`}
+          subtitle={`${currencyOf(actionsFor)} · ${formatMoney(actionsFor.balance, currencyOf(actionsFor))}`}
+          onClose={() => setActionsFor(null)} tint="tint-blue" icon={<IconBank className="w-5 h-5" />}>
+          <div className="space-y-2">
+            {actionsFor_(actionsFor).map(action => (
+              <button key={action.id} onClick={() => { setActionsFor(null); action.run() }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-tile bg-surface-2 hover:bg-surface-3 transition cursor-pointer text-left">
+                <span className={`w-9 h-9 rounded-pill flex items-center justify-center shrink-0 ${action.tint}`}>
+                  {action.icon}
+                </span>
+                <span className="text-sm font-medium text-ink-2">{action.label}</span>
+              </button>
+            ))}
+          </div>
+        </Modal>
       )}
 
       {deleting && (

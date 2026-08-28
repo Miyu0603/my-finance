@@ -34,6 +34,11 @@ export const IconUndo = (p) => <Stroke {...p}><path d="M3 10h10a5 5 0 010 10h-3M
 export const IconHistory = (p) => <Stroke {...p}><path d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z" /></Stroke>
 export const IconWarning = (p) => <Stroke {...p}><path d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></Stroke>
 
+export const IconDots = (p) => <Stroke {...p} width={2}><circle cx="5" cy="12" r="1" fill="currentColor" /><circle cx="12" cy="12" r="1" fill="currentColor" /><circle cx="19" cy="12" r="1" fill="currentColor" /></Stroke>
+export const IconEye = (p) => <Stroke {...p}><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z" /><circle cx="12" cy="12" r="2.75" /></Stroke>
+export const IconEyeOff = (p) => <Stroke {...p}><path d="M9.9 5.7A9.8 9.8 0 0112 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 01-3 3.9M6.5 8.1A17 17 0 002.5 12S6 18.5 12 18.5a9.6 9.6 0 004-.85" /><path d="M9.9 9.9a3 3 0 104.2 4.2" /><line x1="3" y1="3" x2="21" y2="21" /></Stroke>
+export const IconChevronDown = (p) => <Stroke {...p} width={2}><path d="M6 9l6 6 6-6" /></Stroke>
+
 export const IconFaceId = ({ className = 'w-5 h-5' }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}
     strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
