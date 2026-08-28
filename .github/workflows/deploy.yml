@@ -1,8 +1,12 @@
 name: Deploy to GitHub Pages
 
+# Pages is configured with build_type "workflow", so this file is the only thing
+# that publishes the site. Without it, main can move without the live app ever
+# changing — silently, because nothing fails.
 on:
   push:
     branches: [main]
+  pull_request:
 
 permissions:
   contents: read
@@ -14,11 +18,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  # Runs on pull requests too, so a red build is visible before merging rather
+  # than after main has already been published.
+  verify:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -28,7 +31,28 @@ jobs:
           cache: npm
 
       - run: npm ci
+      - run: npm run lint
+      - run: npm test
       - run: npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+
+  deploy:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

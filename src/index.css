@@ -1,268 +1,211 @@
 @import "tailwindcss";
 
-html {
-    -webkit-text-size-adjust: 100%;
+/*
+ * Theming works through semantic colour tokens, not per-utility overrides.
+ * `bg-surface` / `text-ink` resolve to a CSS variable, and `.dark` simply
+ * redefines those variables — so a component is written once and is correct in
+ * both themes. (The previous approach shadowed every Tailwind colour utility
+ * with `!important`, which silently broke whenever new markup used a colour
+ * that wasn't in the list.)
+ */
+@theme {
+  --color-app: #f8f9fb;
+  --color-surface: #ffffff;
+  --color-surface-2: #f9fafb;
+  --color-surface-3: #f3f4f6;
+  --color-surface-4: #e5e7eb;
+
+  --color-ink: #111827;
+  --color-ink-2: #1f2937;
+  --color-ink-3: #374151;
+  --color-ink-4: #4b5563;
+  --color-muted: #9ca3af;
+  --color-faint: #d1d5db;
+
+  --color-line: #f3f4f6;
+  --color-line-2: #e5e7eb;
+  --color-line-soft: #f9fafb;
+
+  --color-solid: #111827;
+  --color-solid-hover: #1f2937;
+  --color-on-solid: #ffffff;
+
+  --color-scrim: rgb(0 0 0 / 0.2);
 }
 
+:root {
+  /* Tinted chips: soft background + readable foreground per accent. */
+  --tint-indigo-bg: #eef2ff;
+  --tint-indigo-fg: #4f46e5;
+  --tint-violet-bg: #f5f3ff;
+  --tint-violet-fg: #7c3aed;
+  --tint-emerald-bg: #ecfdf5;
+  --tint-emerald-fg: #059669;
+  --tint-red-bg: #fef2f2;
+  --tint-red-fg: #ef4444;
+  --tint-amber-bg: #fffbeb;
+  --tint-amber-fg: #d97706;
+  --tint-blue-bg: #eff6ff;
+  --tint-blue-fg: #1d4ed8;
+  --tint-neutral-bg: #f3f4f6;
+  --tint-neutral-fg: #4b5563;
+
+  /* Decorative card skins: two gradient stops each. */
+  --skin-blue-1: #eff6ff;
+  --skin-blue-2: #e0e7ff;
+  --skin-emerald-1: #ecfdf5;
+  --skin-emerald-2: #ccfbf1;
+  --skin-purple-1: #faf5ff;
+  --skin-purple-2: #ede9fe;
+  --skin-amber-1: #fffbeb;
+  --skin-amber-2: #ffedd5;
+  --skin-rose-1: #fff1f2;
+  --skin-rose-2: #fce7f3;
+  --skin-cyan-1: #ecfeff;
+  --skin-cyan-2: #e0f2fe;
+  --skin-fuchsia-1: #fdf4ff;
+  --skin-fuchsia-2: #f3e8ff;
+  --skin-indigo-1: #eef2ff;
+  --skin-indigo-2: #dbeafe;
+  --skin-border: rgb(255 255 255 / 0.6);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --color-app: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-2: #1e293b;
+  --color-surface-3: #334155;
+  --color-surface-4: #475569;
+
+  --color-ink: #f1f5f9;
+  --color-ink-2: #e2e8f0;
+  --color-ink-3: #cbd5e1;
+  --color-ink-4: #94a3b8;
+  --color-muted: #64748b;
+  --color-faint: #475569;
+
+  --color-line: #334155;
+  --color-line-2: #475569;
+  --color-line-soft: #334155;
+
+  --color-solid: #334155;
+  --color-solid-hover: #475569;
+  --color-on-solid: #f1f5f9;
+
+  --color-scrim: rgb(0 0 0 / 0.6);
+
+  --tint-indigo-bg: rgb(99 102 241 / 0.15);
+  --tint-indigo-fg: #a5b4fc;
+  --tint-violet-bg: rgb(139 92 246 / 0.15);
+  --tint-violet-fg: #c4b5fd;
+  --tint-emerald-bg: rgb(16 185 129 / 0.15);
+  --tint-emerald-fg: #6ee7b7;
+  --tint-red-bg: rgb(239 68 68 / 0.15);
+  --tint-red-fg: #fca5a5;
+  --tint-amber-bg: rgb(245 158 11 / 0.15);
+  --tint-amber-fg: #fcd34d;
+  --tint-blue-bg: rgb(59 130 246 / 0.15);
+  --tint-blue-fg: #93c5fd;
+  --tint-neutral-bg: #334155;
+  --tint-neutral-fg: #cbd5e1;
+
+  --skin-blue-1: #172554;
+  --skin-blue-2: #1e3a5f;
+  --skin-emerald-1: #064e3b;
+  --skin-emerald-2: #065f46;
+  --skin-purple-1: #2e1065;
+  --skin-purple-2: #4c1d95;
+  --skin-amber-1: #451a03;
+  --skin-amber-2: #78350f;
+  --skin-rose-1: #4c0519;
+  --skin-rose-2: #881337;
+  --skin-cyan-1: #083344;
+  --skin-cyan-2: #164e63;
+  --skin-fuchsia-1: #4a044e;
+  --skin-fuchsia-2: #86198f;
+  --skin-indigo-1: #312e81;
+  --skin-indigo-2: #3730a3;
+  --skin-border: rgb(51 65 85 / 0.5);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-app);
+}
+
+/*
+ * Safe-area insets are additive. Setting `padding-top: env(...)` directly on an
+ * element that also carries a Tailwind `py-*` utility wipes that padding out
+ * (plain CSS beats layered utilities), which is what pinned the page headings
+ * to the very top of the screen.
+ */
 .safe-area-pb {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .safe-area-pt {
-    padding-top: env(safe-area-inset-top, 0px);
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
-/* ===== Dark Mode — all use !important to override Tailwind v4 ===== */
-.dark {
-    color-scheme: dark;
-    background-color: #0f172a !important;
+@layer components {
+  .tint-indigo { background-color: var(--tint-indigo-bg); color: var(--tint-indigo-fg); }
+  .tint-violet { background-color: var(--tint-violet-bg); color: var(--tint-violet-fg); }
+  .tint-emerald { background-color: var(--tint-emerald-bg); color: var(--tint-emerald-fg); }
+  .tint-red { background-color: var(--tint-red-bg); color: var(--tint-red-fg); }
+  .tint-amber { background-color: var(--tint-amber-bg); color: var(--tint-amber-fg); }
+  .tint-blue { background-color: var(--tint-blue-bg); color: var(--tint-blue-fg); }
+  .tint-neutral { background-color: var(--tint-neutral-bg); color: var(--tint-neutral-fg); }
+
+  .skin { border: 1px solid var(--skin-border); }
+  .skin-blue { background-image: linear-gradient(to bottom right, var(--skin-blue-1), var(--skin-blue-2)); }
+  .skin-emerald { background-image: linear-gradient(to bottom right, var(--skin-emerald-1), var(--skin-emerald-2)); }
+  .skin-purple { background-image: linear-gradient(to bottom right, var(--skin-purple-1), var(--skin-purple-2)); }
+  .skin-amber { background-image: linear-gradient(to bottom right, var(--skin-amber-1), var(--skin-amber-2)); }
+  .skin-rose { background-image: linear-gradient(to bottom right, var(--skin-rose-1), var(--skin-rose-2)); }
+  .skin-cyan { background-image: linear-gradient(to bottom right, var(--skin-cyan-1), var(--skin-cyan-2)); }
+  .skin-fuchsia { background-image: linear-gradient(to bottom right, var(--skin-fuchsia-1), var(--skin-fuchsia-2)); }
+  .skin-indigo { background-image: linear-gradient(to bottom right, var(--skin-indigo-1), var(--skin-indigo-2)); }
+
+  /* Inputs inherit theme colours instead of being re-skinned per theme. */
+  .field {
+    width: 100%;
+    border: 1px solid var(--color-line-2);
+    border-radius: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    font-size: 1rem;
+    background-color: var(--color-surface-2);
+    color: var(--color-ink-2);
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+
+  .field::placeholder {
+    color: var(--color-muted);
+  }
+
+  .field:focus {
+    outline: none;
+    border-color: var(--color-faint);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-ink) 10%, transparent);
+  }
 }
 
-/* Background overrides */
-.dark .bg-white,
-.dark .bg-gray-50\/50 {
-    background-color: #1e293b !important;
+/* Keyboard users must always be able to see what is focused. */
+:focus-visible {
+  outline: 2px solid var(--tint-indigo-fg);
+  outline-offset: 2px;
 }
 
-.dark .bg-\[\#f8f9fb\] {
-    background-color: #0f172a !important;
-}
-
-.dark .bg-gray-50 {
-    background-color: #1e293b !important;
-}
-
-.dark .bg-gray-100 {
-    background-color: #334155 !important;
-}
-
-.dark .bg-gray-200 {
-    background-color: #475569 !important;
-}
-
-.dark .hover\:bg-gray-50:hover,
-.dark .hover\:bg-gray-50\/50:hover,
-.dark .hover\:bg-gray-50\/30:hover {
-    background-color: #334155 !important;
-}
-
-.dark .hover\:bg-gray-100:hover,
-.dark .hover\:bg-gray-200:hover {
-    background-color: #475569 !important;
-}
-
-/* White alpha overrides */
-.dark .bg-white\/80 {
-    background-color: rgba(30, 41, 59, .8) !important;
-}
-
-.dark .bg-white\/70 {
-    background-color: rgba(30, 41, 59, .7) !important;
-}
-
-.dark .bg-white\/60 {
-    background-color: rgba(30, 41, 59, .6) !important;
-}
-
-.dark .bg-white\/40 {
-    background-color: rgba(30, 41, 59, .4) !important;
-}
-
-.dark .hover\:bg-white:hover {
-    background-color: #334155 !important;
-}
-
-/* Text overrides */
-.dark .text-gray-900 {
-    color: #f1f5f9 !important;
-}
-
-.dark .text-gray-800 {
-    color: #e2e8f0 !important;
-}
-
-.dark .text-gray-700 {
-    color: #cbd5e1 !important;
-}
-
-.dark .text-gray-600 {
-    color: #94a3b8 !important;
-}
-
-.dark .text-gray-500 {
-    color: #94a3b8 !important;
-}
-
-.dark .text-gray-400 {
-    color: #64748b !important;
-}
-
-.dark .text-gray-300 {
-    color: #475569 !important;
-}
-
-/* Border overrides */
-.dark .border-gray-100 {
-    border-color: #334155 !important;
-}
-
-.dark .border-gray-200 {
-    border-color: #475569 !important;
-}
-
-.dark .border-white\/60 {
-    border-color: rgba(51, 65, 85, .6) !important;
-}
-
-.dark .divide-gray-50> :not(:first-child) {
-    border-color: #334155 !important;
-}
-
-.dark .border-t {
-    border-color: #334155 !important;
-}
-
-.dark .border-r {
-    border-color: #334155 !important;
-}
-
-.dark .border-b {
-    border-color: #334155 !important;
-}
-
-/* Inputs */
-.dark input,
-.dark select,
-.dark textarea {
-    background-color: #0f172a !important;
-    border-color: #475569 !important;
-    color: #e2e8f0 !important;
-}
-
-.dark input::placeholder,
-.dark textarea::placeholder {
-    color: #64748b !important;
-}
-
-/* Gradient stat cards — brighter in dark */
-.dark .bg-gradient-to-br.from-indigo-50 {
-    background: linear-gradient(to bottom right, #312e81, #4338ca) !important;
-}
-
-.dark .bg-gradient-to-br.from-rose-50 {
-    background: linear-gradient(to bottom right, #881337, #be123c) !important;
-}
-
-.dark .bg-gradient-to-br.from-violet-50 {
-    background: linear-gradient(to bottom right, #4c1d95, #6d28d9) !important;
-}
-
-.dark .bg-gradient-to-br.from-purple-50 {
-    background: linear-gradient(to bottom right, #2e1065, #4c1d95) !important;
-}
-
-/* Account/card gradient cards — darken */
-.dark .bg-gradient-to-br.from-blue-50 {
-    background: linear-gradient(to bottom right, #172554, #1e3a5f) !important;
-}
-
-.dark .bg-gradient-to-br.from-emerald-50 {
-    background: linear-gradient(to bottom right, #064e3b, #065f46) !important;
-}
-
-.dark .bg-gradient-to-br.from-purple-50 {
-    background: linear-gradient(to bottom right, #2e1065, #3b0764) !important;
-}
-
-.dark .bg-gradient-to-br.from-amber-50 {
-    background: linear-gradient(to bottom right, #451a03, #78350f) !important;
-}
-
-.dark .bg-gradient-to-br.from-rose-50 {
-    background: linear-gradient(to bottom right, #4c0519, #881337) !important;
-}
-
-.dark .bg-gradient-to-br.from-cyan-50 {
-    background: linear-gradient(to bottom right, #083344, #164e63) !important;
-}
-
-.dark .bg-gradient-to-br.from-violet-100 {
-    background: linear-gradient(to bottom right, #2e1065, #4c1d95) !important;
-}
-
-.dark .bg-gradient-to-br.from-rose-100 {
-    background: linear-gradient(to bottom right, #4c0519, #9f1239) !important;
-}
-
-.dark .bg-gradient-to-br.from-emerald-100 {
-    background: linear-gradient(to bottom right, #064e3b, #047857) !important;
-}
-
-.dark .bg-gradient-to-br.from-amber-100 {
-    background: linear-gradient(to bottom right, #451a03, #92400e) !important;
-}
-
-.dark .bg-gradient-to-br.from-blue-100 {
-    background: linear-gradient(to bottom right, #172554, #1e40af) !important;
-}
-
-.dark .bg-gradient-to-br.from-fuchsia-100 {
-    background: linear-gradient(to bottom right, #4a044e, #86198f) !important;
-}
-
-/* Border overrides for gradient cards */
-.dark .border-indigo-100\/50,
-.dark .border-rose-100\/50,
-.dark .border-purple-100\/50,
-.dark .border-violet-100\/50 {
-    border-color: rgba(51, 65, 85, .3) !important;
-}
-
-/* Active sidebar item in dark */
-.dark .bg-gray-900 {
-    background-color: #334155 !important;
-}
-
-.dark .shadow-lg.shadow-gray-900\/20 {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .3) !important;
-}
-
-/* Modal backdrop */
-.dark .bg-black\/20 {
-    background-color: rgba(0, 0, 0, .6) !important;
-}
-
-/* Accent color backgrounds should keep their hue in dark */
-.dark .bg-indigo-50 {
-    background-color: rgba(99, 102, 241, .15) !important;
-}
-
-.dark .bg-emerald-50 {
-    background-color: rgba(16, 185, 129, .15) !important;
-}
-
-.dark .bg-red-50 {
-    background-color: rgba(239, 68, 68, .15) !important;
-}
-
-.dark .bg-violet-50 {
-    background-color: rgba(139, 92, 246, .15) !important;
-}
-
-.dark .hover\:bg-red-50:hover {
-    background-color: rgba(239, 68, 68, .2) !important;
-}
-
-.dark .hover\:bg-indigo-50:hover {
-    background-color: rgba(99, 102, 241, .2) !important;
-}
-
-/* Nested bg-gray-50 inside account list — subtle contrast */
-.dark .divide-gray-50 .bg-gray-50 {
-    background-color: rgba(255, 255, 255, .05) !important;
-}
-
-/* Expanded account nested bg-gray-50 items */
-.dark .divide-gray-50 .bg-gray-50 {
-    background-color: rgba(255, 255, 255, .05) !important;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
