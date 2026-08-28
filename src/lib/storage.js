@@ -96,6 +96,28 @@ export function saveState(state) {
   }
 }
 
+/* ---------- ui preferences ---------- */
+
+const PREF_PREFIX = 'pref:'
+
+/** Small, non-critical view settings. A failure here is never worth a toast. */
+export function readPref(key, fallback) {
+  try {
+    const raw = localStorage.getItem(PREF_PREFIX + key)
+    return raw === null ? fallback : JSON.parse(raw)
+  } catch {
+    return fallback
+  }
+}
+
+export function writePref(key, value) {
+  try {
+    localStorage.setItem(PREF_PREFIX + key, JSON.stringify(value))
+  } catch {
+    // A lost preference is not worth interrupting the user over.
+  }
+}
+
 /* ---------- backup ---------- */
 
 export function exportFilename(date = new Date()) {

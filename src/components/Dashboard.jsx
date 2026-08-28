@@ -1,11 +1,12 @@
 import { useState } from 'react'
+import { readPref, writePref } from '../lib/storage'
 import { currencyOf, formatMoney, sumByCurrency } from '../lib/currency'
 import { daysUntilDue, isPaidThisMonth, monthlyAmountOf } from '../lib/cards'
 import { marketCurrency } from '../lib/ledger'
 import TransactionRow from './TransactionRow'
 import {
   IconBank, IconCard, IconCalendar, IconCheck, IconArrowRight, IconTrendUp,
-  IconHistory, IconReceipt, IconTransfer,
+  IconHistory, IconReceipt, IconTransfer, IconEye, IconEyeOff, IconChevronDown,
 } from './icons'
 
 const ICON_BG = ['bg-violet-500', 'bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500']
@@ -46,7 +47,11 @@ function EmptyCard({ icon, text }) {
  * it. A finance app is allowed one big number, but not one that silently adds
  * TWD to USD.
  */
-function BalanceHero({ totals, accountCount, cardCount, lastEntry, onRecord, onTransfer, onHistory }) {
+function BalanceHero({
+  totals, accountCount, cardCount, lastEntry,
+  hidden, onToggleHidden, currency, currencyOptions, onCurrencyChange,
+  onRecord, onTransfer, onHistory,
+}) {
   const [primary, ...rest] = totals
 
   return (
@@ -55,16 +60,44 @@ function BalanceHero({ totals, accountCount, cardCount, lastEntry, onRecord, onT
         <div className="absolute -right-8 -top-10 w-40 h-40 rounded-full opacity-30"
           style={{ background: 'radial-gradient(circle, rgb(255 255 255 / 0.85), transparent 70%)' }} aria-hidden="true" />
         <div className="relative">
-          <p className="text-xs hero-soft">總資產</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs hero-soft">總資產</p>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button onClick={onToggleHidden} aria-pressed={hidden}
+                aria-label={hidden ? '顯示金額' : '隱藏金額'}
+                className="hero-chip w-8 h-8 flex items-center justify-center cursor-pointer">
+                {hidden ? <IconEyeOff className="w-4 h-4" /> : <IconEye className="w-4 h-4" />}
+              </button>
+              {currencyOptions.length > 1 && (
+                <div className="hero-chip relative flex items-center">
+                  <select value={currency} onChange={e => onCurrencyChange(e.target.value)} aria-label="顯示幣別"
+                    className="appearance-none bg-transparent pl-3 pr-7 py-1.5 text-xs font-medium cursor-pointer focus:outline-none">
+                    <option value="ALL" className="bg-surface text-ink">ALL</option>
+                    {currencyOptions.map(code => (
+                      <option key={code} value={code} className="bg-surface text-ink">{code}</option>
+                    ))}
+                  </select>
+                  <IconChevronDown className="w-3 h-3 absolute right-2 pointer-events-none" />
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <span className="text-3xl md:text-4xl font-bold tracking-tight">
-              {primary ? formatMoney(primary.total, primary.currency) : '—'}
-            </span>
-            {rest.map(({ currency, total }) => (
-              <span key={currency} className="text-sm font-semibold hero-soft">
-                {formatMoney(total, currency)}
-              </span>
-            ))}
+            {hidden ? (
+              <span className="text-3xl md:text-4xl font-bold tracking-widest">*****</span>
+            ) : (
+              <>
+                <span className="text-3xl md:text-4xl font-bold tracking-tight">
+                  {primary ? formatMoney(primary.total, primary.currency) : '—'}
+                </span>
+                {rest.map(({ currency: code, total }) => (
+                  <span key={code} className="text-sm font-semibold hero-soft">
+                    {formatMoney(total, code)}
+                  </span>
+                ))}
+              </>
+            )}
           </div>
 
           <div className="flex gap-2 mt-5">
@@ -104,6 +137,13 @@ function StatTile({ skin, icon, totals, label, footnote }) {
 export default function Dashboard({ state, onPayCard, onOpenHistory, onRecord, onTransfer, onNavigate }) {
   const { accounts, cards, investments, transactions } = state
   const [expandedBank, setExpandedBank] = useState(null)
+  const [amountsHidden, setAmountsHidden] = useState(() => readPref('hide-amounts', false))
+  const [balanceCurrency, setBalanceCurrency] = useState(() => readPref('balance-currency', 'ALL'))
+
+  const toggleAmounts = () => {
+    setAmountsHidden(prev => { writePref('hide-amounts', !prev); return !prev })
+  }
+  const pickBalanceCurrency = (next) => { writePref('balance-currency', next); setBalanceCurrency(next) }
 
   const cardsByAccount = new Map()
   cards.forEach(card => {
@@ -120,6 +160,12 @@ export default function Dashboard({ state, onPayCard, onOpenHistory, onRecord, o
   })
 
   const cashTotals = sumByCurrency(accounts, currencyOf, a => a.balance)
+  const currencyOptions = cashTotals.map(entry => entry.currency)
+  // A saved currency can disappear when its last account is deleted.
+  const activeCurrency = currencyOptions.includes(balanceCurrency) ? balanceCurrency : 'ALL'
+  const heroTotals = activeCurrency === 'ALL'
+    ? cashTotals
+    : cashTotals.filter(entry => entry.currency === activeCurrency)
   const investTotals = sumByCurrency(investments, i => marketCurrency(i.market), i => i.cost)
   const dueTotals = sumByCurrency(
     cards.filter(c => monthlyAmountOf(c) > 0 && !isPaidThisMonth(c)),
@@ -148,8 +194,10 @@ export default function Dashboard({ state, onPayCard, onOpenHistory, onRecord, o
         <h1 className="text-xl md:text-2xl font-bold text-ink">我的財務總覽</h1>
       </div>
 
-      <BalanceHero totals={cashTotals} accountCount={accounts.length} cardCount={cards.length}
-        lastEntry={lastEntry} onRecord={onRecord} onTransfer={onTransfer} onHistory={onOpenHistory} />
+      <BalanceHero totals={heroTotals} accountCount={accounts.length} cardCount={cards.length}
+        lastEntry={lastEntry} hidden={amountsHidden} onToggleHidden={toggleAmounts}
+        currency={activeCurrency} currencyOptions={currencyOptions} onCurrencyChange={pickBalanceCurrency}
+        onRecord={onRecord} onTransfer={onTransfer} onHistory={onOpenHistory} />
 
       <div className="grid grid-cols-2 gap-3 mb-6">
         <StatTile skin="skin-purple" icon={<IconTrendUp className="w-20 h-20" />}

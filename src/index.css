@@ -62,11 +62,12 @@
   --tint-neutral-fg: #4a4160;
 
   /* The balance hero: light lavender wash carrying dark text. */
-  --hero-1: #ded7fe;
-  --hero-2: #f0d9fb;
-  --hero-3: #e9e3fe;
+  --hero-1: #cdbffc;
+  --hero-2: #dcaef2;
+  --hero-3: #c3b6fb;
   --hero-ink: #241a3d;
-  --hero-ink-soft: #5b4a80;
+  /* Deepening the wash pushed the old soft ink to 4.16:1; this holds 5.02:1. */
+  --hero-ink-soft: #4e3f70;
   --hero-chip: rgb(255 255 255 / 0.72);
   --hero-chip-hover: rgb(255 255 255 / 0.95);
   --hero-footer-bg: #ffffff;
