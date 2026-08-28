@@ -4,112 +4,163 @@
  * Theming works through semantic colour tokens, not per-utility overrides.
  * `bg-surface` / `text-ink` resolve to a CSS variable, and `.dark` simply
  * redefines those variables — so a component is written once and is correct in
- * both themes. (The previous approach shadowed every Tailwind colour utility
+ * both themes. (An earlier approach shadowed every Tailwind colour utility
  * with `!important`, which silently broke whenever new markup used a colour
  * that wasn't in the list.)
+ *
+ * The palette is lavender-leaning: the page sits on a tinted ground rather than
+ * grey, surfaces are white, and violet is the primary rather than black.
  */
 @theme {
-  --color-app: #f8f9fb;
+  --color-app: #f6f4fc;
   --color-surface: #ffffff;
-  --color-surface-2: #f9fafb;
-  --color-surface-3: #f3f4f6;
-  --color-surface-4: #e5e7eb;
+  --color-surface-2: #f8f7fd;
+  --color-surface-3: #f0edf9;
+  --color-surface-4: #e4dff3;
 
-  --color-ink: #111827;
-  --color-ink-2: #1f2937;
-  --color-ink-3: #374151;
-  --color-ink-4: #4b5563;
-  --color-muted: #9ca3af;
-  --color-faint: #d1d5db;
+  --color-ink: #1a1526;
+  --color-ink-2: #2c2440;
+  --color-ink-3: #4a4160;
+  --color-ink-4: #5f5677;
+  --color-muted: #6f6786;
+  --color-faint: #c1bad4;
 
-  --color-line: #f3f4f6;
-  --color-line-2: #e5e7eb;
-  --color-line-soft: #f9fafb;
+  --color-line: #efecf8;
+  --color-line-2: #e4dff3;
+  --color-line-soft: #f4f2fb;
 
-  --color-solid: #111827;
-  --color-solid-hover: #1f2937;
+  --color-solid: #7c3aed;
+  --color-solid-hover: #6d28d9;
   --color-on-solid: #ffffff;
 
-  --color-scrim: rgb(0 0 0 / 0.2);
+  --color-scrim: rgb(26 21 38 / 0.28);
+
+  /* Softer, larger corners than Tailwind's default scale. */
+  --radius-card: 1.5rem;
+  --radius-tile: 1.125rem;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 2px 20px -8px rgb(76 29 149 / 0.18);
+  --shadow-float: 0 10px 34px -10px rgb(26 21 38 / 0.35);
 }
 
 :root {
   /* Tinted chips: soft background + readable foreground per accent. */
   --tint-indigo-bg: #eef2ff;
   --tint-indigo-fg: #4f46e5;
-  --tint-violet-bg: #f5f3ff;
-  --tint-violet-fg: #7c3aed;
+  --tint-violet-bg: #f3effe;
+  --tint-violet-fg: #6d28d9;
   --tint-emerald-bg: #ecfdf5;
-  --tint-emerald-fg: #059669;
+  --tint-emerald-fg: #047857;
   --tint-red-bg: #fef2f2;
-  --tint-red-fg: #ef4444;
+  --tint-red-fg: #dc2626;
   --tint-amber-bg: #fffbeb;
-  --tint-amber-fg: #d97706;
+  --tint-amber-fg: #b45309;
   --tint-blue-bg: #eff6ff;
   --tint-blue-fg: #1d4ed8;
-  --tint-neutral-bg: #f3f4f6;
-  --tint-neutral-fg: #4b5563;
+  --tint-neutral-bg: #f0edf9;
+  --tint-neutral-fg: #4a4160;
+
+  /* The balance hero: light lavender wash carrying dark text. */
+  --hero-1: #ded7fe;
+  --hero-2: #f0d9fb;
+  --hero-3: #e9e3fe;
+  --hero-ink: #241a3d;
+  --hero-ink-soft: #5b4a80;
+  --hero-chip: rgb(255 255 255 / 0.72);
+  --hero-chip-hover: rgb(255 255 255 / 0.95);
+
+  /* Translucent chips sitting on a coloured card skin. */
+  --veil: rgb(255 255 255 / 0.7);
+  --veil-strong: rgb(255 255 255 / 0.92);
+
+  /* Floating pill navigation. */
+  --nav-bg: #1a1526;
+  --nav-edge: transparent;
+  --nav-fg: #a79fbd;
+  --nav-active-bg: #ffffff;
+  --nav-active-fg: #1a1526;
 
   /* Decorative card skins: two gradient stops each. */
-  --skin-blue-1: #eff6ff;
-  --skin-blue-2: #e0e7ff;
+  --skin-blue-1: #eef4ff;
+  --skin-blue-2: #dfe7ff;
   --skin-emerald-1: #ecfdf5;
-  --skin-emerald-2: #ccfbf1;
-  --skin-purple-1: #faf5ff;
-  --skin-purple-2: #ede9fe;
-  --skin-amber-1: #fffbeb;
-  --skin-amber-2: #ffedd5;
-  --skin-rose-1: #fff1f2;
-  --skin-rose-2: #fce7f3;
-  --skin-cyan-1: #ecfeff;
-  --skin-cyan-2: #e0f2fe;
-  --skin-fuchsia-1: #fdf4ff;
-  --skin-fuchsia-2: #f3e8ff;
-  --skin-indigo-1: #eef2ff;
-  --skin-indigo-2: #dbeafe;
-  --skin-border: rgb(255 255 255 / 0.6);
+  --skin-emerald-2: #d3f7ec;
+  --skin-purple-1: #f7f2ff;
+  --skin-purple-2: #ebe3fe;
+  --skin-amber-1: #fff9ec;
+  --skin-amber-2: #ffeed6;
+  --skin-rose-1: #fff1f5;
+  --skin-rose-2: #fbe2f0;
+  --skin-cyan-1: #edfcff;
+  --skin-cyan-2: #dcf0fd;
+  --skin-fuchsia-1: #fdf2ff;
+  --skin-fuchsia-2: #f4e4fe;
+  --skin-indigo-1: #f0efff;
+  --skin-indigo-2: #e2e2ff;
+  --skin-border: rgb(255 255 255 / 0.7);
 }
 
 .dark {
   color-scheme: dark;
 
-  --color-app: #0f172a;
-  --color-surface: #1e293b;
-  --color-surface-2: #1e293b;
-  --color-surface-3: #334155;
-  --color-surface-4: #475569;
+  --color-app: #100d1a;
+  --color-surface: #1a1626;
+  --color-surface-2: #201b30;
+  --color-surface-3: #2a2440;
+  --color-surface-4: #3a3255;
 
-  --color-ink: #f1f5f9;
-  --color-ink-2: #e2e8f0;
-  --color-ink-3: #cbd5e1;
-  --color-ink-4: #94a3b8;
-  --color-muted: #64748b;
-  --color-faint: #475569;
+  --color-ink: #f4f2fa;
+  --color-ink-2: #e5e1f0;
+  --color-ink-3: #c9c3da;
+  --color-ink-4: #a49db8;
+  --color-muted: #8f87a8;
+  --color-faint: #574e70;
 
-  --color-line: #334155;
-  --color-line-2: #475569;
-  --color-line-soft: #334155;
+  --color-line: #2a2440;
+  --color-line-2: #3a3255;
+  --color-line-soft: #241f36;
 
-  --color-solid: #334155;
-  --color-solid-hover: #475569;
-  --color-on-solid: #f1f5f9;
+  --color-solid: #8b5cf6;
+  --color-solid-hover: #7c3aed;
+  --color-on-solid: #ffffff;
 
-  --color-scrim: rgb(0 0 0 / 0.6);
+  --color-scrim: rgb(0 0 0 / 0.62);
 
-  --tint-indigo-bg: rgb(99 102 241 / 0.15);
+  --shadow-card: 0 2px 20px -8px rgb(0 0 0 / 0.6);
+  --shadow-float: 0 10px 34px -10px rgb(0 0 0 / 0.7);
+
+  --tint-indigo-bg: rgb(99 102 241 / 0.18);
   --tint-indigo-fg: #a5b4fc;
-  --tint-violet-bg: rgb(139 92 246 / 0.15);
+  --tint-violet-bg: rgb(139 92 246 / 0.2);
   --tint-violet-fg: #c4b5fd;
-  --tint-emerald-bg: rgb(16 185 129 / 0.15);
+  --tint-emerald-bg: rgb(16 185 129 / 0.18);
   --tint-emerald-fg: #6ee7b7;
-  --tint-red-bg: rgb(239 68 68 / 0.15);
+  --tint-red-bg: rgb(239 68 68 / 0.18);
   --tint-red-fg: #fca5a5;
-  --tint-amber-bg: rgb(245 158 11 / 0.15);
+  --tint-amber-bg: rgb(245 158 11 / 0.18);
   --tint-amber-fg: #fcd34d;
-  --tint-blue-bg: rgb(59 130 246 / 0.15);
+  --tint-blue-bg: rgb(59 130 246 / 0.18);
   --tint-blue-fg: #93c5fd;
-  --tint-neutral-bg: #334155;
-  --tint-neutral-fg: #cbd5e1;
+  --tint-neutral-bg: #2a2440;
+  --tint-neutral-fg: #c9c3da;
+
+  --hero-1: #3a2a6e;
+  --hero-2: #5b2a72;
+  --hero-3: #2f2359;
+  --hero-ink: #f6f2ff;
+  --hero-ink-soft: #c4b2e8;
+  --hero-chip: rgb(255 255 255 / 0.14);
+  --hero-chip-hover: rgb(255 255 255 / 0.24);
+
+  --veil: rgb(255 255 255 / 0.12);
+  --veil-strong: rgb(255 255 255 / 0.22);
+
+  --nav-bg: #241f36;
+  --nav-edge: #3a3255;
+  --nav-fg: #9992ad;
+  --nav-active-bg: #f4f2fa;
+  --nav-active-fg: #1a1526;
 
   --skin-blue-1: #172554;
   --skin-blue-2: #1e3a5f;
@@ -127,7 +178,7 @@
   --skin-fuchsia-2: #86198f;
   --skin-indigo-1: #312e81;
   --skin-indigo-2: #3730a3;
-  --skin-border: rgb(51 65 85 / 0.5);
+  --skin-border: rgb(255 255 255 / 0.06);
 }
 
 html {
@@ -152,6 +203,10 @@ body {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
+.safe-area-mb {
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 @layer components {
   .tint-indigo { background-color: var(--tint-indigo-bg); color: var(--tint-indigo-fg); }
   .tint-violet { background-color: var(--tint-violet-bg); color: var(--tint-violet-fg); }
@@ -171,11 +226,52 @@ body {
   .skin-fuchsia { background-image: linear-gradient(to bottom right, var(--skin-fuchsia-1), var(--skin-fuchsia-2)); }
   .skin-indigo { background-image: linear-gradient(to bottom right, var(--skin-indigo-1), var(--skin-indigo-2)); }
 
+  /* Balance hero. Its own ink tokens so text stays readable on the wash. */
+  .hero {
+    background-image: linear-gradient(135deg, var(--hero-1) 0%, var(--hero-2) 55%, var(--hero-3) 100%);
+    color: var(--hero-ink);
+    border: 1px solid var(--skin-border);
+  }
+
+  .hero-soft { color: var(--hero-ink-soft); }
+
+  .hero-chip {
+    background-color: var(--hero-chip);
+    color: var(--hero-ink);
+    border-radius: var(--radius-pill);
+    transition: background-color 150ms;
+  }
+
+  .hero-chip:hover { background-color: var(--hero-chip-hover); }
+
+  /*
+   * `bg-surface/70` cannot be used for this: Tailwind bakes the *theme* value
+   * into the opacity variant, so its no-color-mix fallback stays white and the
+   * chip turns into a white blob in dark mode.
+   */
+  .veil { background-color: var(--veil); }
+  .veil:hover { background-color: var(--veil-strong); }
+
+  /* Floating pill navigation, mobile only. */
+  .nav-pill {
+    background-color: var(--nav-bg);
+    border: 1px solid var(--nav-edge);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-float);
+  }
+
+  .nav-item { color: var(--nav-fg); border-radius: var(--radius-pill); }
+
+  .nav-item[aria-current="page"] {
+    background-color: var(--nav-active-bg);
+    color: var(--nav-active-fg);
+  }
+
   /* Inputs inherit theme colours instead of being re-skinned per theme. */
   .field {
     width: 100%;
     border: 1px solid var(--color-line-2);
-    border-radius: 0.75rem;
+    border-radius: var(--radius-tile);
     padding: 0.625rem 0.875rem;
     font-size: 1rem;
     background-color: var(--color-surface-2);
@@ -189,14 +285,27 @@ body {
 
   .field:focus {
     outline: none;
-    border-color: var(--color-faint);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-ink) 10%, transparent);
+    border-color: var(--color-solid);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-solid) 18%, transparent);
   }
+
+  /* Horizontal card rails: scrollable, snapping, no visible scrollbar. */
+  .rail {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: 0.25rem;
+  }
+
+  .rail::-webkit-scrollbar { display: none; }
+  .rail > * { scroll-snap-align: start; flex: 0 0 auto; }
 }
 
 /* Keyboard users must always be able to see what is focused. */
 :focus-visible {
-  outline: 2px solid var(--tint-indigo-fg);
+  outline: 2px solid var(--color-solid);
   outline-offset: 2px;
 }
 
