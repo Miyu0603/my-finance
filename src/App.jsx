@@ -12,7 +12,8 @@ import CardPaymentModal from './components/CardPaymentModal'
 import HistoryModal from './components/HistoryModal'
 import LockScreen from './components/LockScreen'
 import { isFaceIdEnabled } from './lib/faceId'
-import { loadState, saveState } from './lib/storage'
+import { loadState, saveState, readPref, writePref } from './lib/storage'
+import { MoneyFormatContext, maskedMoney, visibleMoney } from './lib/moneyDisplay'
 import {
   applyTransfer, applyCashTx, applyExchange, applyInvestTx,
   applyCardPayment, applyBalanceAdjustment, revertTransaction, deleteAccount,
@@ -38,6 +39,7 @@ export default function App() {
   const [historyOpen, setHistoryOpen] = useState(false)
   const [locked, setLocked] = useState(() => isFaceIdEnabled())
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('dark-mode') === 'true')
+  const [amountsHidden, setAmountsHidden] = useState(() => readPref('hide-amounts', false))
 
   useEffect(() => {
     localStorage.setItem('dark-mode', darkMode)
@@ -108,12 +110,18 @@ export default function App() {
     s => applyCardPayment(s, { cardId, amount, date: now() }), '繳款已記錄')
   const handleRevert = (txId) => runLedger(s => revertTransaction(s, txId), '已復原這筆紀錄')
 
+  const toggleAmounts = () => setAmountsHidden(prev => {
+    writePref('hide-amounts', !prev)
+    return !prev
+  })
+
   const payingCard = state.cards.find(c => c.id === payingCardId) || null
 
   if (locked) return <LockScreen onUnlock={() => setLocked(false)} />
 
   return (
-    <div className="flex min-h-screen bg-app font-['Inter',system-ui,sans-serif] overflow-x-hidden">
+    <MoneyFormatContext.Provider value={amountsHidden ? maskedMoney : visibleMoney}>
+      <div className="flex min-h-screen bg-app font-['Inter',system-ui,sans-serif] overflow-x-hidden">
       <aside className={`hidden md:flex ${collapsed ? 'w-[76px]' : 'w-52'} bg-surface border-r border-line flex-col shrink-0 sticky top-0 h-screen transition-all duration-300`}>
         <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3 h-14 border-b border-line shrink-0`}>
           <button onClick={() => setCollapsed(c => !c)} aria-label={collapsed ? '展開側欄' : '收合側欄'} aria-expanded={!collapsed}
@@ -159,7 +167,7 @@ export default function App() {
           {tab === 'dashboard' && (
             <Dashboard state={state} onPayCard={setPayingCardId} onOpenHistory={() => setHistoryOpen(true)}
               onRecord={() => setTransactionAccount('any')} onTransfer={() => setTransferFromId('')}
-              onNavigate={setTab} />
+              onNavigate={setTab} amountsHidden={amountsHidden} onToggleAmounts={toggleAmounts} />
           )}
           {tab === 'accounts' && (
             <AccountManager accounts={state.accounts} onSave={saveAccount} onRemove={removeAccount}
@@ -174,7 +182,7 @@ export default function App() {
           )}
           {tab === 'settings' && (
             <SettingsPage state={state} onReplaceState={commit} darkMode={darkMode} setDarkMode={setDarkMode}
-              onNotify={setToast} />
+              amountsHidden={amountsHidden} onToggleAmounts={toggleAmounts} onNotify={setToast} />
           )}
         </div>
       </main>
@@ -199,8 +207,9 @@ export default function App() {
         <HistoryModal state={state} onRevert={handleRevert} onClose={() => setHistoryOpen(false)} />
       )}
 
-      <Toast toast={toast} onDismiss={() => setToast(null)} />
-    </div>
+        <Toast toast={toast} onDismiss={() => setToast(null)} />
+      </div>
+    </MoneyFormatContext.Provider>
   )
 }
 

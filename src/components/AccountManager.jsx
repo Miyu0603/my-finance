@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { genId } from '../lib/id'
 import { num, round2 } from '../lib/money'
-import { CURRENCIES, currencyOf, formatMoney, sumByCurrency } from '../lib/currency'
+import { CURRENCIES, currencyOf, sumByCurrency } from '../lib/currency'
+import { useMoneyFormat } from '../lib/moneyDisplay'
 import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButton } from './ui'
 import { IconBank, IconEdit, IconTrash, IconTransfer, IconReceipt, IconExchange, IconPlus, IconDots } from './icons'
 
@@ -10,6 +11,7 @@ const ICON_BG = ['bg-blue-500', 'bg-emerald-500', 'bg-purple-500', 'bg-amber-500
 const emptyAccount = { bank: '', lastFour: '', purpose: '', note: '', balance: '', currency: 'TWD' }
 
 export default function AccountManager({ accounts, onSave, onRemove, onTransfer, onTransaction, onExchange }) {
+  const formatMoney = useMoneyFormat()
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(emptyAccount)
   const [deleting, setDeleting] = useState(null)

@@ -1,4 +1,5 @@
 import { describeTransaction } from './transactionView'
+import { useMoneyFormat } from '../lib/moneyDisplay'
 import { IconUndo } from './icons'
 
 const shortDate = (iso) => {
@@ -7,7 +8,8 @@ const shortDate = (iso) => {
 }
 
 export default function TransactionRow({ tx, state, onRevert, showDetail = false }) {
-  const view = describeTransaction(tx, state)
+  const formatMoney = useMoneyFormat()
+  const view = describeTransaction(tx, state, formatMoney)
   return (
     <div className="flex items-center px-3 md:px-4 py-2.5 text-xs">
       <div className={`w-7 h-7 rounded-pill flex items-center justify-center shrink-0 ${view.tint}`}>{view.icon}</div>

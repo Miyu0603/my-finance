@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { Modal, ConfirmDialog, GhostButton } from './ui'
 import TransactionRow from './TransactionRow'
 import { describeTransaction } from './transactionView'
+import { useMoneyFormat } from '../lib/moneyDisplay'
 import { IconHistory } from './icons'
 
 const FILTERS = [
@@ -19,6 +20,7 @@ const dayKey = (iso) => {
 }
 
 export default function HistoryModal({ state, onRevert, onClose }) {
+  const formatMoney = useMoneyFormat()
   const [filter, setFilter] = useState('all')
   const [reverting, setReverting] = useState(null)
 
@@ -68,7 +70,7 @@ export default function HistoryModal({ state, onRevert, onClose }) {
 
       {reverting && (
         <ConfirmDialog title="復原這筆紀錄"
-          message={`「${describeTransaction(reverting, state).title}」會被刪除，相關帳戶餘額與持股會回到這筆紀錄之前的狀態。`}
+          message={`「${describeTransaction(reverting, state, formatMoney).title}」會被刪除，相關帳戶餘額與持股會回到這筆紀錄之前的狀態。`}
           detail="如果之後還有其他紀錄動到同一個帳戶，餘額會以差額方式回沖。"
           confirmLabel="復原"
           onConfirm={() => onRevert(reverting.id)}

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { readPref, writePref } from '../lib/storage'
-import { currencyOf, formatMoney, sumByCurrency } from '../lib/currency'
+import { currencyOf, sumByCurrency } from '../lib/currency'
 import { daysUntilDue, isPaidThisMonth, monthlyAmountOf } from '../lib/cards'
 import { marketCurrency } from '../lib/ledger'
 import TransactionRow from './TransactionRow'
@@ -8,6 +8,7 @@ import {
   IconBank, IconCard, IconCalendar, IconCheck, IconArrowRight, IconTrendUp,
   IconHistory, IconReceipt, IconTransfer, IconEye, IconEyeOff, IconChevronDown,
 } from './icons'
+import { useMoneyFormat, useMoneyHidden } from '../lib/moneyDisplay'
 
 const ICON_BG = ['bg-violet-500', 'bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500']
 
@@ -52,6 +53,7 @@ function BalanceHero({
   hidden, onToggleHidden, currency, currencyOptions, onCurrencyChange,
   onRecord, onTransfer, onHistory,
 }) {
+  const formatMoney = useMoneyFormat()
   const [primary, ...rest] = totals
 
   return (
@@ -116,7 +118,10 @@ function BalanceHero({
 }
 
 function StatTile({ skin, icon, totals, label, footnote }) {
-  const [primary, ...rest] = totals
+  const formatMoney = useMoneyFormat()
+  const hidden = useMoneyHidden()
+  // Masked, every currency renders the same string, so show it once.
+  const [primary, ...rest] = hidden ? totals.slice(0, 1) : totals
   return (
     <div className={`${skin} skin rounded-card p-4 relative overflow-hidden`}>
       <div className="absolute -bottom-3 -right-3 opacity-[0.08]" aria-hidden="true">{icon}</div>
@@ -134,15 +139,15 @@ function StatTile({ skin, icon, totals, label, footnote }) {
   )
 }
 
-export default function Dashboard({ state, onPayCard, onOpenHistory, onRecord, onTransfer, onNavigate }) {
+export default function Dashboard({
+  state, onPayCard, onOpenHistory, onRecord, onTransfer, onNavigate,
+  amountsHidden, onToggleAmounts,
+}) {
+  const formatMoney = useMoneyFormat()
   const { accounts, cards, investments, transactions } = state
   const [expandedBank, setExpandedBank] = useState(null)
-  const [amountsHidden, setAmountsHidden] = useState(() => readPref('hide-amounts', false))
   const [balanceCurrency, setBalanceCurrency] = useState(() => readPref('balance-currency', 'ALL'))
 
-  const toggleAmounts = () => {
-    setAmountsHidden(prev => { writePref('hide-amounts', !prev); return !prev })
-  }
   const pickBalanceCurrency = (next) => { writePref('balance-currency', next); setBalanceCurrency(next) }
 
   const cardsByAccount = new Map()
@@ -195,7 +200,7 @@ export default function Dashboard({ state, onPayCard, onOpenHistory, onRecord, o
       </div>
 
       <BalanceHero totals={heroTotals} accountCount={accounts.length} cardCount={cards.length}
-        lastEntry={lastEntry} hidden={amountsHidden} onToggleHidden={toggleAmounts}
+        lastEntry={lastEntry} hidden={amountsHidden} onToggleHidden={onToggleAmounts}
         currency={activeCurrency} currencyOptions={currencyOptions} onCurrencyChange={pickBalanceCurrency}
         onRecord={onRecord} onTransfer={onTransfer} onHistory={onOpenHistory} />
 
@@ -232,7 +237,8 @@ export default function Dashboard({ state, onPayCard, onOpenHistory, onRecord, o
                       <span className="block text-[11px] text-muted mb-2">
                         {bankAccounts.length} 個帳戶{cardCount > 0 && ` · ${cardCount} 張卡`}
                       </span>
-                      {bankTotals.map(({ currency, total }) => (
+                      {/* Masked, every currency renders identically — show one. */}
+                      {(amountsHidden ? bankTotals.slice(0, 1) : bankTotals).map(({ currency, total }) => (
                         <span key={currency} className="block font-bold text-ink-2 text-sm">
                           {formatMoney(total, currency)}
                         </span>

@@ -3,7 +3,7 @@ import { downloadBackup, readBackupFile } from '../lib/storage'
 import { emptyState } from '../lib/ledger'
 import { setupFaceId, removeFaceId, isFaceIdEnabled, isFaceIdAvailable } from '../lib/faceId'
 import { ConfirmDialog } from './ui'
-import { IconFaceId, IconMoon, IconShield, IconTrash, IconDownload, IconUpload } from './icons'
+import { IconFaceId, IconMoon, IconShield, IconTrash, IconDownload, IconUpload, IconEyeOff } from './icons'
 
 function Row({ tint, icon, title, description, children }) {
   return (
@@ -29,7 +29,10 @@ function Toggle({ on, onClick, label, accent }) {
   )
 }
 
-export default function SettingsPage({ state, onReplaceState, darkMode, setDarkMode, onNotify }) {
+export default function SettingsPage({
+  state, onReplaceState, darkMode, setDarkMode,
+  amountsHidden, onToggleAmounts, onNotify,
+}) {
   const [faceIdOn, setFaceIdOn] = useState(isFaceIdEnabled())
   const [faceIdSupported, setFaceIdSupported] = useState(false)
   const [confirming, setConfirming] = useState(null)
@@ -105,6 +108,13 @@ export default function SettingsPage({ state, onReplaceState, darkMode, setDarkM
         <Row tint="tint-violet" icon={<IconMoon className="w-5 h-5" />}
           title="暗色模式" description="切換深色介面，保護眼睛">
           <Toggle on={darkMode} onClick={() => setDarkMode(d => !d)} label="暗色模式" accent="bg-violet-500" />
+        </Row>
+
+        {/* Also on the dashboard hero; duplicated here so it can be turned off
+            from any page rather than only the one screen. */}
+        <Row tint="tint-neutral" icon={<IconEyeOff className="w-5 h-5" />}
+          title="隱藏所有金額" description="全站金額顯示為 *****，方便在他人面前使用">
+          <Toggle on={amountsHidden} onClick={onToggleAmounts} label="隱藏所有金額" accent="bg-solid" />
         </Row>
 
         <div className="bg-surface rounded-card border border-line p-4 md:p-5">

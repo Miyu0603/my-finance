@@ -1,13 +1,17 @@
 import { num } from '../lib/money'
-import { currencyOf, formatMoney } from '../lib/currency'
+import { currencyOf } from '../lib/currency'
 import { IconTransfer, IconExchange, IconCheck, IconTrendUp, IconDollar, IconEdit } from './icons'
 
 /**
  * Turns a stored transaction into something renderable. Entries written before
  * a field existed (or pointing at a deleted account) still have to render, so
  * every lookup has a fallback.
+ *
+ * `formatMoney` is a parameter rather than an import because this is a plain
+ * function: its callers pass the one from useMoneyFormat(), so the privacy
+ * toggle reaches transaction rows too.
  */
-export function describeTransaction(tx, state) {
+export function describeTransaction(tx, state, formatMoney) {
   const accountName = (id) => {
     const account = state.accounts.find(a => a.id === id)
     return account ? `${account.bank}${account.lastFour ? ` ···${account.lastFour}` : ''}` : '已刪除帳戶'

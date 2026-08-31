@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { num, round2 } from '../lib/money'
-import { currencyOf, formatMoney } from '../lib/currency'
+import { currencyOf } from '../lib/currency'
+import { useMoneyFormat } from '../lib/moneyDisplay'
 import { Modal, TextField, SelectField, GhostButton, ErrorNote } from './ui'
 import { IconExchange } from './icons'
 
 export default function ExchangeModal({ account, accounts, onExchange, onClose }) {
+  const formatMoney = useMoneyFormat()
   const fromCurrency = currencyOf(account)
   // Same-bank, different-currency only — a same-currency "exchange" is a transfer.
   const targets = accounts.filter(a =>

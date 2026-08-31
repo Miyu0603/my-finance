@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { genId } from '../lib/id'
 
-import { currencyOf, formatMoney, sumByCurrency } from '../lib/currency'
+import { currencyOf, sumByCurrency } from '../lib/currency'
 import { daysUntilDue, isPaidThisMonth, monthlyAmountOf } from '../lib/cards'
+import { useMoneyFormat } from '../lib/moneyDisplay'
 import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButton } from './ui'
 import { IconCard, IconEdit, IconTrash, IconCheck, IconPlus } from './icons'
 
@@ -12,6 +13,7 @@ const ICON_BG = ['bg-violet-500', 'bg-rose-500', 'bg-emerald-500', 'bg-amber-500
 const emptyCard = { name: '', issuer: '', accountId: '', dueDay: '', annualFee: '', note: '', monthlyAmount: '' }
 
 export default function CardManager({ cards, accounts, onChange, onPayCard }) {
+  const formatMoney = useMoneyFormat()
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(emptyCard)
   const [deleting, setDeleting] = useState(null)

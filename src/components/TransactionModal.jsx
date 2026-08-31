@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { num } from '../lib/money'
-import { currencyOf, formatMoney } from '../lib/currency'
+import { currencyOf } from '../lib/currency'
+import { useMoneyFormat } from '../lib/moneyDisplay'
 import { Modal, TextField, SelectField, GhostButton, ErrorNote, Field } from './ui'
 import { IconMinus, IconPlus } from './icons'
 
@@ -14,6 +15,7 @@ const INCOME_CATEGORIES = ['薪水', '獎金', '投資收入', '副業', '退款
  * navigating to a list first.
  */
 export default function TransactionModal({ account, accounts = [], onSubmit, onClose }) {
+  const formatMoney = useMoneyFormat()
   const [type, setType] = useState('expense')
   const [accountId, setAccountId] = useState(account?.id || '')
   const [amount, setAmount] = useState('')
