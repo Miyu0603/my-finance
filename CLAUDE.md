@@ -32,11 +32,13 @@ src/
     cards.js               credit-card due-date and paid-this-month logic
     cards.test.js
     currency.js            currency list, symbols, formatMoney, sumByCurrency
+    moneyDisplay.js        MoneyFormatContext — the privacy toggle's single choke point
     money.js               num() coercion + round2()
     id.js                  genId()
     faceId.js              WebAuthn helpers for the lock screen
   components/
     ui.jsx                 Modal (Escape / focus trap / scroll lock), ConfirmDialog, form fields, buttons
+    ui.test.jsx            focus/Escape/scroll behaviour of the shared Modal
     icons.jsx              every icon, defined once
     transactionView.jsx    turns a stored transaction into label/amount/tint
     TransactionRow.jsx     renders one transaction, optionally with an undo button
@@ -91,6 +93,12 @@ drops card links to accounts that no longer exist.
 returns a message instead of throwing, and `commit()` surfaces it — never write to
 localStorage from an effect, or the user finds out one render after the action.
 
+**Amounts render only through `formatMoney`, never `toLocaleString` directly.**
+That one function is where the privacy toggle lives: `MoneyFormatContext` swaps it
+for a masking version, so a new screen inherits "hide all amounts" for free — and
+cannot opt out of it by accident. Components take it from `useMoneyFormat()`;
+plain helpers (like `describeTransaction`) receive it as an argument.
+
 **Theming is tokens, never per-utility overrides.** `index.css` defines semantic colours
 (`--color-surface`, `--color-ink`, `--tint-*`, `--skin-*`) and `.dark` redefines them. Write
 `bg-surface text-ink`, never `bg-white text-gray-900` — the earlier approach shadowed every
@@ -120,5 +128,6 @@ permanently losing the ledger.
   "database" is one localStorage key. The `UI → Service` half does apply: `lib/ledger.js`.
 - **AI-01 … AI-03** — no AI features.
 - **SHIP-03** — no staging environment; `main` deploys straight to GitHub Pages.
-- **TEST-04's e2e tier** — unit tests cover the ledger and card-cycle logic. There is no
-  component or e2e test runner yet; UI changes are verified by hand in the browser.
+- **TEST-04's e2e tier** — unit tests cover the ledger and card-cycle logic, and a thin
+  component tier (jsdom + Testing Library) covers the shared Modal's focus behaviour and the
+  amount masking. There is no e2e runner; layout is still verified by hand in the browser.

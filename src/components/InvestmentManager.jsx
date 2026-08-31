@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { genId } from '../lib/id'
 import { num, round2 } from '../lib/money'
-import { currencyOf, formatMoney } from '../lib/currency'
+import { currencyOf } from '../lib/currency'
 import { marketCurrency } from '../lib/ledger'
+import { useMoneyFormat } from '../lib/moneyDisplay'
 import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButton, ErrorNote } from './ui'
 import { IconTrendUp, IconEdit, IconTrash, IconPlus, IconMinus } from './icons'
 
@@ -19,6 +20,7 @@ const emptyStock = { name: '', market: 'tw', shares: '', cost: '', note: '' }
 const marketLabel = (market) => (market === 'us' ? '美股' : '台股')
 
 export default function InvestmentManager({ investments, accounts, onChange, onInvestTx }) {
+  const formatMoney = useMoneyFormat()
   const [market, setMarket] = useState('tw')
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(emptyStock)
@@ -176,6 +178,7 @@ function CardAction({ onClick, className, children }) {
 }
 
 function InvestTxModal({ stock, type, accounts, onSubmit, onClose }) {
+  const formatMoney = useMoneyFormat()
   const [accountId, setAccountId] = useState('')
   const [shares, setShares] = useState('')
   const [amount, setAmount] = useState('')

@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { num } from '../lib/money'
-import { currencyOf, formatMoney } from '../lib/currency'
+import { currencyOf } from '../lib/currency'
+import { useMoneyFormat } from '../lib/moneyDisplay'
 import { Modal, TextField, SelectField, PrimaryButton, GhostButton, ErrorNote } from './ui'
 import { IconTransfer, IconArrowDown } from './icons'
 
 export default function TransferModal({ accounts, defaultFromId, onTransfer, onClose }) {
+  const formatMoney = useMoneyFormat()
   const [fromId, setFromId] = useState(defaultFromId || '')
   const [toId, setToId] = useState('')
   const [amount, setAmount] = useState('')

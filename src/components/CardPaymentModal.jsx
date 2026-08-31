@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { num } from '../lib/money'
-import { currencyOf, formatMoney } from '../lib/currency'
+import { currencyOf } from '../lib/currency'
 import { monthlyAmountOf } from '../lib/cards'
+import { useMoneyFormat } from '../lib/moneyDisplay'
 import { Modal, TextField, GhostButton, ErrorNote } from './ui'
 import { IconCard } from './icons'
 
@@ -11,6 +12,7 @@ import { IconCard } from './icons'
  * figure that is actually being deducted.
  */
 export default function CardPaymentModal({ card, accounts, onSubmit, onClose }) {
+  const formatMoney = useMoneyFormat()
   const [amount, setAmount] = useState(String(monthlyAmountOf(card) || ''))
   const [error, setError] = useState('')
 
