@@ -7,7 +7,7 @@ import { IconFaceId, IconMoon, IconShield, IconTrash, IconDownload, IconUpload, 
 
 function Row({ tint, icon, title, description, children }) {
   return (
-    <div className="bg-surface rounded-card border border-line p-4 md:p-5">
+    <div className="brick brick-plain rounded-card p-4 md:p-5">
       <div className="flex items-center gap-3">
         <div className={`w-10 h-10 rounded-tile flex items-center justify-center shrink-0 ${tint}`}>{icon}</div>
         <div className="flex-1 min-w-0">
@@ -117,7 +117,7 @@ export default function SettingsPage({
           <Toggle on={amountsHidden} onClick={onToggleAmounts} label="隱藏所有金額" accent="bg-solid" />
         </Row>
 
-        <div className="bg-surface rounded-card border border-line p-4 md:p-5">
+        <div className="brick brick-plain rounded-card p-4 md:p-5">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 rounded-tile flex items-center justify-center shrink-0 tint-emerald">
               <IconDownload className="w-5 h-5" />
@@ -145,7 +145,7 @@ export default function SettingsPage({
         <Row tint="tint-blue" icon={<IconShield className="w-5 h-5" />}
           title="資料儲存" description="全部存在本機瀏覽器，不會上傳到任何伺服器" />
 
-        <div className="bg-surface rounded-card border border-line p-4 md:p-5">
+        <div className="brick brick-plain rounded-card p-4 md:p-5">
           <div className="text-sm font-medium text-ink-2 mb-3">資料統計</div>
           <div className="grid grid-cols-4 gap-2 text-center">
             {[['帳戶', counts.accounts], ['投資', counts.investments], ['信用卡', counts.cards], ['紀錄', counts.transactions]].map(([label, value]) => (

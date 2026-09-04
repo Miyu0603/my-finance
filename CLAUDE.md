@@ -99,10 +99,18 @@ for a masking version, so a new screen inherits "hide all amounts" for free — 
 cannot opt out of it by accident. Components take it from `useMoneyFormat()`;
 plain helpers (like `describeTransaction`) receive it as an argument.
 
+**Never name a component class after a Tailwind utility.** A `.block` component
+class was added for the card style and silently collided with Tailwind's
+`display:block` utility, so every element with `className="block"` — form labels
+included — grew a 2px border. The card class is `.brick`; check a candidate name
+against Tailwind's utilities before defining it in `@layer components`.
+
 **Theming is tokens, never per-utility overrides.** `index.css` defines semantic colours
-(`--color-surface`, `--color-ink`, `--tint-*`, `--skin-*`) and `.dark` redefines them. Write
-`bg-surface text-ink`, never `bg-white text-gray-900` — the earlier approach shadowed every
-Tailwind colour with `!important` and silently broke on any colour not in the list.
+(`--color-surface`, `--color-ink`, `--tint-*`, `--block-*`) and `.dark` redefines them. Write
+`bg-surface text-ink`, never `bg-white text-gray-900` — an earlier approach shadowed every
+Tailwind colour with `!important` and silently broke on any colour not in the list. The current
+look is the "blocks" layout: cream canvas inside a dark frame, saturated `.brick` cards with a
+hard `--edge` outline, black `.pill-solid` labels and an orange `--color-solid` CTA.
 
 **Safe-area insets are additive.** Putting `padding-top: env(safe-area-inset-top)` on an
 element that also has a Tailwind `py-*` class *replaces* that padding (plain CSS beats layered

@@ -73,7 +73,7 @@ export function Modal({ title, subtitle, icon, tint = 'tint-indigo', onClose, ch
     <div className="fixed inset-0 bg-scrim backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto"
       onClick={onClose}>
       <div ref={panelRef} role="dialog" aria-modal="true" aria-labelledby={labelledBy}
-        className="bg-surface rounded-card shadow-2xl p-5 md:p-6 w-full max-w-md border border-line my-auto"
+        className="brick brick-plain rounded-card shadow-float p-5 md:p-6 w-full max-w-md my-auto"
         onClick={e => e.stopPropagation()}>
         <div className="flex items-start gap-3 mb-5">
           {icon && <div className={`w-10 h-10 rounded-tile flex items-center justify-center shrink-0 ${tint}`}>{icon}</div>}
@@ -96,7 +96,7 @@ export function Modal({ title, subtitle, icon, tint = 'tint-indigo', onClose, ch
 export function PrimaryButton({ children, className = '', ...rest }) {
   return (
     <button {...rest}
-      className={`flex-1 bg-solid text-on-solid py-3 rounded-pill text-sm font-medium hover:bg-solid-hover transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${className}`}>
+      className={`flex-1 bg-solid text-on-solid py-3 rounded-tile text-sm font-bold hover:bg-solid-hover transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${className}`}>
       {children}
     </button>
   )
@@ -105,7 +105,7 @@ export function PrimaryButton({ children, className = '', ...rest }) {
 export function GhostButton({ children, className = '', ...rest }) {
   return (
     <button {...rest}
-      className={`flex-1 bg-surface-2 text-ink-4 py-3 rounded-pill text-sm font-medium hover:bg-surface-3 transition cursor-pointer ${className}`}>
+      className={`flex-1 pill-outline !rounded-tile py-3 text-sm font-bold hover:bg-surface-3 transition cursor-pointer ${className}`}>
       {children}
     </button>
   )
@@ -158,7 +158,7 @@ export function ConfirmDialog({ title, message, detail, confirmLabel = '刪除',
       footer={
         <>
           <button onClick={() => { onConfirm(); onClose() }}
-            className="flex-1 bg-red-500 text-white py-3 rounded-pill text-sm font-medium hover:bg-red-600 transition cursor-pointer">
+            className="flex-1 bg-red-600 text-white py-3 rounded-tile text-sm font-bold hover:bg-red-700 transition cursor-pointer">
             {confirmLabel}
           </button>
           <GhostButton onClick={onClose}>取消</GhostButton>

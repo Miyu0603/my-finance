@@ -125,7 +125,7 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
       ) : (
         <div className="space-y-4">
           {groups.map((bankName, groupIndex) => (
-            <section key={bankName} className="bg-surface rounded-card border border-line overflow-hidden">
+            <section key={bankName} className="brick brick-plain rounded-card overflow-hidden">
               <h2 className="flex items-center gap-2.5 px-4 py-3 border-b border-line">
                 <span className={`${ICON_BG[groupIndex % ICON_BG.length]} w-8 h-8 rounded-pill flex items-center justify-center text-white`}>
                   <IconBank className="w-4 h-4" />
