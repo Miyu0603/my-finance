@@ -8,8 +8,8 @@ import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButto
 import { IconTrendUp, IconEdit, IconTrash, IconPlus, IconMinus } from './icons'
 
 const SKINS = {
-  tw: ['skin-purple', 'skin-blue', 'skin-emerald', 'skin-amber', 'skin-rose', 'skin-fuchsia'],
-  us: ['skin-blue', 'skin-emerald', 'skin-amber', 'skin-purple', 'skin-rose', 'skin-cyan'],
+  tw: ['brick-purple', 'brick-blue', 'brick-green', 'brick-yellow', 'brick-peach', 'brick-plain'],
+  us: ['brick-blue', 'brick-green', 'brick-yellow', 'brick-purple', 'brick-peach', 'brick-plain'],
 }
 const ICON_BG = {
   tw: ['bg-violet-500', 'bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-fuchsia-500'],
@@ -91,7 +91,7 @@ export default function InvestmentManager({ investments, accounts, onChange, onI
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {holdings.map((inv, index) => (
-            <div key={inv.id} className={`${SKINS[market][index % 6]} skin rounded-card p-5 relative group overflow-hidden`}>
+            <div key={inv.id} className={`brick ${SKINS[market][index % 6]} rounded-card p-5 relative group overflow-hidden`}>
               <div className="absolute -bottom-4 -right-4 opacity-[0.06]" aria-hidden="true">
                 <IconTrendUp className="w-24 h-24" />
               </div>

@@ -18,7 +18,7 @@ import {
   applyTransfer, applyCashTx, applyExchange, applyInvestTx,
   applyCardPayment, applyBalanceAdjustment, revertTransaction, deleteAccount,
 } from './lib/ledger'
-import { IconHome, IconBank, IconCard, IconSettings, IconChevronLeft, IconTrendUp, IconCheck, IconWarning } from './components/icons'
+import { IconHome, IconBank, IconCard, IconSettings, IconTrendUp, IconCheck, IconWarning, IconMoon } from './components/icons'
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: '總覽', Icon: IconHome },
@@ -30,7 +30,6 @@ const NAV_ITEMS = [
 export default function App() {
   const [tab, setTab] = useState('dashboard')
   const [state, setState] = useState(loadState)
-  const [collapsed, setCollapsed] = useState(true)
   const [toast, setToast] = useState(null)
   const [transferFromId, setTransferFromId] = useState(null)
   const [transactionAccount, setTransactionAccount] = useState(null)
@@ -45,7 +44,7 @@ export default function App() {
     localStorage.setItem('dark-mode', darkMode)
     document.documentElement.classList.toggle('dark', darkMode)
     // Match the page ground so the status bar blends into the app.
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', darkMode ? '#100d1a' : '#f6f4fc')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', darkMode ? '#0d0d0d' : '#faf7f2')
   }, [darkMode])
 
   useEffect(() => {
@@ -121,30 +120,33 @@ export default function App() {
 
   return (
     <MoneyFormatContext.Provider value={amountsHidden ? maskedMoney : visibleMoney}>
-      <div className="flex min-h-screen bg-app font-['Inter',system-ui,sans-serif] overflow-x-hidden">
-      <aside className={`hidden md:flex ${collapsed ? 'w-[76px]' : 'w-52'} bg-surface border-r border-line flex-col shrink-0 sticky top-0 h-screen transition-all duration-300`}>
-        <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3 h-14 border-b border-line shrink-0`}>
-          <button onClick={() => setCollapsed(c => !c)} aria-label={collapsed ? '展開側欄' : '收合側欄'} aria-expanded={!collapsed}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted hover:text-ink-3 hover:bg-surface-2 transition cursor-pointer shrink-0">
-            {collapsed ? <img src={`${import.meta.env.BASE_URL}apple-touch-icon.png`} alt="" className="w-7 h-7 rounded-lg" /> : <IconChevronLeft className="w-4 h-4" />}
-          </button>
-          {!collapsed && (
-            <div className="flex items-center gap-2 min-w-0">
-              <img src={`${import.meta.env.BASE_URL}apple-touch-icon.png`} alt="" className="w-7 h-7 rounded-lg shrink-0" />
-              <span className="font-semibold text-ink-2 text-sm truncate">財務管家</span>
-            </div>
-          )}
-        </div>
-        <nav aria-label="主選單" className={`flex-1 ${collapsed ? 'px-2' : 'px-3'} pt-4`}>
-          {[...NAV_ITEMS, { id: 'settings', label: '設定', Icon: IconSettings }].map(item => (
-            <button key={item.id} onClick={() => setTab(item.id)} title={collapsed ? item.label : undefined}
+      <div className="flex min-h-screen app-frame overflow-x-hidden md:gap-3 md:p-3">
+      {/* Icon-only rail sitting directly on the dark frame — no panel of its
+          own, the cream canvas beside it provides the contrast. */}
+      <aside className="hidden md:flex w-16 shrink-0 flex-col items-center gap-2.5 py-3.5 sticky top-3 h-[calc(100vh-1.5rem)]">
+        <img src={`${import.meta.env.BASE_URL}apple-touch-icon.png`} alt=""
+          className="w-11 h-11 rounded-tile mb-1" />
+        <nav aria-label="主選單" className="flex flex-col items-center gap-2.5">
+          {NAV_ITEMS.map(item => (
+            <button key={item.id} onClick={() => setTab(item.id)} title={item.label} aria-label={item.label}
               aria-current={tab === item.id ? 'page' : undefined}
-              className={`w-full flex items-center ${collapsed ? 'justify-center px-0' : 'px-3.5'} gap-3 py-3 rounded-pill text-sm font-medium mb-1.5 transition-all cursor-pointer ${tab === item.id ? 'bg-solid text-on-solid shadow-card' : 'text-ink-4 hover:bg-surface-3 hover:text-ink-2'}`}>
-              <item.Icon className="w-[18px] h-[18px] shrink-0" />
-              {!collapsed && <span>{item.label}</span>}
+              className="frame-item w-11 h-11 flex items-center justify-center transition cursor-pointer hover:text-white">
+              <item.Icon className="w-[21px] h-[21px]" />
             </button>
           ))}
         </nav>
+        <div className="mt-auto flex flex-col items-center gap-2.5">
+          <button onClick={() => setTab('settings')} title="設定" aria-label="設定"
+            aria-current={tab === 'settings' ? 'page' : undefined}
+            className="frame-item w-11 h-11 flex items-center justify-center transition cursor-pointer hover:text-white">
+            <IconSettings className="w-[21px] h-[21px]" />
+          </button>
+          <button onClick={() => setDarkMode(d => !d)} aria-pressed={darkMode}
+            title={darkMode ? '切換淺色' : '切換暗色'} aria-label={darkMode ? '切換淺色' : '切換暗色'}
+            className="frame-item w-11 h-11 flex items-center justify-center transition cursor-pointer hover:text-white">
+            <IconMoon className="w-[21px] h-[21px]" />
+          </button>
+        </div>
       </aside>
 
       {/* Floating pill nav: the active tab expands to show its label, the rest
@@ -162,8 +164,8 @@ export default function App() {
         </div>
       </nav>
 
-      <main className="flex-1 min-w-0 overflow-y-auto pb-28 md:pb-0 safe-area-pt">
-        <div className="max-w-5xl mx-auto px-4 pt-7 pb-6 md:px-8 md:pt-10 md:pb-10">
+      <main className="flex-1 min-w-0 overflow-y-auto pb-28 md:pb-0 safe-area-pt bg-app md:rounded-card">
+        <div className="max-w-5xl mx-auto px-4 pt-7 pb-6 md:px-7 md:pt-7 md:pb-9">
           {tab === 'dashboard' && (
             <Dashboard state={state} onPayCard={setPayingCardId} onOpenHistory={() => setHistoryOpen(true)}
               onRecord={() => setTransactionAccount('any')} onTransfer={() => setTransferFromId('')}

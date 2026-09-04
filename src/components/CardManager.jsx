@@ -7,7 +7,7 @@ import { useMoneyFormat } from '../lib/moneyDisplay'
 import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButton } from './ui'
 import { IconCard, IconEdit, IconTrash, IconCheck, IconPlus } from './icons'
 
-const SKINS = ['skin-purple', 'skin-rose', 'skin-emerald', 'skin-amber', 'skin-blue', 'skin-fuchsia']
+const SKINS = ['brick-purple', 'brick-peach', 'brick-green', 'brick-yellow', 'brick-blue', 'brick-plain']
 const ICON_BG = ['bg-violet-500', 'bg-rose-500', 'bg-emerald-500', 'bg-amber-500', 'bg-blue-500', 'bg-fuchsia-500']
 
 const emptyCard = { name: '', issuer: '', accountId: '', dueDay: '', annualFee: '', note: '', monthlyAmount: '' }
@@ -125,7 +125,7 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
             const amount = monthlyAmountOf(card)
             const account = accountOf(card)
             return (
-              <div key={card.id} className={`${SKINS[index % SKINS.length]} skin rounded-card p-4 hover:shadow-md transition group relative overflow-hidden`}>
+              <div key={card.id} className={`brick ${SKINS[index % SKINS.length]} rounded-card p-4 hover:shadow-md transition group relative overflow-hidden`}>
                 <div className="absolute -right-4 -bottom-4 opacity-[0.06]" aria-hidden="true">
                   <IconCard className="w-20 h-20" />
                 </div>
