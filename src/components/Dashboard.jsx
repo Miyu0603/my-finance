@@ -287,7 +287,7 @@ export default function Dashboard({
           {accounts.length === 0 ? (
             <EmptyCard icon={<IconBank className="w-8 h-8 mx-auto" />} text="尚無帳戶" />
           ) : (
-            <div className="rail -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="rail rail-bleed">
               {bankOrder.map((bank, index) => {
                 const bankAccounts = byBank.get(bank)
                 const bankTotals = sumByCurrency(bankAccounts, currencyOf, a => a.balance)
