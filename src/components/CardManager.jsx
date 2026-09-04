@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { genId } from '../lib/id'
+import { BLOCK_COLORS } from '../lib/storage'
 
 import { currencyOf, sumByCurrency } from '../lib/currency'
 import { daysUntilDue, isPaidThisMonth, isPartiallyPaid, monthlyAmountOf, outstandingThisMonth, paidThisMonth } from '../lib/cards'
 import { useMoneyFormat } from '../lib/moneyDisplay'
-import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButton } from './ui'
+import { Modal, ConfirmDialog, TextField, SelectField, ColorField, PrimaryButton, GhostButton } from './ui'
 import { IconCard, IconEdit, IconTrash, IconCheck, IconPlus } from './icons'
 
 const SKINS = ['brick-purple', 'brick-peach', 'brick-green', 'brick-yellow', 'brick-blue', 'brick-plain']
 const ICON_BG = ['bg-violet-500', 'bg-rose-500', 'bg-emerald-500', 'bg-amber-500', 'bg-blue-500', 'bg-fuchsia-500']
 
-const emptyCard = { name: '', issuer: '', accountId: '', dueDay: '', annualFee: '', note: '', monthlyAmount: '' }
+const emptyCard = { name: '', issuer: '', accountId: '', dueDay: '', annualFee: '', note: '', monthlyAmount: '', color: '' }
 
 export default function CardManager({ cards, accounts, transactions = [], onChange, onPayCard }) {
   const formatMoney = useMoneyFormat()
@@ -23,6 +24,7 @@ export default function CardManager({ cards, accounts, transactions = [], onChan
     setForm({
       name: card.name, issuer: card.issuer, accountId: card.accountId || '', dueDay: card.dueDay || '',
       annualFee: card.annualFee || '', note: card.note || '', monthlyAmount: card.monthlyAmount || '',
+      color: card.color || '',
     })
     setEditing(card.id)
   }
@@ -109,6 +111,9 @@ export default function CardManager({ cards, accounts, transactions = [], onChan
             </div>
             <TextField label="備註" placeholder="海外 3% 回饋" value={form.note}
               onChange={v => setForm(f => ({ ...f, note: v }))} />
+            <ColorField label="顏色" value={form.color} options={BLOCK_COLORS}
+              hint="選「自動」就依順序配色"
+              onChange={v => setForm(f => ({ ...f, color: v }))} />
           </div>
         </Modal>
       )}
@@ -129,7 +134,7 @@ export default function CardManager({ cards, accounts, transactions = [], onChan
             const amount = monthlyAmountOf(card)
             const account = accountOf(card)
             return (
-              <div key={card.id} className={`brick ${SKINS[index % SKINS.length]} rounded-card p-4 hover:shadow-md transition group relative overflow-hidden`}>
+              <div key={card.id} className={`brick ${card.color ? `brick-${card.color}` : SKINS[index % SKINS.length]} rounded-card p-4 hover:shadow-md transition group relative overflow-hidden`}>
                 <div className="absolute -right-4 -bottom-4 opacity-[0.06]" aria-hidden="true">
                   <IconCard className="w-20 h-20" />
                 </div>

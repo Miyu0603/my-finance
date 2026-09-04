@@ -305,7 +305,7 @@ export default function Dashboard({
                 return (
                   <button key={bank} onClick={() => setExpandedBank(expanded ? null : bank)}
                     aria-expanded={expanded} aria-label={`${bank}，${bankAccounts.length} 個帳戶`}
-                    className={`brick ${BANK_BLOCKS[index % BANK_BLOCKS.length]} w-48 text-left rounded-card p-4 transition cursor-pointer ${expanded ? 'shadow-card' : ''}`}>
+                    className={`brick ${bankAccounts.find(a => a.color)?.color ? `brick-${bankAccounts.find(a => a.color).color}` : BANK_BLOCKS[index % BANK_BLOCKS.length]} w-48 text-left rounded-card p-4 transition cursor-pointer ${expanded ? 'shadow-card' : ''}`}>
                     <div className="flex items-center justify-between">
                       <BlockTag>{bank}</BlockTag>
                       <IconBank className="w-4 h-4" />
