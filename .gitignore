@@ -26,6 +26,6 @@ dist-ssr
 # Editor workspace files
 *.code-workspace
 
-# Design canvas exports (large generated HTML kept locally for reference)
-網站版面設計方案/
+# The design canvas exports are version-controlled; only the redundant
+# archive of them is not.
 網站版面設計方案.zip

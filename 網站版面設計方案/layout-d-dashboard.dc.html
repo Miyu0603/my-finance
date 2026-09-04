@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#dedbe8; font-family:Manrope,'Noto Sans TC',system-ui,sans-serif; }
+  a { color:#6d28d9; text-decoration:none; }
+  a:hover { color:#5b21b6; text-decoration:underline; }
+</style>
+</helmet>
+
+<section style="padding:56px 56px 96px; display:flex; flex-direction:column; gap:24px">
+  <div style="max-width:840px; display:flex; flex-direction:column; gap:10px">
+    <span style="display:inline-flex; align-items:center; justify-content:center; width:44px; height:28px; border-radius:6px; background:#6d28d9; color:#fff; font-size:13px; font-weight:800">1d</span>
+    <h1 style="margin:0; font-size:38px; font-weight:800; color:#171422; letter-spacing:-.02em">精算儀表板</h1>
+    <p style="margin:0; font-size:15px; line-height:1.75; color:#4a4160; text-wrap:pretty">資訊密集但克制的專業版：淺灰紫底、白面板、12px 圓角、等寬對齊數字。桌機側欄展開並分組，頂欄有月份切換；加入資產配置環圈與月度收支長條，一頁看完全部。手機改成分段控制＋緊湊列表。</p>
+  </div>
+
+  <div style="display:flex; flex-wrap:wrap; gap:32px; align-items:flex-start">
+
+    <!-- 桌機 · 總覽 -->
+    <div data-screen-label="D-桌機-總覽" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:600; color:#4a4160">桌機 1280 · 總覽</span>
+      <div style="width:1280px; height:984px; overflow:hidden; border-radius:14px; box-shadow:0 24px 60px -30px rgb(23 20 34 / .45); background:#f7f7fb; color:#171422; display:flex; font-variant-numeric:tabular-nums">
+        <aside style="width:224px; flex-shrink:0; background:#fff; border-right:1px solid #ebe9f2; display:flex; flex-direction:column">
+          <div style="display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid #ebe9f2">
+            <img src="assets/app-icon.png" alt="" style="width:30px; height:30px; border-radius:9px">
+            <div>
+              <div style="font-size:14px; font-weight:800; letter-spacing:-.01em">財務管家</div>
+              <div style="font-size:10px; color:#8b849e">本機資料 · 已備份 8/30</div>
+            </div>
+          </div>
+          <nav style="padding:14px 10px; display:flex; flex-direction:column; gap:2px">
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:6px 10px">總覽</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; background:#f1ecfd; color:#5b21b6; font-size:13px; font-weight:700">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>財務總覽
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">資產</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V12m0-9L3 8v1h18V8l-9-5zM3 21h18M5 12v9m14-9v9M9 12v9m6-9v9"/></svg>銀行帳戶
+              <span style="margin-left:auto; font-size:11px; color:#8b849e">4</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>投資持股
+              <span style="margin-left:auto; font-size:11px; color:#8b849e">3</span>
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">負債與支出</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>信用卡
+              <span style="margin-left:auto; font-size:11px; font-weight:700; color:#dc2626; background:#fef2f2; border-radius:999px; padding:1px 7px">2</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>交易紀錄
+              <span style="margin-left:auto; font-size:11px; color:#8b849e">38</span>
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">其他</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>設定與備份
+            </div>
+          </nav>
+        </aside>
+
+        <main style="flex:1; min-width:0; display:flex; flex-direction:column">
+          <div style="display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 22px; background:#fff; border-bottom:1px solid #ebe9f2">
+            <div style="display:flex; align-items:center; gap:14px">
+              <h1 style="margin:0; font-size:15px; font-weight:800">財務總覽</h1>
+              <div style="display:flex; background:#f2f1f7; border-radius:9px; padding:2px">
+                <span style="font-size:12px; font-weight:700; background:#fff; border-radius:7px; padding:5px 12px; box-shadow:0 1px 2px rgb(23 20 34 / .08)">本月</span>
+                <span style="font-size:12px; color:#6b6480; padding:5px 12px">近 3 月</span>
+                <span style="font-size:12px; color:#6b6480; padding:5px 12px">今年</span>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px">
+              <span style="font-size:12px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; border-radius:9px; padding:6px 12px">幣別：全部 ▾</span>
+              <span style="width:32px; height:32px; border:1px solid #e2dff0; border-radius:9px; display:flex; align-items:center; justify-content:center; color:#6b6480">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.75"/></svg>
+              </span>
+              <span style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; background:#6d28d9; color:#fff; border-radius:9px; padding:7px 14px">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16m8-8H4"/></svg>記一筆
+              </span>
+            </div>
+          </div>
+
+          <div style="padding:18px 22px; display:flex; flex-direction:column; gap:14px">
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px">
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:14px 16px">
+                <div style="font-size:11px; font-weight:700; letter-spacing:.06em; color:#8b849e">總資產 TWD</div>
+                <div style="font-size:26px; font-weight:800; letter-spacing:-.02em; margin-top:4px">197,630</div>
+                <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:11px; color:#047857; font-weight:600">▲ 4.2% 較上月 <span style="color:#8b849e; font-weight:500">＋7,940</span></div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:14px 16px">
+                <div style="font-size:11px; font-weight:700; letter-spacing:.06em; color:#8b849e">外幣資產 USD</div>
+                <div style="font-size:26px; font-weight:800; letter-spacing:-.02em; margin-top:4px">3,200.00</div>
+                <div style="margin-top:4px; font-size:11px; color:#8b849e">中國信託 ···9902 外幣定存</div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:14px 16px">
+                <div style="font-size:11px; font-weight:700; letter-spacing:.06em; color:#8b849e">投資成本</div>
+                <div style="font-size:26px; font-weight:800; letter-spacing:-.02em; margin-top:4px">210,000</div>
+                <div style="margin-top:4px; font-size:11px; color:#8b849e">3 檔 · 另有 USD 4,800</div>
+              </div>
+              <div style="background:#fff; border:1px solid #fbdada; border-radius:12px; padding:14px 16px">
+                <div style="display:flex; align-items:center; justify-content:space-between">
+                  <div style="font-size:11px; font-weight:700; letter-spacing:.06em; color:#8b849e">本月待繳</div>
+                  <span style="font-size:10px; font-weight:700; color:#dc2626; background:#fef2f2; border-radius:999px; padding:2px 7px">2 張未繳</span>
+                </div>
+                <div style="font-size:26px; font-weight:800; letter-spacing:-.02em; margin-top:4px; color:#b91c1c">4,820</div>
+                <div style="margin-top:4px; font-size:11px; color:#8b849e">最近到期 9/15 · 3 天後</div>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1.15fr 1fr 1fr; gap:12px">
+              <section style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:14px 16px">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px">
+                  <h2 style="margin:0; font-size:13px; font-weight:800">近 6 個月淨資產</h2>
+                  <span style="font-size:11px; color:#8b849e">TWD</span>
+                </div>
+                <svg width="100%" height="132" viewBox="0 0 380 132" preserveAspectRatio="none" style="display:block">
+                  <line x1="0" y1="12" x2="380" y2="12" stroke="#f0eef7" stroke-width="1"/>
+                  <line x1="0" y1="52" x2="380" y2="52" stroke="#f0eef7" stroke-width="1"/>
+                  <line x1="0" y1="92" x2="380" y2="92" stroke="#f0eef7" stroke-width="1"/>
+                  <line x1="0" y1="120" x2="380" y2="120" stroke="#e6e3f0" stroke-width="1"/>
+                  <defs><linearGradient id="dArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c3aed" stop-opacity=".22"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/></linearGradient></defs>
+                  <path d="M6 96 L80 88 L154 92 L228 62 L302 48 L376 26 L376 120 L6 120 Z" fill="url(#dArea)"/>
+                  <path d="M6 96 L80 88 L154 92 L228 62 L302 48 L376 26" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linejoin="round"/>
+                  <circle cx="376" cy="26" r="4" fill="#7c3aed"/>
+                </svg>
+                <div style="display:flex; justify-content:space-between; font-size:10px; color:#a7a1b8; margin-top:6px">
+                  <span>4月</span><span>5月</span><span>6月</span><span>7月</span><span>8月</span><span>9月</span>
+                </div>
+              </section>
+
+              <section style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:14px 16px">
+                <h2 style="margin:0 0 10px; font-size:13px; font-weight:800">資產配置</h2>
+                <div style="display:flex; align-items:center; gap:16px">
+                  <svg width="110" height="110" viewBox="0 0 42 42">
+                    <circle cx="21" cy="21" r="15.9" fill="none" stroke="#f2f1f7" stroke-width="7"/>
+                    <circle cx="21" cy="21" r="15.9" fill="none" stroke="#7c3aed" stroke-width="7" stroke-dasharray="48 52" stroke-dashoffset="25" stroke-linecap="butt"/>
+                    <circle cx="21" cy="21" r="15.9" fill="none" stroke="#a78bfa" stroke-width="7" stroke-dasharray="21 79" stroke-dashoffset="-23" stroke-linecap="butt"/>
+                    <circle cx="21" cy="21" r="15.9" fill="none" stroke="#34d399" stroke-width="7" stroke-dasharray="27 73" stroke-dashoffset="-44" stroke-linecap="butt"/>
+                    <circle cx="21" cy="21" r="15.9" fill="none" stroke="#fbbf24" stroke-width="7" stroke-dasharray="4 96" stroke-dashoffset="-71" stroke-linecap="butt"/>
+                  </svg>
+                  <div style="display:flex; flex-direction:column; gap:7px; font-size:12px">
+                    <div style="display:flex; align-items:center; gap:7px"><span style="width:8px; height:8px; border-radius:2px; background:#7c3aed"></span>現金 48%<span style="color:#8b849e">197,630</span></div>
+                    <div style="display:flex; align-items:center; gap:7px"><span style="width:8px; height:8px; border-radius:2px; background:#a78bfa"></span>台股 21%<span style="color:#8b849e">88,000</span></div>
+                    <div style="display:flex; align-items:center; gap:7px"><span style="width:8px; height:8px; border-radius:2px; background:#34d399"></span>美股 27%<span style="color:#8b849e">122,000</span></div>
+                    <div style="display:flex; align-items:center; gap:7px"><span style="width:8px; height:8px; border-radius:2px; background:#fbbf24"></span>外幣 4%<span style="color:#8b849e">3,200</span></div>
+                  </div>
+                </div>
+              </section>
+
+              <section style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:14px 16px">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px">
+                  <h2 style="margin:0; font-size:13px; font-weight:800">本月收支</h2>
+                  <span style="font-size:11px; font-weight:700; color:#047857">結餘 ＋63,850</span>
+                </div>
+                <div style="display:flex; align-items:flex-end; gap:12px; height:104px; padding-top:6px">
+                  <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px">
+                    <span style="font-size:11px; font-weight:700; color:#047857">92,000</span>
+                    <span style="width:100%; height:78px; border-radius:6px 6px 0 0; background:linear-gradient(#34d399,#10b981)"></span>
+                    <span style="font-size:11px; color:#6b6480">收入</span>
+                  </div>
+                  <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px">
+                    <span style="font-size:11px; font-weight:700; color:#b91c1c">28,150</span>
+                    <span style="width:100%; height:24px; border-radius:6px 6px 0 0; background:linear-gradient(#f87171,#ef4444)"></span>
+                    <span style="font-size:11px; color:#6b6480">支出</span>
+                  </div>
+                  <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:6px">
+                    <span style="font-size:11px; font-weight:700; color:#5b21b6">19,050</span>
+                    <span style="width:100%; height:16px; border-radius:6px 6px 0 0; background:linear-gradient(#a78bfa,#7c3aed)"></span>
+                    <span style="font-size:11px; color:#6b6480">投資</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:12px">
+              <section style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; overflow:hidden">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid #ebe9f2">
+                  <h2 style="margin:0; font-size:13px; font-weight:800">帳戶明細</h2>
+                  <span style="font-size:11px; font-weight:600; color:#6d28d9">管理帳戶 →</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1.4fr 54px 78px 1fr 120px; padding:8px 16px; background:#fafafd; border-bottom:1px solid #ebe9f2; font-size:10px; font-weight:700; letter-spacing:.08em; color:#a7a1b8">
+                  <span>銀行</span><span>幣別</span><span>末四碼</span><span>用途</span><span style="text-align:right">餘額</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1.4fr 54px 78px 1fr 120px; padding:11px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                  <span style="display:flex; align-items:center; gap:8px; font-weight:600"><span style="width:6px; height:22px; border-radius:3px; background:#7c3aed"></span>中國信託</span>
+                  <span style="font-size:11px; font-weight:700; color:#5b21b6">TWD</span>
+                  <span style="font-size:12px; color:#8b849e">···1234</span>
+                  <span style="color:#4a4160">薪轉戶</span>
+                  <span style="text-align:right; font-weight:700">128,430</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1.4fr 54px 78px 1fr 120px; padding:11px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                  <span style="display:flex; align-items:center; gap:8px; font-weight:600"><span style="width:6px; height:22px; border-radius:3px; background:#7c3aed"></span>中國信託</span>
+                  <span style="font-size:11px; font-weight:700; color:#b45309">USD</span>
+                  <span style="font-size:12px; color:#8b849e">···9902</span>
+                  <span style="color:#4a4160">外幣定存</span>
+                  <span style="text-align:right; font-weight:700">3,200.00</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1.4fr 54px 78px 1fr 120px; padding:11px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                  <span style="display:flex; align-items:center; gap:8px; font-weight:600"><span style="width:6px; height:22px; border-radius:3px; background:#10b981"></span>國泰世華</span>
+                  <span style="font-size:11px; font-weight:700; color:#5b21b6">TWD</span>
+                  <span style="font-size:12px; color:#8b849e">···5678</span>
+                  <span style="color:#4a4160">儲蓄</span>
+                  <span style="text-align:right; font-weight:700">56,900</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1.4fr 54px 78px 1fr 120px; padding:11px 16px; font-size:13px; align-items:center">
+                  <span style="display:flex; align-items:center; gap:8px; font-weight:600"><span style="width:6px; height:22px; border-radius:3px; background:#06b6d4"></span>玉山銀行</span>
+                  <span style="font-size:11px; font-weight:700; color:#5b21b6">TWD</span>
+                  <span style="font-size:12px; color:#8b849e">···3311</span>
+                  <span style="color:#4a4160">信用卡扣款</span>
+                  <span style="text-align:right; font-weight:700">12,300</span>
+                </div>
+              </section>
+
+              <section style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; overflow:hidden">
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid #ebe9f2">
+                  <h2 style="margin:0; font-size:13px; font-weight:800">繳款排程</h2>
+                  <span style="font-size:11px; color:#8b849e">未來 30 天</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid #f4f3f9">
+                  <div style="width:38px; text-align:center">
+                    <div style="font-size:15px; font-weight:800; line-height:1.1; color:#b91c1c">15</div>
+                    <div style="font-size:10px; color:#8b849e">9 月</div>
+                  </div>
+                  <div style="flex:1; min-width:0">
+                    <div style="font-size:13px; font-weight:600">LINE Pay 信用卡</div>
+                    <div style="font-size:11px; color:#8b849e">中國信託 ···1234 · 3 天後</div>
+                  </div>
+                  <span style="font-size:13px; font-weight:700">3,540</span>
+                  <span style="font-size:11px; font-weight:700; background:#6d28d9; color:#fff; border-radius:8px; padding:6px 11px">繳款</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid #f4f3f9">
+                  <div style="width:38px; text-align:center">
+                    <div style="font-size:15px; font-weight:800; line-height:1.1">22</div>
+                    <div style="font-size:10px; color:#8b849e">9 月</div>
+                  </div>
+                  <div style="flex:1; min-width:0">
+                    <div style="font-size:13px; font-weight:600">玉山 Unicard</div>
+                    <div style="font-size:11px; color:#8b849e">玉山銀行 ···3311 · 10 天後</div>
+                  </div>
+                  <span style="font-size:13px; font-weight:700">1,280</span>
+                  <span style="font-size:11px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; border-radius:8px; padding:5px 11px">繳款</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 16px">
+                  <div style="width:38px; text-align:center">
+                    <div style="font-size:15px; font-weight:800; line-height:1.1; color:#8b849e">6</div>
+                    <div style="font-size:10px; color:#8b849e">10 月</div>
+                  </div>
+                  <div style="flex:1; min-width:0">
+                    <div style="font-size:13px; font-weight:600; color:#6b6480">國泰 CUBE 卡</div>
+                    <div style="font-size:11px; color:#8b849e">8/28 已繳 · 國泰世華 ···5678</div>
+                  </div>
+                  <span style="font-size:13px; font-weight:700; color:#6b6480">8,920</span>
+                  <span style="display:flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#047857; background:#ecfdf5; border-radius:8px; padding:5px 9px">
+                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>已繳
+                  </span>
+                </div>
+              </section>
+            </div>
+
+            <section style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; overflow:hidden">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid #ebe9f2">
+                <h2 style="margin:0; font-size:13px; font-weight:800">近期交易</h2>
+                <div style="display:flex; align-items:center; gap:10px">
+                  <span style="font-size:11px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; border-radius:8px; padding:4px 10px">全部類型 ▾</span>
+                  <span style="font-size:11px; font-weight:600; color:#6d28d9">查看 38 筆 →</span>
+                </div>
+              </div>
+              <div style="display:grid; grid-template-columns:70px 1fr 150px 130px 110px; padding:8px 16px; background:#fafafd; border-bottom:1px solid #ebe9f2; font-size:10px; font-weight:700; letter-spacing:.08em; color:#a7a1b8">
+                <span>日期</span><span>說明</span><span>帳戶</span><span style="text-align:right">金額</span><span style="text-align:right">類型</span>
+              </div>
+              <div style="display:grid; grid-template-columns:70px 1fr 150px 130px 110px; padding:10px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span style="color:#8b849e; font-size:12px">08/31</span>
+                <span>餐飲 · 午餐</span>
+                <span style="font-size:12px; color:#6b6480">中國信託 ···1234</span>
+                <span style="text-align:right; font-weight:700; color:#b91c1c">−180</span>
+                <span style="text-align:right"><span style="font-size:10px; font-weight:700; color:#b91c1c; background:#fef2f2; border-radius:6px; padding:3px 8px">支出</span></span>
+              </div>
+              <div style="display:grid; grid-template-columns:70px 1fr 150px 130px 110px; padding:10px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span style="color:#8b849e; font-size:12px">08/30</span>
+                <span>轉帳 中國信託 → 國泰世華</span>
+                <span style="font-size:12px; color:#6b6480">中國信託 ···1234</span>
+                <span style="text-align:right; font-weight:700">20,000</span>
+                <span style="text-align:right"><span style="font-size:10px; font-weight:700; color:#4f46e5; background:#eef2ff; border-radius:6px; padding:3px 8px">轉帳</span></span>
+              </div>
+              <div style="display:grid; grid-template-columns:70px 1fr 150px 130px 110px; padding:10px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span style="color:#8b849e; font-size:12px">08/28</span>
+                <span>國泰 CUBE 卡 繳款</span>
+                <span style="font-size:12px; color:#6b6480">國泰世華 ···5678</span>
+                <span style="text-align:right; font-weight:700; color:#b91c1c">−8,920</span>
+                <span style="text-align:right"><span style="font-size:10px; font-weight:700; color:#047857; background:#ecfdf5; border-radius:6px; padding:3px 8px">卡費</span></span>
+              </div>
+              <div style="display:grid; grid-template-columns:70px 1fr 150px 130px 110px; padding:10px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span style="color:#8b849e; font-size:12px">08/27</span>
+                <span>買進 元大台灣50 100 股</span>
+                <span style="font-size:12px; color:#6b6480">中國信託 ···1234</span>
+                <span style="text-align:right; font-weight:700; color:#b91c1c">−19,050</span>
+                <span style="text-align:right"><span style="font-size:10px; font-weight:700; color:#5b21b6; background:#f1ecfd; border-radius:6px; padding:3px 8px">買進</span></span>
+              </div>
+              <div style="display:grid; grid-template-columns:70px 1fr 150px 130px 110px; padding:10px 16px; font-size:13px; align-items:center">
+                <span style="color:#8b849e; font-size:12px">08/25</span>
+                <span>薪資</span>
+                <span style="font-size:12px; color:#6b6480">中國信託 ···1234</span>
+                <span style="text-align:right; font-weight:700; color:#047857">＋92,000</span>
+                <span style="text-align:right"><span style="font-size:10px; font-weight:700; color:#047857; background:#ecfdf5; border-radius:6px; padding:3px 8px">收入</span></span>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- 手機 · 總覽 -->
+    <div data-screen-label="D-手機-總覽" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:600; color:#4a4160">手機 375 · 總覽</span>
+      <div style="width:375px; height:812px; overflow:hidden; border-radius:40px; background:#f7f7fb; color:#171422; position:relative; box-shadow:0 24px 60px -30px rgb(23 20 34 / .45); font-variant-numeric:tabular-nums">
+        <div style="padding:44px 14px 96px">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px">
+            <div style="display:flex; align-items:center; gap:9px">
+              <img src="assets/app-icon.png" alt="" style="width:30px; height:30px; border-radius:9px">
+              <div>
+                <div style="font-size:14px; font-weight:800">財務總覽</div>
+                <div style="font-size:10px; color:#8b849e">9 月 · 更新於 10:24</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:7px">
+              <span style="width:32px; height:32px; border:1px solid #e2dff0; border-radius:9px; background:#fff; display:flex; align-items:center; justify-content:center; color:#6b6480">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.75"/></svg>
+              </span>
+              <span style="font-size:12px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; background:#fff; border-radius:9px; padding:7px 10px">全部 ▾</span>
+            </div>
+          </div>
+
+          <div style="background:#fff; border:1px solid #ebe9f2; border-radius:14px; padding:16px">
+            <div style="font-size:11px; font-weight:700; letter-spacing:.06em; color:#8b849e">總資產 TWD</div>
+            <div style="font-size:34px; font-weight:800; letter-spacing:-.02em; margin-top:4px">197,630</div>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:5px; font-size:12px">
+              <span style="font-weight:700; color:#047857">▲ 4.2%</span>
+              <span style="color:#8b849e">較上月 ＋7,940</span>
+              <span style="color:#d6d2e2">|</span>
+              <span style="color:#8b849e">USD 3,200</span>
+            </div>
+            <svg width="100%" height="62" viewBox="0 0 320 62" preserveAspectRatio="none" style="margin-top:12px; display:block">
+              <defs><linearGradient id="dAreaM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c3aed" stop-opacity=".2"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/></linearGradient></defs>
+              <path d="M4 46 L66 42 L128 44 L190 28 L252 22 L316 10 L316 58 L4 58 Z" fill="url(#dAreaM)"/>
+              <path d="M4 46 L66 42 L128 44 L190 28 L252 22 L316 10" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linejoin="round"/>
+              <circle cx="316" cy="10" r="3.5" fill="#7c3aed"/>
+            </svg>
+            <div style="display:flex; gap:8px; margin-top:12px">
+              <span style="flex:1; text-align:center; font-size:13px; font-weight:700; background:#6d28d9; color:#fff; border-radius:10px; padding:10px 0">記一筆</span>
+              <span style="flex:1; text-align:center; font-size:13px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; border-radius:10px; padding:10px 0">轉帳</span>
+              <span style="flex:1; text-align:center; font-size:13px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; border-radius:10px; padding:10px 0">紀錄</span>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px">
+            <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 14px">
+              <div style="font-size:11px; font-weight:700; color:#8b849e">投資成本</div>
+              <div style="font-size:20px; font-weight:800; margin-top:3px">210,000</div>
+              <div style="font-size:10px; color:#8b849e; margin-top:2px">3 檔 · USD 4,800</div>
+            </div>
+            <div style="background:#fff; border:1px solid #fbdada; border-radius:12px; padding:13px 14px">
+              <div style="font-size:11px; font-weight:700; color:#8b849e">本月待繳</div>
+              <div style="font-size:20px; font-weight:800; margin-top:3px; color:#b91c1c">4,820</div>
+              <div style="font-size:10px; color:#8b849e; margin-top:2px">2 張未繳 · 3 天後</div>
+            </div>
+          </div>
+
+          <div style="display:flex; background:#eeecf6; border-radius:10px; padding:3px; margin-top:16px">
+            <span style="flex:1; text-align:center; font-size:12px; font-weight:700; background:#fff; border-radius:8px; padding:7px 0; box-shadow:0 1px 2px rgb(23 20 34 / .08)">帳戶</span>
+            <span style="flex:1; text-align:center; font-size:12px; color:#6b6480; padding:7px 0">繳款</span>
+            <span style="flex:1; text-align:center; font-size:12px; color:#6b6480; padding:7px 0">交易</span>
+          </div>
+
+          <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; overflow:hidden; margin-top:10px">
+            <div style="display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid #f4f3f9">
+              <span style="width:5px; height:26px; border-radius:3px; background:#7c3aed"></span>
+              <div style="flex:1; min-width:0">
+                <div style="font-size:13px; font-weight:600">中國信託 <span style="font-size:11px; color:#8b849e">···1234</span></div>
+                <div style="font-size:11px; color:#8b849e">TWD · 薪轉戶</div>
+              </div>
+              <span style="font-size:14px; font-weight:700">128,430</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid #f4f3f9">
+              <span style="width:5px; height:26px; border-radius:3px; background:#fbbf24"></span>
+              <div style="flex:1; min-width:0">
+                <div style="font-size:13px; font-weight:600">中國信託 <span style="font-size:11px; color:#8b849e">···9902</span></div>
+                <div style="font-size:11px; color:#8b849e">USD · 外幣定存</div>
+              </div>
+              <span style="font-size:14px; font-weight:700">3,200.00</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid #f4f3f9">
+              <span style="width:5px; height:26px; border-radius:3px; background:#10b981"></span>
+              <div style="flex:1; min-width:0">
+                <div style="font-size:13px; font-weight:600">國泰世華 <span style="font-size:11px; color:#8b849e">···5678</span></div>
+                <div style="font-size:11px; color:#8b849e">TWD · 儲蓄</div>
+              </div>
+              <span style="font-size:14px; font-weight:700">56,900</span>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:0; left:0; right:0; background:#fff; border-top:1px solid #ebe9f2; display:flex; align-items:center; justify-content:space-around; padding:9px 0 22px">
+          <span style="display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10px; font-weight:700; color:#6d28d9">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>總覽
+          </span>
+          <span style="display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10px; color:#8b849e">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V12m0-9L3 8v1h18V8l-9-5zM3 21h18M5 12v9m14-9v9M9 12v9m6-9v9"/></svg>帳戶
+          </span>
+          <span style="display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10px; color:#8b849e">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>投資
+          </span>
+          <span style="display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10px; color:#8b849e; position:relative">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>信用卡
+            <span style="position:absolute; top:-2px; right:8px; width:7px; height:7px; border-radius:999px; background:#dc2626"></span>
+          </span>
+          <span style="display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10px; color:#8b849e">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>設定
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 桌機 · 銀行帳戶 -->
+    <div data-screen-label="D-桌機-銀行帳戶" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:600; color:#4a4160">桌機 1280 · 銀行帳戶</span>
+      <div style="width:1280px; height:560px; overflow:hidden; border-radius:14px; box-shadow:0 24px 60px -30px rgb(23 20 34 / .45); background:#f7f7fb; color:#171422; display:flex; font-variant-numeric:tabular-nums">
+        <aside style="width:224px; flex-shrink:0; background:#fff; border-right:1px solid #ebe9f2">
+          <div style="display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid #ebe9f2">
+            <img src="assets/app-icon.png" alt="" style="width:30px; height:30px; border-radius:9px">
+            <div style="font-size:14px; font-weight:800">財務管家</div>
+          </div>
+          <nav style="padding:14px 10px; display:flex; flex-direction:column; gap:2px">
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>財務總覽
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">資產</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; background:#f1ecfd; color:#5b21b6; font-size:13px; font-weight:700">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V12m0-9L3 8v1h18V8l-9-5zM3 21h18M5 12v9m14-9v9M9 12v9m6-9v9"/></svg>銀行帳戶
+              <span style="margin-left:auto; font-size:11px">4</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>投資持股
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">負債與支出</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>信用卡
+            </div>
+          </nav>
+        </aside>
+        <main style="flex:1; min-width:0">
+          <div style="display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 22px; background:#fff; border-bottom:1px solid #ebe9f2">
+            <h1 style="margin:0; font-size:15px; font-weight:800">銀行帳戶</h1>
+            <div style="display:flex; align-items:center; gap:8px">
+              <span style="font-size:12px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; border-radius:9px; padding:6px 12px">依銀行分組 ▾</span>
+              <span style="font-size:12px; font-weight:700; background:#6d28d9; color:#fff; border-radius:9px; padding:7px 14px">＋ 新增帳戶</span>
+            </div>
+          </div>
+          <div style="padding:18px 22px">
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:14px">
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">TWD 合計</div>
+                <div style="font-size:22px; font-weight:800; margin-top:3px">197,630</div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">USD 合計</div>
+                <div style="font-size:22px; font-weight:800; margin-top:3px">3,200.00</div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">帳戶數</div>
+                <div style="font-size:22px; font-weight:800; margin-top:3px">4 <span style="font-size:12px; font-weight:600; color:#8b849e">／ 3 家銀行</span></div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">綁定卡片</div>
+                <div style="font-size:22px; font-weight:800; margin-top:3px">3 <span style="font-size:12px; font-weight:600; color:#8b849e">張</span></div>
+              </div>
+            </div>
+            <section style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; overflow:hidden">
+              <div style="display:grid; grid-template-columns:1.3fr 54px 84px 1fr 130px 132px; padding:9px 16px; background:#fafafd; border-bottom:1px solid #ebe9f2; font-size:10px; font-weight:700; letter-spacing:.08em; color:#a7a1b8">
+                <span>銀行</span><span>幣別</span><span>末四碼</span><span>用途／備註</span><span style="text-align:right">餘額</span><span style="text-align:right">操作</span>
+              </div>
+              <div style="display:grid; grid-template-columns:1.3fr 54px 84px 1fr 130px 132px; padding:12px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span style="display:flex; align-items:center; gap:9px; font-weight:700"><span style="width:6px; height:24px; border-radius:3px; background:#7c3aed"></span>中國信託</span>
+                <span style="font-size:11px; font-weight:700; color:#5b21b6">TWD</span>
+                <span style="font-size:12px; color:#8b849e">···1234</span>
+                <span style="color:#4a4160">薪轉戶 · 主要收支帳戶</span>
+                <span style="text-align:right; font-weight:700; font-size:15px">128,430</span>
+                <span style="display:flex; gap:13px; justify-content:flex-end; color:#8b849e">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m-4 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </span>
+              </div>
+              <div style="display:grid; grid-template-columns:1.3fr 54px 84px 1fr 130px 132px; padding:12px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span style="display:flex; align-items:center; gap:9px; font-weight:700"><span style="width:6px; height:24px; border-radius:3px; background:#7c3aed"></span>中國信託</span>
+                <span style="font-size:11px; font-weight:700; color:#b45309">USD</span>
+                <span style="font-size:12px; color:#8b849e">···9902</span>
+                <span style="color:#4a4160">外幣定存</span>
+                <span style="text-align:right; font-weight:700; font-size:15px">3,200.00</span>
+                <span></span>
+              </div>
+              <div style="display:grid; grid-template-columns:1.3fr 54px 84px 1fr 130px 132px; padding:12px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span style="display:flex; align-items:center; gap:9px; font-weight:700"><span style="width:6px; height:24px; border-radius:3px; background:#10b981"></span>國泰世華</span>
+                <span style="font-size:11px; font-weight:700; color:#5b21b6">TWD</span>
+                <span style="font-size:12px; color:#8b849e">···5678</span>
+                <span style="color:#4a4160">儲蓄</span>
+                <span style="text-align:right; font-weight:700; font-size:15px">56,900</span>
+                <span></span>
+              </div>
+              <div style="display:grid; grid-template-columns:1.3fr 54px 84px 1fr 130px 132px; padding:12px 16px; font-size:13px; align-items:center">
+                <span style="display:flex; align-items:center; gap:9px; font-weight:700"><span style="width:6px; height:24px; border-radius:3px; background:#06b6d4"></span>玉山銀行</span>
+                <span style="font-size:11px; font-weight:700; color:#5b21b6">TWD</span>
+                <span style="font-size:12px; color:#8b849e">···3311</span>
+                <span style="color:#4a4160">信用卡扣款</span>
+                <span style="text-align:right; font-weight:700; font-size:15px">12,300</span>
+                <span></span>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- 桌機 · 信用卡 -->
+    <div data-screen-label="D-桌機-信用卡" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:600; color:#4a4160">桌機 1280 · 信用卡</span>
+      <div style="width:1280px; height:520px; overflow:hidden; border-radius:14px; box-shadow:0 24px 60px -30px rgb(23 20 34 / .45); background:#f7f7fb; color:#171422; display:flex; font-variant-numeric:tabular-nums">
+        <aside style="width:224px; flex-shrink:0; background:#fff; border-right:1px solid #ebe9f2">
+          <div style="display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid #ebe9f2">
+            <img src="assets/app-icon.png" alt="" style="width:30px; height:30px; border-radius:9px">
+            <div style="font-size:14px; font-weight:800">財務管家</div>
+          </div>
+          <nav style="padding:14px 10px; display:flex; flex-direction:column; gap:2px">
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>財務總覽
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V12m0-9L3 8v1h18V8l-9-5zM3 21h18M5 12v9m14-9v9M9 12v9m6-9v9"/></svg>銀行帳戶
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>投資持股
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">負債與支出</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; background:#f1ecfd; color:#5b21b6; font-size:13px; font-weight:700">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>信用卡
+              <span style="margin-left:auto; font-size:11px; font-weight:700; color:#dc2626; background:#fef2f2; border-radius:999px; padding:1px 7px">2</span>
+            </div>
+          </nav>
+        </aside>
+        <main style="flex:1; min-width:0">
+          <div style="display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 22px; background:#fff; border-bottom:1px solid #ebe9f2">
+            <h1 style="margin:0; font-size:15px; font-weight:800">信用卡</h1>
+            <div style="display:flex; align-items:center; gap:8px">
+              <span style="font-size:12px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; border-radius:9px; padding:6px 12px">依到期日排序 ▾</span>
+              <span style="font-size:12px; font-weight:700; background:#6d28d9; color:#fff; border-radius:9px; padding:7px 14px">＋ 新增卡片</span>
+            </div>
+          </div>
+          <div style="padding:18px 22px">
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px">
+              <div style="background:#fff; border:1px solid #fbdada; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">本月待繳 TWD</div>
+                <div style="font-size:22px; font-weight:800; margin-top:3px; color:#b91c1c">4,820</div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">本月已繳</div>
+                <div style="font-size:22px; font-weight:800; margin-top:3px; color:#047857">8,920</div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">繳款完成度</div>
+                <div style="display:flex; align-items:center; gap:10px; margin-top:7px">
+                  <span style="flex:1; height:8px; border-radius:999px; background:#f2f1f7; overflow:hidden"><span style="display:block; width:33%; height:100%; background:#7c3aed"></span></span>
+                  <span style="font-size:13px; font-weight:800">1／3</span>
+                </div>
+              </div>
+            </div>
+            <section style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; overflow:hidden">
+              <div style="display:grid; grid-template-columns:56px 1.4fr 1fr 110px 130px 120px; padding:9px 16px; background:#fafafd; border-bottom:1px solid #ebe9f2; font-size:10px; font-weight:700; letter-spacing:.08em; color:#a7a1b8">
+                <span>繳費日</span><span>卡片</span><span>扣款帳戶</span><span>狀態</span><span style="text-align:right">本月應繳</span><span style="text-align:right">操作</span>
+              </div>
+              <div style="display:grid; grid-template-columns:56px 1.4fr 1fr 110px 130px 120px; padding:13px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span style="font-size:15px; font-weight:800; color:#b91c1c">15</span>
+                <span>
+                  <span style="display:block; font-weight:700">LINE Pay 信用卡</span>
+                  <span style="display:block; font-size:11px; color:#8b849e">中國信託 · 海外 3% 回饋</span>
+                </span>
+                <span style="font-size:12px; color:#4a4160">中國信託 ···1234</span>
+                <span><span style="font-size:11px; font-weight:700; color:#b91c1c; background:#fef2f2; border-radius:6px; padding:3px 8px">3 天後到期</span></span>
+                <span style="text-align:right; font-weight:800; font-size:16px">3,540</span>
+                <span style="text-align:right"><span style="font-size:11px; font-weight:700; background:#6d28d9; color:#fff; border-radius:8px; padding:6px 13px">立即繳款</span></span>
+              </div>
+              <div style="display:grid; grid-template-columns:56px 1.4fr 1fr 110px 130px 120px; padding:13px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span style="font-size:15px; font-weight:800">22</span>
+                <span>
+                  <span style="display:block; font-weight:700">玉山 Unicard</span>
+                  <span style="display:block; font-size:11px; color:#8b849e">玉山銀行</span>
+                </span>
+                <span style="font-size:12px; color:#4a4160">玉山銀行 ···3311</span>
+                <span><span style="font-size:11px; font-weight:700; color:#b45309; background:#fffbeb; border-radius:6px; padding:3px 8px">10 天後</span></span>
+                <span style="text-align:right; font-weight:800; font-size:16px">1,280</span>
+                <span style="text-align:right"><span style="font-size:11px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; border-radius:8px; padding:5px 13px">手動繳款</span></span>
+              </div>
+              <div style="display:grid; grid-template-columns:56px 1.4fr 1fr 110px 130px 120px; padding:13px 16px; font-size:13px; align-items:center">
+                <span style="font-size:15px; font-weight:800; color:#8b849e">6</span>
+                <span>
+                  <span style="display:block; font-weight:700; color:#6b6480">國泰 CUBE 卡</span>
+                  <span style="display:block; font-size:11px; color:#8b849e">國泰世華</span>
+                </span>
+                <span style="font-size:12px; color:#6b6480">國泰世華 ···5678</span>
+                <span><span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#047857; background:#ecfdf5; border-radius:6px; padding:3px 8px">
+                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>8/28 已繳
+                </span></span>
+                <span style="text-align:right; font-weight:800; font-size:16px; color:#6b6480">8,920</span>
+                <span style="text-align:right"><span style="font-size:11px; font-weight:600; color:#8b849e">看紀錄</span></span>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- 桌機 · 投資 -->
+    <div data-screen-label="D-桌機-投資" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:600; color:#4a4160">桌機 1280 · 投資</span>
+      <div style="width:1280px; height:560px; overflow:hidden; border-radius:14px; box-shadow:0 24px 60px -30px rgb(23 20 34 / .45); background:#f7f7fb; color:#171422; display:flex; font-variant-numeric:tabular-nums">
+        <aside style="width:224px; flex-shrink:0; background:#fff; border-right:1px solid #ebe9f2">
+          <div style="display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid #ebe9f2">
+            <img src="assets/app-icon.png" alt="" style="width:30px; height:30px; border-radius:9px">
+            <div style="font-size:14px; font-weight:800">財務管家</div>
+          </div>
+          <nav style="padding:14px 10px; display:flex; flex-direction:column; gap:2px">
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>財務總覽
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">資產</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V12m0-9L3 8v1h18V8l-9-5zM3 21h18M5 12v9m14-9v9M9 12v9m6-9v9"/></svg>銀行帳戶
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; background:#f1ecfd; color:#5b21b6; font-size:13px; font-weight:700">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>投資持股
+              <span style="margin-left:auto; font-size:11px">3</span>
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">負債與支出</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>信用卡
+            </div>
+          </nav>
+        </aside>
+        <main style="flex:1; min-width:0">
+          <div style="display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 22px; background:#fff; border-bottom:1px solid #ebe9f2">
+            <div style="display:flex; align-items:center; gap:14px">
+              <h1 style="margin:0; font-size:15px; font-weight:800">投資持股</h1>
+              <div style="display:flex; background:#f2f1f7; border-radius:9px; padding:2px">
+                <span style="font-size:12px; font-weight:700; background:#fff; border-radius:7px; padding:5px 14px; box-shadow:0 1px 2px rgb(23 20 34 / .08)">台股 TWD</span>
+                <span style="font-size:12px; color:#6b6480; padding:5px 14px">美股 USD</span>
+              </div>
+            </div>
+            <span style="font-size:12px; font-weight:700; background:#6d28d9; color:#fff; border-radius:9px; padding:7px 14px">＋ 新增持股</span>
+          </div>
+          <div style="padding:18px 22px">
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:14px">
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">台股總成本 TWD</div>
+                <div style="font-size:22px; font-weight:800; margin-top:3px">210,000</div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">美股總成本 USD</div>
+                <div style="font-size:22px; font-weight:800; margin-top:3px">4,800.00</div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">持股檔數</div>
+                <div style="font-size:22px; font-weight:800; margin-top:3px">3 <span style="font-size:12px; font-weight:600; color:#8b849e">台 2 ／ 美 1</span></div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:13px 15px">
+                <div style="font-size:11px; font-weight:700; color:#8b849e">最近交易</div>
+                <div style="font-size:14px; font-weight:700; margin-top:6px">08/27 買進 元大台灣50</div>
+              </div>
+            </div>
+            <section style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; overflow:hidden">
+              <div style="display:grid; grid-template-columns:1.4fr 70px 110px 130px 130px 190px; padding:9px 16px; background:#fafafd; border-bottom:1px solid #ebe9f2; font-size:10px; font-weight:700; letter-spacing:.08em; color:#a7a1b8">
+                <span>名稱</span><span>市場</span><span style="text-align:right">股數</span><span style="text-align:right">總成本</span><span style="text-align:right">平均成本</span><span style="text-align:right">操作</span>
+              </div>
+              <div style="display:grid; grid-template-columns:1.4fr 70px 110px 130px 130px 190px; padding:12px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span>
+                  <span style="display:block; font-weight:700">元大台灣50 · 0050</span>
+                  <span style="display:block; font-size:11px; color:#8b849e">長期持有</span>
+                </span>
+                <span><span style="font-size:11px; font-weight:700; color:#5b21b6; background:#f1ecfd; border-radius:6px; padding:3px 8px">台股</span></span>
+                <span style="text-align:right; font-weight:600">1,200</span>
+                <span style="text-align:right; font-weight:700; font-size:15px">122,000</span>
+                <span style="text-align:right; color:#4a4160">101.67</span>
+                <span style="display:flex; gap:6px; justify-content:flex-end">
+                  <span style="display:flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#047857; background:#ecfdf5; border-radius:8px; padding:5px 10px">
+                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16m8-8H4"/></svg>買進
+                  </span>
+                  <span style="display:flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#b91c1c; background:#fef2f2; border-radius:8px; padding:5px 10px">
+                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4"/></svg>賣出
+                  </span>
+                  <span style="width:28px; height:28px; border:1px solid #e2dff0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#8b849e">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  </span>
+                  <span style="width:28px; height:28px; border:1px solid #e2dff0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#8b849e">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                  </span>
+                </span>
+              </div>
+              <div style="display:grid; grid-template-columns:1.4fr 70px 110px 130px 130px 190px; padding:12px 16px; border-bottom:1px solid #f4f3f9; font-size:13px; align-items:center">
+                <span>
+                  <span style="display:block; font-weight:700">台積電 · 2330</span>
+                  <span style="display:block; font-size:11px; color:#8b849e">核心持股</span>
+                </span>
+                <span><span style="font-size:11px; font-weight:700; color:#5b21b6; background:#f1ecfd; border-radius:6px; padding:3px 8px">台股</span></span>
+                <span style="text-align:right; font-weight:600">100</span>
+                <span style="text-align:right; font-weight:700; font-size:15px">88,000</span>
+                <span style="text-align:right; color:#4a4160">880.00</span>
+                <span></span>
+              </div>
+              <div style="display:grid; grid-template-columns:1.4fr 70px 110px 130px 130px 190px; padding:12px 16px; font-size:13px; align-items:center">
+                <span>
+                  <span style="display:block; font-weight:700">VT</span>
+                  <span style="display:block; font-size:11px; color:#8b849e">Vanguard Total World</span>
+                </span>
+                <span><span style="font-size:11px; font-weight:700; color:#1d4ed8; background:#eff6ff; border-radius:6px; padding:3px 8px">美股</span></span>
+                <span style="text-align:right; font-weight:600">40</span>
+                <span style="text-align:right; font-weight:700; font-size:15px">4,800.00</span>
+                <span style="text-align:right; color:#4a4160">120.00</span>
+                <span></span>
+              </div>
+            </section>
+            <p style="margin:12px 0 0; font-size:11px; color:#8b849e">買進／賣出會同步扣款或入帳到同幣別的銀行帳戶；手動編輯股數與成本不會動到帳戶餘額。</p>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- 桌機 · 設定 -->
+    <div data-screen-label="D-桌機-設定" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:600; color:#4a4160">桌機 1280 · 設定與備份</span>
+      <div style="width:1280px; height:660px; overflow:hidden; border-radius:14px; box-shadow:0 24px 60px -30px rgb(23 20 34 / .45); background:#f7f7fb; color:#171422; display:flex; font-variant-numeric:tabular-nums">
+        <aside style="width:224px; flex-shrink:0; background:#fff; border-right:1px solid #ebe9f2">
+          <div style="display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid #ebe9f2">
+            <img src="assets/app-icon.png" alt="" style="width:30px; height:30px; border-radius:9px">
+            <div style="font-size:14px; font-weight:800">財務管家</div>
+          </div>
+          <nav style="padding:14px 10px; display:flex; flex-direction:column; gap:2px">
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>財務總覽
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">資產</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V12m0-9L3 8v1h18V8l-9-5zM3 21h18M5 12v9m14-9v9M9 12v9m6-9v9"/></svg>銀行帳戶
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>投資持股
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">負債與支出</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#4a4160; font-size:13px; font-weight:500">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>信用卡
+            </div>
+            <div style="font-size:10px; font-weight:700; letter-spacing:.12em; color:#a7a1b8; padding:12px 10px 6px">其他</div>
+            <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; background:#f1ecfd; color:#5b21b6; font-size:13px; font-weight:700">
+              <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>設定與備份
+            </div>
+          </nav>
+        </aside>
+        <main style="flex:1; min-width:0">
+          <div style="display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 22px; background:#fff; border-bottom:1px solid #ebe9f2">
+            <h1 style="margin:0; font-size:15px; font-weight:800">設定與備份</h1>
+            <span style="font-size:11px; color:#8b849e">資料只存在這台裝置 · 上次備份 8/30</span>
+          </div>
+          <div style="padding:18px 22px; display:grid; grid-template-columns:1.05fr 1fr; gap:14px; align-items:start">
+            <div style="display:flex; flex-direction:column; gap:10px">
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:8px 16px">
+                <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #f4f3f9">
+                  <span style="width:36px; height:36px; border-radius:10px; background:#eef2ff; color:#4f46e5; display:flex; align-items:center; justify-content:center">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3H5a2 2 0 00-2 2v2m0 10v2a2 2 0 002 2h2m10 0h2a2 2 0 002-2v-2m0-10V5a2 2 0 00-2-2h-2"/><circle cx="9" cy="10" r="0.5" fill="currentColor"/><circle cx="15" cy="10" r="0.5" fill="currentColor"/><path d="M9.5 15a3.5 3.5 0 005 0"/><line x1="12" y1="10" x2="12" y2="13.5"/></svg>
+                  </span>
+                  <div style="flex:1; min-width:0">
+                    <div style="font-size:13px; font-weight:700">生物辨識鎖定</div>
+                    <div style="font-size:11px; color:#8b849e">開啟 APP 時需要 Face ID／指紋驗證</div>
+                  </div>
+                  <span style="width:44px; height:26px; border-radius:999px; background:#4f46e5; position:relative; flex-shrink:0">
+                    <span style="position:absolute; top:3px; left:21px; width:20px; height:20px; border-radius:999px; background:#fff; box-shadow:0 1px 2px rgb(23 20 34 / .2)"></span>
+                  </span>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #f4f3f9">
+                  <span style="width:36px; height:36px; border-radius:10px; background:#f1ecfd; color:#5b21b6; display:flex; align-items:center; justify-content:center">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                  </span>
+                  <div style="flex:1; min-width:0">
+                    <div style="font-size:13px; font-weight:700">暗色模式</div>
+                    <div style="font-size:11px; color:#8b849e">切換深色介面，夜間使用更舒服</div>
+                  </div>
+                  <span style="width:44px; height:26px; border-radius:999px; background:#e6e3f0; position:relative; flex-shrink:0">
+                    <span style="position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:999px; background:#fff; box-shadow:0 1px 2px rgb(23 20 34 / .2)"></span>
+                  </span>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; padding:12px 0">
+                  <span style="width:36px; height:36px; border-radius:10px; background:#f2f1f7; color:#4a4160; display:flex; align-items:center; justify-content:center">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 5.7A9.8 9.8 0 0112 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 01-3 3.9M6.5 8.1A17 17 0 002.5 12S6 18.5 12 18.5a9.6 9.6 0 004-.85"/><path d="M9.9 9.9a3 3 0 104.2 4.2"/><line x1="3" y1="3" x2="21" y2="21"/></svg>
+                  </span>
+                  <div style="flex:1; min-width:0">
+                    <div style="font-size:13px; font-weight:700">隱藏所有金額</div>
+                    <div style="font-size:11px; color:#8b849e">全站金額顯示為 *****，在他人面前使用</div>
+                  </div>
+                  <span style="width:44px; height:26px; border-radius:999px; background:#e6e3f0; position:relative; flex-shrink:0">
+                    <span style="position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:999px; background:#fff; box-shadow:0 1px 2px rgb(23 20 34 / .2)"></span>
+                  </span>
+                </div>
+              </div>
+
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:16px">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px">
+                  <span style="width:36px; height:36px; border-radius:10px; background:#ecfdf5; color:#047857; display:flex; align-items:center; justify-content:center">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3"/></svg>
+                  </span>
+                  <div style="flex:1; min-width:0">
+                    <div style="font-size:13px; font-weight:700">備份與還原</div>
+                    <div style="font-size:11px; color:#8b849e">清除瀏覽器資料就會消失，備份是唯一的回復路徑</div>
+                  </div>
+                </div>
+                <div style="display:flex; gap:10px">
+                  <span style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px; font-weight:700; background:#6d28d9; color:#fff; border-radius:10px; padding:10px 0">
+                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3"/></svg>匯出備份
+                  </span>
+                  <span style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; border-radius:10px; padding:10px 0">
+                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 8l-5-5m0 0L7 8m5-5v12"/></svg>匯入備份
+                  </span>
+                </div>
+                <p style="margin:10px 0 0; font-size:11px; color:#8b849e">建議每次大量記帳後匯出一次，檔案存到雲端硬碟或傳給自己。</p>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px">
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:16px">
+                <div style="font-size:13px; font-weight:700; margin-bottom:12px">資料統計</div>
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px">
+                  <div style="background:#fafafd; border:1px solid #f0eef7; border-radius:10px; padding:12px 0; text-align:center">
+                    <div style="font-size:20px; font-weight:800">4</div>
+                    <div style="font-size:11px; color:#8b849e">帳戶</div>
+                  </div>
+                  <div style="background:#fafafd; border:1px solid #f0eef7; border-radius:10px; padding:12px 0; text-align:center">
+                    <div style="font-size:20px; font-weight:800">3</div>
+                    <div style="font-size:11px; color:#8b849e">投資</div>
+                  </div>
+                  <div style="background:#fafafd; border:1px solid #f0eef7; border-radius:10px; padding:12px 0; text-align:center">
+                    <div style="font-size:20px; font-weight:800">3</div>
+                    <div style="font-size:11px; color:#8b849e">信用卡</div>
+                  </div>
+                  <div style="background:#fafafd; border:1px solid #f0eef7; border-radius:10px; padding:12px 0; text-align:center">
+                    <div style="font-size:20px; font-weight:800">38</div>
+                    <div style="font-size:11px; color:#8b849e">紀錄</div>
+                  </div>
+                </div>
+              </div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px">
+                <span style="width:36px; height:36px; border-radius:10px; background:#eff6ff; color:#1d4ed8; display:flex; align-items:center; justify-content:center">
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </span>
+                <div style="flex:1; min-width:0">
+                  <div style="font-size:13px; font-weight:700">資料儲存</div>
+                  <div style="font-size:11px; color:#8b849e">全部存在本機瀏覽器，不會上傳到任何伺服器</div>
+                </div>
+              </div>
+              <div style="background:#fff; border:1px solid #fbdada; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px">
+                <span style="width:36px; height:36px; border-radius:10px; background:#fef2f2; color:#dc2626; display:flex; align-items:center; justify-content:center">
+                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </span>
+                <div style="flex:1; min-width:0">
+                  <div style="font-size:13px; font-weight:700">清除所有資料</div>
+                  <div style="font-size:11px; color:#8b849e">刪除所有帳戶、信用卡、投資及紀錄，無法復原</div>
+                </div>
+                <span style="font-size:12px; font-weight:700; color:#b91c1c; background:#fef2f2; border-radius:8px; padding:7px 14px">清除</span>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- 桌機 · 記帳 Modal -->
+    <div data-screen-label="D-桌機-記帳Modal" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:600; color:#4a4160">桌機 1280 · 記帳 Modal（其他 Modal 同一套殼）</span>
+      <div style="width:1280px; height:660px; overflow:hidden; border-radius:14px; box-shadow:0 24px 60px -30px rgb(23 20 34 / .45); background:#f7f7fb; color:#171422; position:relative; font-variant-numeric:tabular-nums">
+        <div style="position:absolute; inset:0; display:flex">
+          <aside style="width:224px; flex-shrink:0; background:#fff; border-right:1px solid #ebe9f2">
+            <div style="display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid #ebe9f2">
+              <img src="assets/app-icon.png" alt="" style="width:30px; height:30px; border-radius:9px">
+              <div style="font-size:14px; font-weight:800">財務管家</div>
+            </div>
+          </aside>
+          <main style="flex:1; min-width:0">
+            <div style="display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 22px; background:#fff; border-bottom:1px solid #ebe9f2">
+              <h1 style="margin:0; font-size:15px; font-weight:800">財務總覽</h1>
+              <span style="font-size:12px; font-weight:700; background:#6d28d9; color:#fff; border-radius:9px; padding:7px 14px">＋ 記一筆</span>
+            </div>
+            <div style="padding:18px 22px; display:grid; grid-template-columns:repeat(4,1fr); gap:12px">
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; height:82px"></div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; height:82px"></div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; height:82px"></div>
+              <div style="background:#fff; border:1px solid #ebe9f2; border-radius:12px; height:82px"></div>
+            </div>
+          </main>
+        </div>
+        <div style="position:absolute; inset:0; background:rgb(23 20 34 / .34); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center">
+          <div style="width:430px; background:#fff; border:1px solid #ebe9f2; border-radius:16px; box-shadow:0 30px 70px -20px rgb(23 20 34 / .5); padding:20px">
+            <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:16px">
+              <span style="width:38px; height:38px; border-radius:11px; background:#fef2f2; color:#dc2626; display:flex; align-items:center; justify-content:center; flex-shrink:0">
+                <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4"/></svg>
+              </span>
+              <div style="flex:1; min-width:0">
+                <h2 style="margin:0; font-size:17px; font-weight:800">記錄支出</h2>
+                <p style="margin:3px 0 0; font-size:11px; color:#8b849e">中國信託 ···1234 · NT$128,430</p>
+              </div>
+              <span style="width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#8b849e; border:1px solid #ebe9f2">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18L18 6M6 6l12 12"/></svg>
+              </span>
+            </div>
+
+            <div style="display:flex; background:#f2f1f7; border-radius:10px; padding:3px; margin-bottom:16px">
+              <span style="flex:1; text-align:center; font-size:13px; font-weight:700; color:#b91c1c; background:#fff; border-radius:8px; padding:8px 0; box-shadow:0 1px 2px rgb(23 20 34 / .08)">支出</span>
+              <span style="flex:1; text-align:center; font-size:13px; color:#6b6480; padding:8px 0">收入</span>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:14px">
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#4a4160; margin-bottom:6px">帳戶</div>
+                <div style="display:flex; align-items:center; justify-content:space-between; border:1px solid #e2dff0; background:#fafafd; border-radius:10px; padding:11px 13px; font-size:13px">
+                  <span>中國信託 ···1234 — NT$128,430</span>
+                  <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#8b849e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#4a4160; margin-bottom:6px">金額（TWD）</div>
+                <div style="border:1px solid #6d28d9; background:#fff; border-radius:10px; padding:11px 13px; font-size:15px; font-weight:700; box-shadow:0 0 0 3px rgb(109 40 217 / .14)">180</div>
+              </div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#4a4160; margin-bottom:6px">分類</div>
+                <div style="display:flex; flex-wrap:wrap; gap:7px">
+                  <span style="font-size:12px; font-weight:700; color:#fff; background:#dc2626; border-radius:999px; padding:6px 14px">餐飲</span>
+                  <span style="font-size:12px; color:#4a4160; background:#f2f1f7; border-radius:999px; padding:6px 14px">交通</span>
+                  <span style="font-size:12px; color:#4a4160; background:#f2f1f7; border-radius:999px; padding:6px 14px">購物</span>
+                  <span style="font-size:12px; color:#4a4160; background:#f2f1f7; border-radius:999px; padding:6px 14px">娛樂</span>
+                  <span style="font-size:12px; color:#4a4160; background:#f2f1f7; border-radius:999px; padding:6px 14px">生活</span>
+                  <span style="font-size:12px; color:#4a4160; background:#f2f1f7; border-radius:999px; padding:6px 14px">醫療</span>
+                  <span style="font-size:12px; color:#4a4160; background:#f2f1f7; border-radius:999px; padding:6px 14px">教育</span>
+                  <span style="font-size:12px; color:#4a4160; background:#f2f1f7; border-radius:999px; padding:6px 14px">其他</span>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#4a4160; margin-bottom:6px">備註（選填）</div>
+                <div style="border:1px solid #e2dff0; background:#fafafd; border-radius:10px; padding:11px 13px; font-size:13px; color:#a7a1b8">例：午餐、加油</div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:20px">
+              <span style="flex:1; text-align:center; font-size:13px; font-weight:700; color:#fff; background:#dc2626; border-radius:10px; padding:11px 0">確認記錄</span>
+              <span style="flex:1; text-align:center; font-size:13px; font-weight:600; color:#4a4160; border:1px solid #e2dff0; border-radius:10px; padding:11px 0">取消</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 手機 · 鎖定畫面 -->
+    <div data-screen-label="D-手機-鎖定畫面" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:600; color:#4a4160">手機 375 · 鎖定畫面</span>
+      <div style="width:375px; height:812px; overflow:hidden; border-radius:40px; background:#f7f7fb; color:#171422; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 24px 60px -30px rgb(23 20 34 / .45)">
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 32px">
+          <img src="assets/app-icon.png" alt="" style="width:88px; height:88px; border-radius:24px; box-shadow:0 16px 40px -16px rgb(109 40 217 / .5)">
+          <h1 style="margin:26px 0 4px; font-size:22px; font-weight:800">財務管家</h1>
+          <p style="margin:0 0 44px; font-size:13px; color:#8b849e">請驗證身分以繼續使用</p>
+          <span style="width:84px; height:84px; border-radius:999px; background:#fff; border:1px solid #ebe9f2; box-shadow:0 8px 24px -12px rgb(23 20 34 / .3); display:flex; align-items:center; justify-content:center; color:#6d28d9">
+            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3H5a2 2 0 00-2 2v2m0 10v2a2 2 0 002 2h2m10 0h2a2 2 0 002-2v-2m0-10V5a2 2 0 00-2-2h-2"/><circle cx="9" cy="10" r="0.5" fill="currentColor"/><circle cx="15" cy="10" r="0.5" fill="currentColor"/><path d="M9.5 15a3.5 3.5 0 005 0"/><line x1="12" y1="10" x2="12" y2="13.5"/></svg>
+          </span>
+          <p style="margin:18px 0 0; font-size:13px; font-weight:600; color:#4a4160">點擊使用 Face ID 解鎖</p>
+          <p style="margin:36px 0 0; font-size:11px; line-height:1.6; color:#a7a1b8">略過驗證<br>（本機資料未加密，此鎖僅防他人隨手翻看）</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</x-dc>
+</body>
+</html>

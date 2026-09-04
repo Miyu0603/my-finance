@@ -1,6 +1,14 @@
 @import "tailwindcss";
 
 /*
+ * Tailwind's automatic content detection follows .gitignore, so version-
+ * controlling the design-canvas exports pulled them into the scan and emitted
+ * utilities for words that merely look like class names (.static, .start,
+ * .backdrop-filter). They are reference artefacts, never shipped markup.
+ */
+@source not "../網站版面設計方案";
+
+/*
  * Theming works through semantic colour tokens, not per-utility overrides.
  * `bg-surface` / `text-ink` resolve to a CSS variable, and `.dark` simply
  * redefines those variables — so a component is written once and is correct in

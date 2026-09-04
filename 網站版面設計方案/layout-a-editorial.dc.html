@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#e6e2da; font-family:'Noto Sans TC',system-ui,sans-serif; }
+  a { color:#7c3aed; text-decoration:none; }
+  a:hover { color:#6d28d9; text-decoration:underline; }
+</style>
+</helmet>
+
+<section style="padding:56px 56px 96px; display:flex; flex-direction:column; gap:24px">
+  <div style="max-width:840px; display:flex; flex-direction:column; gap:10px">
+    <span style="display:inline-flex; align-items:center; justify-content:center; width:44px; height:28px; border-radius:6px; background:#1a1526; color:#fff; font-size:13px; font-weight:700; letter-spacing:.04em">1a</span>
+    <h1 style="margin:0; font-family:'Playfair Display',serif; font-size:40px; font-weight:600; color:#1a1526; letter-spacing:-.01em">時尚編輯風</h1>
+    <p style="margin:0; font-size:15px; line-height:1.75; color:#4a4160; text-wrap:pretty">紙感米白底、細線分隔取代卡片、襯線體大數字。導覽改成頂欄字級導覽（桌機）＋底部細膠囊（手機），版面留白拉大，紫色只做重點提示。適合「精品財經雜誌」的氣質。</p>
+  </div>
+
+  <div style="display:flex; flex-wrap:wrap; gap:32px; align-items:flex-start">
+
+    <!-- 桌機 · 總覽 -->
+    <div data-screen-label="A-桌機-總覽" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:500; color:#4a4160">桌機 1280 · 總覽</span>
+      <div style="width:1280px; height:900px; overflow:hidden; border-radius:14px; box-shadow:0 24px 60px -30px rgb(26 21 38 / .45); background:#faf7f2; color:#1a1526">
+        <header style="display:flex; align-items:center; justify-content:space-between; padding:0 48px; height:76px; border-bottom:1px solid #e5ded2">
+          <div style="display:flex; align-items:center; gap:32px">
+            <span style="font-family:'Playfair Display',serif; font-size:22px; font-weight:600; letter-spacing:.01em">財務管家</span>
+            <nav style="display:flex; gap:26px; font-size:14px">
+              <span style="position:relative; padding-bottom:4px; font-weight:500; border-bottom:2px solid #1a1526">總覽</span>
+              <span style="color:#6f6786">銀行帳戶</span>
+              <span style="color:#6f6786">投資</span>
+              <span style="color:#6f6786">信用卡</span>
+            </nav>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px">
+            <span style="display:flex; align-items:center; gap:6px; font-size:13px; color:#4a4160; border:1px solid #ddd4c6; border-radius:999px; padding:7px 14px">
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.75"/></svg>顯示金額
+            </span>
+            <span style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:500; background:#1a1526; color:#faf7f2; border-radius:999px; padding:9px 18px">
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>記一筆
+            </span>
+            <img src="assets/app-icon.png" alt="" style="width:32px; height:32px; border-radius:999px">
+          </div>
+        </header>
+
+        <div style="padding:48px; display:flex; flex-direction:column; gap:44px">
+          <div style="display:grid; grid-template-columns:1.35fr 1fr; gap:56px; align-items:end">
+            <div>
+              <p style="margin:0 0 12px; font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:#8a8070">Total Net Worth · 總資產</p>
+              <div style="display:flex; align-items:flex-end; gap:18px">
+                <span style="font-family:'Playfair Display',serif; font-size:78px; line-height:.95; font-weight:500; letter-spacing:-.02em">197,630</span>
+                <span style="font-size:15px; color:#6f6786; padding-bottom:10px">TWD</span>
+              </div>
+              <div style="display:flex; gap:22px; margin-top:18px; padding-top:18px; border-top:1px solid #e5ded2; font-size:13px; color:#4a4160">
+                <span>外幣 <span style="font-family:'Playfair Display',serif; font-size:17px">$3,200</span> USD</span>
+                <span style="color:#c4bcaa">|</span>
+                <span>4 個帳戶 · 3 張卡</span>
+                <span style="color:#c4bcaa">|</span>
+                <span>最後一筆 8/31</span>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:18px">
+              <div style="display:flex; align-items:flex-end; justify-content:space-between; border-bottom:1px solid #e5ded2; padding-bottom:12px">
+                <div>
+                  <p style="margin:0; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#8a8070">投資成本</p>
+                  <p style="margin:4px 0 0; font-family:'Playfair Display',serif; font-size:26px">NT$210,000</p>
+                </div>
+                <span style="font-size:12px; color:#6f6786">3 檔 · 另有 $4,800</span>
+              </div>
+              <div style="display:flex; align-items:flex-end; justify-content:space-between; border-bottom:1px solid #e5ded2; padding-bottom:12px">
+                <div>
+                  <p style="margin:0; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#8a8070">本月待繳</p>
+                  <p style="margin:4px 0 0; font-family:'Playfair Display',serif; font-size:26px; color:#7c3aed">NT$4,820</p>
+                </div>
+                <span style="font-size:12px; color:#6f6786">1／3 已繳</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:56px">
+            <section>
+              <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px">
+                <h2 style="margin:0; font-family:'Playfair Display',serif; font-size:20px; font-weight:600">我的帳戶</h2>
+                <span style="font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#8a8070">全部 →</span>
+              </div>
+              <div style="display:flex; flex-direction:column">
+                <div style="display:flex; align-items:baseline; justify-content:space-between; padding:16px 0; border-top:1px solid #e5ded2">
+                  <div>
+                    <div style="font-size:15px; font-weight:500">中國信託</div>
+                    <div style="font-size:12px; color:#8a8070; margin-top:3px">薪轉戶 ···1234 · 外幣定存 ···9902</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div style="font-family:'Playfair Display',serif; font-size:20px">NT$128,430</div>
+                    <div style="font-size:12px; color:#8a8070">$3,200</div>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:baseline; justify-content:space-between; padding:16px 0; border-top:1px solid #e5ded2">
+                  <div>
+                    <div style="font-size:15px; font-weight:500">國泰世華</div>
+                    <div style="font-size:12px; color:#8a8070; margin-top:3px">儲蓄 ···5678</div>
+                  </div>
+                  <div style="font-family:'Playfair Display',serif; font-size:20px">NT$56,900</div>
+                </div>
+                <div style="display:flex; align-items:baseline; justify-content:space-between; padding:16px 0; border-top:1px solid #e5ded2; border-bottom:1px solid #e5ded2">
+                  <div>
+                    <div style="font-size:15px; font-weight:500">玉山銀行</div>
+                    <div style="font-size:12px; color:#8a8070; margin-top:3px">信用卡扣款 ···3311</div>
+                  </div>
+                  <div style="font-family:'Playfair Display',serif; font-size:20px">NT$12,300</div>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px">
+                <h2 style="margin:0; font-family:'Playfair Display',serif; font-size:20px; font-weight:600">信用卡繳費</h2>
+                <span style="font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#8a8070">全部 →</span>
+              </div>
+              <div style="display:flex; flex-direction:column">
+                <div style="display:flex; align-items:center; gap:16px; padding:16px 0; border-top:1px solid #e5ded2">
+                  <span style="font-family:'Playfair Display',serif; font-size:15px; width:44px; color:#7c3aed">15日</span>
+                  <div style="flex:1; min-width:0">
+                    <div style="font-size:15px; font-weight:500">LINE Pay 信用卡</div>
+                    <div style="font-size:12px; color:#8a8070; margin-top:3px">中國信託 ···1234 扣款 · 3 天後</div>
+                  </div>
+                  <div style="font-family:'Playfair Display',serif; font-size:20px">NT$3,540</div>
+                  <span style="font-size:12px; font-weight:500; border:1px solid #1a1526; border-radius:999px; padding:6px 14px">繳款</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:16px; padding:16px 0; border-top:1px solid #e5ded2">
+                  <span style="font-family:'Playfair Display',serif; font-size:15px; width:44px; color:#8a8070">22日</span>
+                  <div style="flex:1; min-width:0">
+                    <div style="font-size:15px; font-weight:500">玉山 Unicard</div>
+                    <div style="font-size:12px; color:#8a8070; margin-top:3px">玉山銀行 ···3311 扣款 · 10 天後</div>
+                  </div>
+                  <div style="font-family:'Playfair Display',serif; font-size:20px">NT$1,280</div>
+                  <span style="font-size:12px; font-weight:500; border:1px solid #ddd4c6; color:#4a4160; border-radius:999px; padding:6px 14px">繳款</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:16px; padding:16px 0; border-top:1px solid #e5ded2; border-bottom:1px solid #e5ded2; opacity:.62">
+                  <span style="font-family:'Playfair Display',serif; font-size:15px; width:44px; color:#8a8070">6日</span>
+                  <div style="flex:1; min-width:0">
+                    <div style="font-size:15px; font-weight:500">國泰 CUBE 卡</div>
+                    <div style="font-size:12px; color:#8a8070; margin-top:3px">國泰世華 ···5678 扣款 · 本月已繳</div>
+                  </div>
+                  <div style="font-family:'Playfair Display',serif; font-size:20px">NT$8,920</div>
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <section>
+            <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px">
+              <h2 style="margin:0; font-family:'Playfair Display',serif; font-size:20px; font-weight:600">近期紀錄</h2>
+              <span style="font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#8a8070">全部 38 筆 →</span>
+            </div>
+            <div style="display:flex; flex-direction:column">
+              <div style="display:flex; align-items:center; gap:20px; padding:13px 0; border-top:1px solid #e5ded2; font-size:14px">
+                <span style="width:44px; color:#8a8070; font-size:12px">8/31</span>
+                <span style="flex:1">餐飲 · 午餐<span style="color:#8a8070; font-size:12px; margin-left:10px">中國信託 ···1234</span></span>
+                <span style="font-family:'Playfair Display',serif; font-size:17px">−180</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:20px; padding:13px 0; border-top:1px solid #e5ded2; font-size:14px">
+                <span style="width:44px; color:#8a8070; font-size:12px">8/30</span>
+                <span style="flex:1">轉帳<span style="color:#8a8070; font-size:12px; margin-left:10px">中國信託 ···1234 → 國泰世華 ···5678</span></span>
+                <span style="font-family:'Playfair Display',serif; font-size:17px; color:#6f6786">20,000</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:20px; padding:13px 0; border-top:1px solid #e5ded2; font-size:14px">
+                <span style="width:44px; color:#8a8070; font-size:12px">8/28</span>
+                <span style="flex:1">國泰 CUBE 卡 繳款<span style="color:#8a8070; font-size:12px; margin-left:10px">國泰世華 ···5678</span></span>
+                <span style="font-family:'Playfair Display',serif; font-size:17px">−8,920</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:20px; padding:13px 0; border-top:1px solid #e5ded2; font-size:14px">
+                <span style="width:44px; color:#8a8070; font-size:12px">8/27</span>
+                <span style="flex:1">買進 元大台灣50 100 股<span style="color:#8a8070; font-size:12px; margin-left:10px">中國信託 ···1234</span></span>
+                <span style="font-family:'Playfair Display',serif; font-size:17px">−19,050</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:20px; padding:13px 0; border-top:1px solid #e5ded2; border-bottom:1px solid #e5ded2; font-size:14px">
+                <span style="width:44px; color:#8a8070; font-size:12px">8/25</span>
+                <span style="flex:1">薪資<span style="color:#8a8070; font-size:12px; margin-left:10px">中國信託 ···1234</span></span>
+                <span style="font-family:'Playfair Display',serif; font-size:17px; color:#7c3aed">＋92,000</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- 手機 · 總覽 -->
+    <div data-screen-label="A-手機-總覽" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:500; color:#4a4160">手機 375 · 總覽</span>
+      <div style="width:375px; height:812px; overflow:hidden; border-radius:40px; background:#faf7f2; color:#1a1526; position:relative; box-shadow:0 24px 60px -30px rgb(26 21 38 / .45)">
+        <div style="padding:44px 24px 0">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:32px">
+            <span style="font-family:'Playfair Display',serif; font-size:19px; font-weight:600">財務管家</span>
+            <div style="display:flex; gap:8px">
+              <span style="width:34px; height:34px; border:1px solid #ddd4c6; border-radius:999px; display:flex; align-items:center; justify-content:center; color:#4a4160">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.75"/></svg>
+              </span>
+              <img src="assets/app-icon.png" alt="" style="width:34px; height:34px; border-radius:999px">
+            </div>
+          </div>
+
+          <p style="margin:0 0 10px; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#8a8070">總資產 TWD</p>
+          <div style="font-family:'Playfair Display',serif; font-size:56px; line-height:1; font-weight:500; letter-spacing:-.02em">197,630</div>
+          <p style="margin:12px 0 0; padding-top:14px; border-top:1px solid #e5ded2; font-size:12px; color:#6f6786">外幣 $3,200 · 4 個帳戶 · 3 張卡</p>
+
+          <div style="display:flex; gap:10px; margin-top:22px">
+            <span style="flex:1; text-align:center; font-size:13px; font-weight:500; background:#1a1526; color:#faf7f2; border-radius:999px; padding:12px 0">記一筆</span>
+            <span style="flex:1; text-align:center; font-size:13px; border:1px solid #ddd4c6; border-radius:999px; padding:12px 0; color:#4a4160">轉帳</span>
+            <span style="flex:1; text-align:center; font-size:13px; border:1px solid #ddd4c6; border-radius:999px; padding:12px 0; color:#4a4160">紀錄</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:30px; padding:18px 0; border-top:1px solid #e5ded2; border-bottom:1px solid #e5ded2">
+            <div>
+              <p style="margin:0; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8a8070">投資成本</p>
+              <p style="margin:4px 0 0; font-family:'Playfair Display',serif; font-size:22px">210,000</p>
+            </div>
+            <div>
+              <p style="margin:0; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8a8070">本月待繳</p>
+              <p style="margin:4px 0 0; font-family:'Playfair Display',serif; font-size:22px; color:#7c3aed">4,820</p>
+            </div>
+          </div>
+
+          <h2 style="margin:26px 0 6px; font-family:'Playfair Display',serif; font-size:17px; font-weight:600">帳戶</h2>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:13px 0; border-top:1px solid #e5ded2; font-size:14px">
+            <span>中國信託 <span style="color:#8a8070; font-size:12px">2 個帳戶</span></span>
+            <span style="font-family:'Playfair Display',serif; font-size:17px">128,430</span>
+          </div>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:13px 0; border-top:1px solid #e5ded2; font-size:14px">
+            <span>國泰世華 <span style="color:#8a8070; font-size:12px">1 個帳戶</span></span>
+            <span style="font-family:'Playfair Display',serif; font-size:17px">56,900</span>
+          </div>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; padding:13px 0; border-top:1px solid #e5ded2; font-size:14px">
+            <span>玉山銀行 <span style="color:#8a8070; font-size:12px">1 個帳戶</span></span>
+            <span style="font-family:'Playfair Display',serif; font-size:17px">12,300</span>
+          </div>
+
+          <h2 style="margin:24px 0 6px; font-family:'Playfair Display',serif; font-size:17px; font-weight:600">近期紀錄</h2>
+          <div style="display:flex; align-items:center; gap:14px; padding:12px 0; border-top:1px solid #e5ded2; font-size:14px">
+            <span style="width:34px; color:#8a8070; font-size:12px">8/31</span>
+            <span style="flex:1">餐飲 · 午餐</span>
+            <span style="font-family:'Playfair Display',serif; font-size:16px">−180</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:12px 0; border-top:1px solid #e5ded2; font-size:14px">
+            <span style="width:34px; color:#8a8070; font-size:12px">8/30</span>
+            <span style="flex:1">轉帳 中信 → 國泰</span>
+            <span style="font-family:'Playfair Display',serif; font-size:16px; color:#6f6786">20,000</span>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:22px; left:24px; right:24px; display:flex; align-items:center; justify-content:space-between; background:#1a1526; border-radius:999px; padding:6px 10px; color:#a79fbd">
+          <span style="display:flex; align-items:center; gap:6px; background:#faf7f2; color:#1a1526; border-radius:999px; padding:9px 15px; font-size:12px; font-weight:500">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>總覽
+          </span>
+          <span style="padding:9px 12px"><svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V12m0-9L3 8v1h18V8l-9-5zM3 21h18M5 12v9m14-9v9M9 12v9m6-9v9"/></svg></span>
+          <span style="padding:9px 12px"><svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></span>
+          <span style="padding:9px 12px"><svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></span>
+          <span style="padding:9px 12px"><svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 桌機 · 銀行帳戶 -->
+    <div data-screen-label="A-桌機-銀行帳戶" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:500; color:#4a4160">桌機 1280 · 銀行帳戶</span>
+      <div style="width:1280px; height:600px; overflow:hidden; border-radius:14px; box-shadow:0 24px 60px -30px rgb(26 21 38 / .45); background:#faf7f2; color:#1a1526">
+        <header style="display:flex; align-items:center; justify-content:space-between; padding:0 48px; height:76px; border-bottom:1px solid #e5ded2">
+          <div style="display:flex; align-items:center; gap:32px">
+            <span style="font-family:'Playfair Display',serif; font-size:22px; font-weight:600">財務管家</span>
+            <nav style="display:flex; gap:26px; font-size:14px; color:#6f6786">
+              <span>總覽</span>
+              <span style="color:#1a1526; font-weight:500; padding-bottom:4px; border-bottom:2px solid #1a1526">銀行帳戶</span>
+              <span>投資</span>
+              <span>信用卡</span>
+            </nav>
+          </div>
+          <span style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:500; background:#1a1526; color:#faf7f2; border-radius:999px; padding:9px 18px">＋ 新增帳戶</span>
+        </header>
+        <div style="padding:40px 48px">
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; padding-bottom:20px; border-bottom:1px solid #e5ded2">
+            <h1 style="margin:0; font-family:'Playfair Display',serif; font-size:30px; font-weight:600">銀行帳戶</h1>
+            <div style="display:flex; gap:28px; font-size:13px; color:#6f6786">
+              <span>TWD <span style="font-family:'Playfair Display',serif; font-size:19px; color:#1a1526">197,630</span></span>
+              <span>USD <span style="font-family:'Playfair Display',serif; font-size:19px; color:#1a1526">3,200</span></span>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:34px; margin-top:28px">
+            <section>
+              <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:6px">
+                <h2 style="margin:0; font-size:15px; font-weight:700; letter-spacing:.02em">中國信託</h2>
+                <span style="font-size:12px; color:#8a8070">2 個帳戶 · 1 張卡</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:16px; padding:15px 0; border-top:1px solid #e5ded2; font-size:14px">
+                <span style="font-size:11px; letter-spacing:.1em; color:#8a8070; width:38px">TWD</span>
+                <span style="width:74px; color:#8a8070; font-size:13px">···1234</span>
+                <span style="flex:1">薪轉戶 <span style="color:#8a8070; font-size:12px; margin-left:8px">主要收支帳戶</span></span>
+                <span style="font-family:'Playfair Display',serif; font-size:20px">128,430</span>
+                <span style="display:flex; gap:14px; color:#6f6786; margin-left:22px">
+                  <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+                  <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                  <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </span>
+              </div>
+              <div style="display:flex; align-items:center; gap:16px; padding:15px 0; border-top:1px solid #e5ded2; border-bottom:1px solid #e5ded2; font-size:14px">
+                <span style="font-size:11px; letter-spacing:.1em; color:#7c3aed; width:38px">USD</span>
+                <span style="width:74px; color:#8a8070; font-size:13px">···9902</span>
+                <span style="flex:1">外幣定存</span>
+                <span style="font-family:'Playfair Display',serif; font-size:20px">3,200</span>
+                <span style="width:106px"></span>
+              </div>
+            </section>
+            <section>
+              <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:6px">
+                <h2 style="margin:0; font-size:15px; font-weight:700">國泰世華</h2>
+                <span style="font-size:12px; color:#8a8070">1 個帳戶 · 1 張卡</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:16px; padding:15px 0; border-top:1px solid #e5ded2; border-bottom:1px solid #e5ded2; font-size:14px">
+                <span style="font-size:11px; letter-spacing:.1em; color:#8a8070; width:38px">TWD</span>
+                <span style="width:74px; color:#8a8070; font-size:13px">···5678</span>
+                <span style="flex:1">儲蓄</span>
+                <span style="font-family:'Playfair Display',serif; font-size:20px">56,900</span>
+                <span style="width:106px"></span>
+              </div>
+            </section>
+            <section>
+              <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:6px">
+                <h2 style="margin:0; font-size:15px; font-weight:700">玉山銀行</h2>
+                <span style="font-size:12px; color:#8a8070">1 個帳戶 · 1 張卡</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:16px; padding:15px 0; border-top:1px solid #e5ded2; border-bottom:1px solid #e5ded2; font-size:14px">
+                <span style="font-size:11px; letter-spacing:.1em; color:#8a8070; width:38px">TWD</span>
+                <span style="width:74px; color:#8a8070; font-size:13px">···3311</span>
+                <span style="flex:1">信用卡扣款</span>
+                <span style="font-family:'Playfair Display',serif; font-size:20px">12,300</span>
+                <span style="width:106px"></span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 桌機 · 信用卡 -->
+    <div data-screen-label="A-桌機-信用卡" style="display:flex; flex-direction:column; gap:10px">
+      <span style="font-size:12px; font-weight:500; color:#4a4160">桌機 1280 · 信用卡</span>
+      <div style="width:1280px; height:560px; overflow:hidden; border-radius:14px; box-shadow:0 24px 60px -30px rgb(26 21 38 / .45); background:#faf7f2; color:#1a1526">
+        <header style="display:flex; align-items:center; justify-content:space-between; padding:0 48px; height:76px; border-bottom:1px solid #e5ded2">
+          <div style="display:flex; align-items:center; gap:32px">
+            <span style="font-family:'Playfair Display',serif; font-size:22px; font-weight:600">財務管家</span>
+            <nav style="display:flex; gap:26px; font-size:14px; color:#6f6786">
+              <span>總覽</span>
+              <span>銀行帳戶</span>
+              <span>投資</span>
+              <span style="color:#1a1526; font-weight:500; padding-bottom:4px; border-bottom:2px solid #1a1526">信用卡</span>
+            </nav>
+          </div>
+          <span style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:500; background:#1a1526; color:#faf7f2; border-radius:999px; padding:9px 18px">＋ 新增卡片</span>
+        </header>
+        <div style="padding:40px 48px">
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; padding-bottom:20px; border-bottom:1px solid #e5ded2">
+            <div>
+              <h1 style="margin:0; font-family:'Playfair Display',serif; font-size:30px; font-weight:600">信用卡</h1>
+              <p style="margin:6px 0 0; font-size:13px; color:#8a8070">3 張卡，全部已綁定扣款帳戶</p>
+            </div>
+            <span style="font-size:13px; color:#6f6786">本月待繳 <span style="font-family:'Playfair Display',serif; font-size:22px; color:#7c3aed">NT$4,820</span></span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#e5ded2; margin-top:28px">
+            <div style="background:#faf7f2; padding:26px 24px 24px">
+              <div style="display:flex; align-items:baseline; justify-content:space-between">
+                <span style="font-family:'Playfair Display',serif; font-size:15px; color:#7c3aed">每月 15 日</span>
+                <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#7c3aed">3 天後</span>
+              </div>
+              <h3 style="margin:16px 0 4px; font-size:17px; font-weight:700">LINE Pay 信用卡</h3>
+              <p style="margin:0; font-size:12px; color:#8a8070">中國信託發卡 · 海外 3% 回饋</p>
+              <p style="margin:22px 0 0; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8a8070">本月應繳</p>
+              <p style="margin:4px 0 0; font-family:'Playfair Display',serif; font-size:34px">NT$3,540</p>
+              <p style="margin:14px 0 0; padding-top:12px; border-top:1px solid #e5ded2; font-size:12px; color:#6f6786">自 中國信託 ···1234 扣款</p>
+              <span style="display:inline-block; margin-top:16px; font-size:13px; font-weight:500; background:#1a1526; color:#faf7f2; border-radius:999px; padding:9px 20px">立即繳款</span>
+            </div>
+            <div style="background:#faf7f2; padding:26px 24px 24px">
+              <div style="display:flex; align-items:baseline; justify-content:space-between">
+                <span style="font-family:'Playfair Display',serif; font-size:15px; color:#8a8070">每月 22 日</span>
+                <span style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a8070">10 天後</span>
+              </div>
+              <h3 style="margin:16px 0 4px; font-size:17px; font-weight:700">玉山 Unicard</h3>
+              <p style="margin:0; font-size:12px; color:#8a8070">玉山銀行發卡</p>
+              <p style="margin:22px 0 0; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8a8070">本月應繳</p>
+              <p style="margin:4px 0 0; font-family:'Playfair Display',serif; font-size:34px">NT$1,280</p>
+              <p style="margin:14px 0 0; padding-top:12px; border-top:1px solid #e5ded2; font-size:12px; color:#6f6786">自 玉山銀行 ···3311 扣款</p>
+              <span style="display:inline-block; margin-top:16px; font-size:13px; font-weight:500; border:1px solid #ddd4c6; color:#4a4160; border-radius:999px; padding:8px 20px">手動繳款</span>
+            </div>
+            <div style="background:#f3efe7; padding:26px 24px 24px">
+              <div style="display:flex; align-items:baseline; justify-content:space-between">
+                <span style="font-family:'Playfair Display',serif; font-size:15px; color:#8a8070">每月 6 日</span>
+                <span style="display:flex; align-items:center; gap:5px; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#4a4160">
+                  <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>已繳
+                </span>
+              </div>
+              <h3 style="margin:16px 0 4px; font-size:17px; font-weight:700">國泰 CUBE 卡</h3>
+              <p style="margin:0; font-size:12px; color:#8a8070">國泰世華發卡</p>
+              <p style="margin:22px 0 0; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8a8070">本月應繳</p>
+              <p style="margin:4px 0 0; font-family:'Playfair Display',serif; font-size:34px; color:#6f6786">NT$8,920</p>
+              <p style="margin:14px 0 0; padding-top:12px; border-top:1px solid #ddd4c6; font-size:12px; color:#6f6786">8/28 已自 國泰世華 ···5678 繳款</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</x-dc>
+</body>
+</html>
