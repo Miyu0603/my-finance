@@ -375,14 +375,40 @@ body {
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-solid) 22%, transparent);
   }
 
-  /* Horizontal card rails: scrollable, snapping, no visible scrollbar. */
+  /*
+   * A horizontal card rail that bleeds to the screen edges on a phone.
+   *
+   * The gutter is one variable because three properties have to agree: the
+   * padding that insets the first card, the negative margin that lets the rail
+   * reach the screen edge, and scroll-padding, which tells snapping where the
+   * scrollport starts. Without that last one `scroll-snap-align: start` aligned
+   * each card to offset 0 while the cards actually began at the padding edge, so
+   * mandatory snapping pinned scrollLeft at 16px: the gutter vanished, the first
+   * card sat flush against the screen edge, and scrolling back to the start was
+   * impossible.
+   *
+   * Snapping is `proximity`, not `mandatory` — the layout reads fine unsnapped,
+   * and mandatory is what turns any such mismatch into a trap.
+   */
   .rail {
+    --rail-gutter: 0px;
     display: flex;
     gap: 0.75rem;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    padding-inline: var(--rail-gutter);
+    margin-inline: calc(-1 * var(--rail-gutter));
+    scroll-padding-inline-start: var(--rail-gutter);
+    scroll-snap-type: x proximity;
     scrollbar-width: none;
     padding-bottom: 0.25rem;
+    overscroll-behavior-x: contain;
+  }
+
+  /* Edge-to-edge on a phone, inset with the page content from md up. */
+  .rail-bleed { --rail-gutter: 1rem; }
+
+  @media (width >= 48rem) {
+    .rail-bleed { --rail-gutter: 0px; }
   }
 
   .rail::-webkit-scrollbar { display: none; }
