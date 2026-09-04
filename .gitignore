@@ -25,3 +25,7 @@ dist-ssr
 
 # Editor workspace files
 *.code-workspace
+
+# Design canvas exports (large generated HTML kept locally for reference)
+網站版面設計方案/
+網站版面設計方案.zip

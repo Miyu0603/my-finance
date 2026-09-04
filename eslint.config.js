@@ -5,7 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // Design-canvas exports are supplied artefacts, not project source.
+  globalIgnores(['dist', '網站版面設計方案']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
