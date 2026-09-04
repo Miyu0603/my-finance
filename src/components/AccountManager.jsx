@@ -7,7 +7,13 @@ import { useMoneyFormat } from '../lib/moneyDisplay'
 import { Modal, ConfirmDialog, TextField, SelectField, ColorField, PrimaryButton, GhostButton } from './ui'
 import { IconBank, IconEdit, IconTrash, IconTransfer, IconReceipt, IconExchange, IconPlus, IconDots } from './icons'
 
-const ICON_BG = ['bg-blue-500', 'bg-emerald-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500']
+const ICON_BG = ['brick-blue', 'brick-green', 'brick-purple', 'brick-yellow', 'brick-peach', 'brick-plain']
+
+/** Colour is per account, but a bank header covers several — take the first set. */
+const groupColor = (accountsInGroup) => {
+  const chosen = accountsInGroup.find(a => a.color)
+  return chosen ? `brick-${chosen.color}` : ''
+}
 
 const emptyAccount = { bank: '', lastFour: '', purpose: '', note: '', balance: '', currency: 'TWD', color: '' }
 
@@ -132,7 +138,8 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
           {groups.map((bankName, groupIndex) => (
             <section key={bankName} className="brick brick-plain rounded-card overflow-hidden">
               <h2 className="flex items-center gap-2.5 px-4 py-3 border-b border-line">
-                <span className={`${ICON_BG[groupIndex % ICON_BG.length]} w-8 h-8 rounded-pill flex items-center justify-center text-white`}>
+                {/* A group shows the first explicit colour among its accounts. */}
+                <span className={`brick ${groupColor(byBank.get(bankName)) || ICON_BG[groupIndex % ICON_BG.length]} w-8 h-8 rounded-pill flex items-center justify-center`}>
                   <IconBank className="w-4 h-4" />
                 </span>
                 <span className="font-semibold text-ink-2 text-sm">{bankName}</span>
@@ -146,6 +153,10 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
                     <div key={account.id} className="flex items-center px-4 py-3 border-t border-line-soft first:border-t-0 hover:bg-surface-2 transition group">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
+                          {account.color && (
+                            <span aria-hidden="true"
+                              className={`brick brick-${account.color} w-2.5 h-5 rounded-pill shrink-0`} />
+                          )}
                           <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${currency === 'TWD' ? 'tint-blue' : 'tint-amber'}`}>{currency}</span>
                           <span className="text-sm font-medium text-ink-3 truncate">
                             {account.lastFour && <span className="text-muted font-mono text-xs mr-1.5">···{account.lastFour}</span>}

@@ -329,6 +329,9 @@ export default function Dashboard({
             <div className="brick brick-plain rounded-card p-3 mt-3 space-y-1.5">
               {byBank.get(expandedBank).map(account => (
                 <div key={account.id} className="flex items-center text-xs bg-surface-2 rounded-tile px-3 py-2">
+                  {account.color && (
+                    <span aria-hidden="true" className={`brick brick-${account.color} w-2 h-4 rounded-pill shrink-0 mr-1.5`} />
+                  )}
                   <span className="pill-outline text-[10px] font-bold px-2 py-0.5 shrink-0">{currencyOf(account)}</span>
                   <span className="ml-2 text-ink-4 flex-1 truncate">
                     {account.lastFour && `···${account.lastFour}`}{account.purpose && ` · ${account.purpose}`}
@@ -390,7 +393,7 @@ export default function Dashboard({
               const partial = isPartiallyPaid(card, transactions)
               return (
                 <div key={card.id} className="px-4 py-3 border-t border-line first:border-t-0 flex items-center gap-2.5">
-                  <div className={`w-9 h-9 rounded-tile border-2 border-[var(--edge)] flex items-center justify-center shrink-0 ${paid ? 'brick-green' : days <= 3 ? 'brick-peach' : 'brick-plain'}`}>
+                  <div className={`w-9 h-9 rounded-tile border-2 border-[var(--edge)] flex items-center justify-center shrink-0 ${card.color ? `brick-${card.color}` : paid ? 'brick-green' : days <= 3 ? 'brick-peach' : 'brick-plain'}`}>
                     {paid ? <IconCheck className="w-4 h-4" /> : <IconCard className="w-4 h-4" />}
                   </div>
                   <div className="flex-1 min-w-0">
