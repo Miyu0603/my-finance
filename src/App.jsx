@@ -86,7 +86,7 @@ export default function App() {
 
   const saveAccount = (account, editingId) => {
     if (editingId === 'new') {
-      commit({ ...state, accounts: [...state.accounts, account] })
+      commit({ ...state, accounts: [...state.accounts, { ...account, createdAt: now() }] })
       return
     }
     // A hand-edited balance is a ledger event, not a silent overwrite.
@@ -172,7 +172,8 @@ export default function App() {
               onNavigate={setTab} amountsHidden={amountsHidden} onToggleAmounts={toggleAmounts} />
           )}
           {tab === 'accounts' && (
-            <AccountManager accounts={state.accounts} onSave={saveAccount} onRemove={removeAccount}
+            <AccountManager accounts={state.accounts} transactions={state.transactions}
+              onSave={saveAccount} onRemove={removeAccount}
               onTransfer={setTransferFromId} onTransaction={setTransactionAccount} onExchange={setExchangeAccount} />
           )}
           {tab === 'investments' && (
