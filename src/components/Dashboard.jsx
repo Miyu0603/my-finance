@@ -232,7 +232,7 @@ export default function Dashboard({
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+      <div className={`grid grid-cols-1 gap-3.5 ${nextDue ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
         <div className="md:col-span-1">
           <BalanceHero totals={heroTotals} accountCount={accounts.length} cardCount={cards.length}
             lastEntry={lastEntry} hidden={amountsHidden}
@@ -249,8 +249,8 @@ export default function Dashboard({
               : null} />
         </div>
 
-        <div className="md:col-span-1 mb-5 md:mb-0">
-          {nextDue ? (
+        {nextDue && (
+          <div className="md:col-span-1 mb-5 md:mb-0">
             <div className="brick brick-plain rounded-card p-4 md:p-5 h-full flex flex-col">
               <BlockTag solid={false}>最近要繳的一筆</BlockTag>
               <div className="flex items-start justify-between gap-2 mt-3.5">
@@ -276,16 +276,8 @@ export default function Dashboard({
                 </button>
               )}
             </div>
-          ) : (
-            <div className="brick brick-green rounded-card p-4 md:p-5 h-full flex flex-col justify-center items-center text-center">
-              <IconCheck className="w-8 h-8 mb-2" />
-              <div className="font-bold text-[15px]">本月卡費都繳完了</div>
-              <div className="text-[12px] opacity-75 mt-1">
-                {cards.length === 0 ? '還沒有信用卡' : `${cards.length} 張卡都沒有待繳`}
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mt-6">
