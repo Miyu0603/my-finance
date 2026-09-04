@@ -12,54 +12,81 @@
  * grey, surfaces are white, and violet is the primary rather than black.
  */
 @theme {
-  --color-app: #f6f4fc;
+  --color-app: #faf7f2;
   --color-surface: #ffffff;
-  --color-surface-2: #f8f7fd;
-  --color-surface-3: #f0edf9;
-  --color-surface-4: #e4dff3;
+  --color-surface-2: #faf7f2;
+  --color-surface-3: #f1ece3;
+  --color-surface-4: #e5dfd4;
 
-  --color-ink: #1a1526;
-  --color-ink-2: #2c2440;
-  --color-ink-3: #4a4160;
-  --color-ink-4: #5f5677;
-  --color-muted: #6f6786;
-  --color-faint: #c1bad4;
+  --color-ink: #1c1c1c;
+  --color-ink-2: #2a2a2a;
+  --color-ink-3: #3a3a3a;
+  --color-ink-4: #5a5a5a;
+  --color-muted: #6b6b6b;
+  --color-faint: #9d9d9d;
 
-  --color-line: #efecf8;
-  --color-line-2: #e4dff3;
-  --color-line-soft: #f4f2fb;
+  --color-line: #e6e1d8;
+  --color-line-2: #d8d2c8;
+  --color-line-soft: #efeae1;
 
-  --color-solid: #7c3aed;
-  --color-solid-hover: #6d28d9;
+  /* Primary action is the orange CTA; black is reserved for labels and edges. */
+  --color-solid: #d4400f;
+  --color-solid-hover: #b8360c;
   --color-on-solid: #ffffff;
+  /* The same orange as body text, darkened to clear AA on cream. */
+  --color-accent: #b8360c;
 
-  --color-scrim: rgb(26 21 38 / 0.28);
+  --color-scrim: rgb(28 28 28 / 0.45);
 
-  /* Softer, larger corners than Tailwind's default scale. */
-  --radius-card: 1.5rem;
-  --radius-tile: 1.125rem;
+  --radius-card: 1.375rem;
+  --radius-tile: 0.875rem;
   --radius-pill: 999px;
 
-  --shadow-card: 0 2px 20px -8px rgb(76 29 149 / 0.18);
-  --shadow-float: 0 10px 34px -10px rgb(26 21 38 / 0.35);
+  --shadow-card: 0 2px 0 0 #1c1c1c;
+  --shadow-float: 0 18px 40px -18px rgb(28 28 28 / 0.55);
 }
 
 :root {
+  /* Hard outline that defines every card in this layout. */
+  --edge: #1c1c1c;
+  --edge-width: 2px;
+  --edge-soft-width: 1.5px;
+
+  --frame-bg: #1c1c1c;
+  --frame-ink: #9d9d9d;
+  --frame-active-bg: #ffd84d;
+  --frame-active-ink: #1c1c1c;
+
+  /* Saturated block fills. One hue per bank makes them recognisable at a glance. */
+  --block-ink: #1c1c1c;
+  --block-yellow: #ffd84d;
+  --block-purple: #d5c3fb;
+  --block-blue: #a8d5f2;
+  --block-green: #c7ecd4;
+  --block-peach: #ffe1d8;
+  --block-plain: #ffffff;
+
+  --pill-solid-bg: #1c1c1c;
+  --pill-solid-ink: #faf7f2;
+
+  --meter-track: rgb(28 28 28 / 0.18);
+  --meter-fill: #1c1c1c;
+
   /* Tinted chips: soft background + readable foreground per accent. */
-  --tint-indigo-bg: #eef2ff;
-  --tint-indigo-fg: #4f46e5;
-  --tint-violet-bg: #f3effe;
-  --tint-violet-fg: #6d28d9;
-  --tint-emerald-bg: #ecfdf5;
-  --tint-emerald-fg: #047857;
-  --tint-red-bg: #fef2f2;
-  --tint-red-fg: #dc2626;
-  --tint-amber-bg: #fffbeb;
-  --tint-amber-fg: #b45309;
-  --tint-blue-bg: #eff6ff;
-  --tint-blue-fg: #1d4ed8;
-  --tint-neutral-bg: #f0edf9;
-  --tint-neutral-fg: #4a4160;
+  --tint-indigo-bg: #a8d5f2;
+  --tint-indigo-fg: #1c1c1c;
+  --tint-violet-bg: #d5c3fb;
+  --tint-violet-fg: #1c1c1c;
+  --tint-emerald-bg: #c7ecd4;
+  --tint-emerald-fg: #1c1c1c;
+  --tint-red-bg: #ffe1d8;
+  --tint-red-fg: #a83409;
+  --tint-amber-bg: #ffd84d;
+  --tint-amber-fg: #1c1c1c;
+  --tint-blue-bg: #a8d5f2;
+  --tint-blue-fg: #1c1c1c;
+  --tint-neutral-bg: #f1ece3;
+  --tint-neutral-fg: #3a3a3a;
 
   /* The balance hero: light lavender wash carrying dark text. */
   --hero-1: #cdbffc;
@@ -67,7 +94,7 @@
   --hero-3: #c3b6fb;
   --hero-ink: #241a3d;
   /* Deepening the wash pushed the old soft ink to 4.16:1; this holds 5.02:1. */
-  --hero-ink-soft: #4e3f70;
+  --hero-ink-soft: #4a3a05;
   --hero-chip: rgb(255 255 255 / 0.72);
   --hero-chip-hover: rgb(255 255 255 / 0.95);
   --hero-footer-bg: #ffffff;
@@ -78,82 +105,85 @@
   --veil-strong: rgb(255 255 255 / 0.92);
 
   /* Floating pill navigation. */
-  --nav-bg: #1a1526;
+  --nav-bg: #1c1c1c;
   --nav-edge: transparent;
-  --nav-fg: #a79fbd;
-  --nav-active-bg: #ffffff;
-  --nav-active-fg: #1a1526;
+  --nav-fg: #9d9d9d;
+  --nav-active-bg: #ffd84d;
+  --nav-active-fg: #1c1c1c;
 
-  /* Decorative card skins: two gradient stops each. */
-  --skin-blue-1: #eef4ff;
-  --skin-blue-2: #dfe7ff;
-  --skin-emerald-1: #ecfdf5;
-  --skin-emerald-2: #d3f7ec;
-  --skin-purple-1: #f7f2ff;
-  --skin-purple-2: #ebe3fe;
-  --skin-amber-1: #fff9ec;
-  --skin-amber-2: #ffeed6;
-  --skin-rose-1: #fff1f5;
-  --skin-rose-2: #fbe2f0;
-  --skin-cyan-1: #edfcff;
-  --skin-cyan-2: #dcf0fd;
-  --skin-fuchsia-1: #fdf2ff;
-  --skin-fuchsia-2: #f4e4fe;
-  --skin-indigo-1: #f0efff;
-  --skin-indigo-2: #e2e2ff;
-  --skin-border: rgb(255 255 255 / 0.85);
-  --skin-border-width: 2px;
 }
 
 .dark {
   color-scheme: dark;
 
-  --color-app: #100d1a;
-  --color-surface: #1a1626;
-  --color-surface-2: #201b30;
-  --color-surface-3: #2a2440;
-  --color-surface-4: #3a3255;
+  --edge: #4a463e;
+  --frame-bg: #0d0d0d;
+  --frame-ink: #7e7a72;
+  --frame-active-bg: #ffd84d;
+  --frame-active-ink: #1c1c1c;
 
-  --color-ink: #f4f2fa;
-  --color-ink-2: #e5e1f0;
-  --color-ink-3: #c9c3da;
-  --color-ink-4: #a49db8;
-  --color-muted: #8f87a8;
-  --color-faint: #574e70;
+  --block-ink: #f7f3ea;
+  --block-yellow: #6a5210;
+  --block-purple: #453569;
+  --block-blue: #1b4459;
+  --block-green: #144b37;
+  --block-peach: #653427;
+  --block-plain: #241f19;
 
-  --color-line: #2a2440;
-  --color-line-2: #3a3255;
-  --color-line-soft: #241f36;
+  --pill-solid-bg: #12100d;
+  --pill-solid-ink: #f7f3ea;
 
-  --color-solid: #8b5cf6;
-  --color-solid-hover: #7c3aed;
+  --meter-track: rgb(247 243 234 / 0.2);
+  --meter-fill: #f7f3ea;
+
+
+  --color-app: #1a1814;
+  --color-surface: #241f19;
+  --color-surface-2: #1f1b16;
+  --color-surface-3: #302a22;
+  --color-surface-4: #3f382e;
+
+  --color-ink: #f7f3ea;
+  --color-ink-2: #ece7dc;
+  --color-ink-3: #d3cdc0;
+  --color-ink-4: #b0a99c;
+  --color-muted: #9c958a;
+  --color-faint: #6f6960;
+
+  --color-line: #332d25;
+  --color-line-2: #443d33;
+  --color-line-soft: #2a251e;
+
+  --color-solid: #e4551f;
+  --color-solid-hover: #d4400f;
+  --color-accent: #ff8f63;
   --color-on-solid: #ffffff;
 
-  --color-scrim: rgb(0 0 0 / 0.62);
+  --color-scrim: rgb(0 0 0 / 0.7);
 
-  --shadow-card: 0 2px 20px -8px rgb(0 0 0 / 0.6);
+  --shadow-card: 0 2px 0 0 #4a463e;
   --shadow-float: 0 10px 34px -10px rgb(0 0 0 / 0.7);
 
-  --tint-indigo-bg: rgb(99 102 241 / 0.18);
-  --tint-indigo-fg: #a5b4fc;
-  --tint-violet-bg: rgb(139 92 246 / 0.2);
-  --tint-violet-fg: #c4b5fd;
-  --tint-emerald-bg: rgb(16 185 129 / 0.18);
-  --tint-emerald-fg: #6ee7b7;
-  --tint-red-bg: rgb(239 68 68 / 0.18);
-  --tint-red-fg: #fca5a5;
-  --tint-amber-bg: rgb(245 158 11 / 0.18);
-  --tint-amber-fg: #fcd34d;
-  --tint-blue-bg: rgb(59 130 246 / 0.18);
-  --tint-blue-fg: #93c5fd;
-  --tint-neutral-bg: #2a2440;
-  --tint-neutral-fg: #c9c3da;
+  --tint-indigo-bg: #1b4459;
+  --tint-indigo-fg: #cfe8f6;
+  --tint-violet-bg: #453569;
+  --tint-violet-fg: #ddd2f7;
+  --tint-emerald-bg: #144b37;
+  --tint-emerald-fg: #c2e9d3;
+  --tint-red-bg: #653427;
+  --tint-red-fg: #f7c9ba;
+  --tint-amber-bg: #6a5210;
+  --tint-amber-fg: #ffe08a;
+  --tint-blue-bg: #1b4459;
+  --tint-blue-fg: #cfe8f6;
+  --tint-neutral-bg: #302a22;
+  --tint-neutral-fg: #d3cdc0;
 
   --hero-1: #3a2a6e;
   --hero-2: #5b2a72;
   --hero-3: #2f2359;
   --hero-ink: #f6f2ff;
-  --hero-ink-soft: #c4b2e8;
+  --hero-ink-soft: #f0e3b8;
   --hero-chip: rgb(255 255 255 / 0.14);
   --hero-chip-hover: rgb(255 255 255 / 0.24);
   --hero-footer-bg: #1a1626;
@@ -162,34 +192,18 @@
   --veil: rgb(255 255 255 / 0.12);
   --veil-strong: rgb(255 255 255 / 0.22);
 
-  --nav-bg: #241f36;
-  --nav-edge: #3a3255;
-  --nav-fg: #9992ad;
-  --nav-active-bg: #f4f2fa;
-  --nav-active-fg: #1a1526;
+  --nav-bg: #0d0d0d;
+  --nav-edge: #3a3630;
+  --nav-fg: #7e7a72;
+  --nav-active-bg: #ffd84d;
+  --nav-active-fg: #1c1c1c;
 
-  --skin-blue-1: #172554;
-  --skin-blue-2: #1e3a5f;
-  --skin-emerald-1: #064e3b;
-  --skin-emerald-2: #065f46;
-  --skin-purple-1: #2e1065;
-  --skin-purple-2: #4c1d95;
-  --skin-amber-1: #451a03;
-  --skin-amber-2: #78350f;
-  --skin-rose-1: #4c0519;
-  --skin-rose-2: #881337;
-  --skin-cyan-1: #083344;
-  --skin-cyan-2: #164e63;
-  --skin-fuchsia-1: #4a044e;
-  --skin-fuchsia-2: #86198f;
-  --skin-indigo-1: #312e81;
-  --skin-indigo-2: #3730a3;
-  --skin-border: rgb(255 255 255 / 0.1);
-  --skin-border-width: 2px;
 }
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* Outfit carries the numerals, Noto Sans TC the Chinese. */
+  font-family: Outfit, 'Noto Sans TC', system-ui, sans-serif;
 }
 
 body {
@@ -223,39 +237,90 @@ body {
   .tint-blue { background-color: var(--tint-blue-bg); color: var(--tint-blue-fg); }
   .tint-neutral { background-color: var(--tint-neutral-bg); color: var(--tint-neutral-fg); }
 
-  .skin { border: var(--skin-border-width) solid var(--skin-border); }
-  .skin-blue { background-image: linear-gradient(to bottom right, var(--skin-blue-1), var(--skin-blue-2)); }
-  .skin-emerald { background-image: linear-gradient(to bottom right, var(--skin-emerald-1), var(--skin-emerald-2)); }
-  .skin-purple { background-image: linear-gradient(to bottom right, var(--skin-purple-1), var(--skin-purple-2)); }
-  .skin-amber { background-image: linear-gradient(to bottom right, var(--skin-amber-1), var(--skin-amber-2)); }
-  .skin-rose { background-image: linear-gradient(to bottom right, var(--skin-rose-1), var(--skin-rose-2)); }
-  .skin-cyan { background-image: linear-gradient(to bottom right, var(--skin-cyan-1), var(--skin-cyan-2)); }
-  .skin-fuchsia { background-image: linear-gradient(to bottom right, var(--skin-fuchsia-1), var(--skin-fuchsia-2)); }
-  .skin-indigo { background-image: linear-gradient(to bottom right, var(--skin-indigo-1), var(--skin-indigo-2)); }
-
-  /* Balance hero. Its own ink tokens so text stays readable on the wash. */
-  .hero {
-    background-image: linear-gradient(135deg, var(--hero-1) 0%, var(--hero-2) 55%, var(--hero-3) 100%);
-    color: var(--hero-ink);
-    border: var(--skin-border-width) solid var(--skin-border);
+  /*
+   * A brick: saturated fill, hard black outline, dark ink. This layout
+   * uses weight and colour instead of shadow, so the edge is structural — not
+   * decoration — and lives on one token pair.
+   */
+  .brick {
+    border: var(--edge-width) solid var(--edge);
+    color: var(--block-ink);
+    background-color: var(--block-plain);
   }
 
-  /* The hero closes on a plain band, like the reference card does. */
-  .hero-footer {
-    background-color: var(--hero-footer-bg);
-    color: var(--hero-footer-ink);
+  .brick-yellow { background-color: var(--block-yellow); }
+  .brick-purple { background-color: var(--block-purple); }
+  .brick-blue { background-color: var(--block-blue); }
+  .brick-green { background-color: var(--block-green); }
+  .brick-peach { background-color: var(--block-peach); }
+  .brick-plain { background-color: var(--block-plain); }
+
+  /* Black capsule label, and its outlined sibling for use on a filled block. */
+  .pill-solid {
+    background-color: var(--pill-solid-bg);
+    color: var(--pill-solid-ink);
+    border-radius: var(--radius-pill);
+  }
+
+  .pill-outline {
+    background-color: var(--color-app);
+    color: var(--color-ink);
+    border: var(--edge-soft-width) solid var(--edge);
+    border-radius: var(--radius-pill);
+  }
+
+  /* Progress meter: payment completion, or one bank's share of a currency. */
+  .meter {
+    height: 9px;
+    border-radius: var(--radius-pill);
+    background-color: var(--meter-track);
+    overflow: hidden;
+  }
+
+  .meter > span {
+    display: block;
+    height: 100%;
+    border-radius: var(--radius-pill);
+    background-color: var(--meter-fill);
+  }
+
+  /* The dark chrome the cream canvas sits inside. */
+  .app-frame { background-color: var(--frame-bg); }
+
+  .frame-item {
+    color: var(--frame-ink);
+    border-radius: var(--radius-tile);
+  }
+
+  .frame-item[aria-current="page"] {
+    background-color: var(--frame-active-bg);
+    color: var(--frame-active-ink);
+  }
+
+  /* The headline block: yellow fill, black outline, black ink. */
+  .hero {
+    background-color: var(--block-yellow);
+    color: var(--block-ink);
+    border: var(--edge-width) solid var(--edge);
   }
 
   .hero-soft { color: var(--hero-ink-soft); }
 
+  .hero-footer {
+    background-color: var(--block-plain);
+    color: var(--color-muted);
+    border-top: var(--edge-width) solid var(--edge);
+  }
+
   .hero-chip {
-    background-color: var(--hero-chip);
-    color: var(--hero-ink);
+    background-color: var(--block-plain);
+    color: var(--block-ink);
+    border: var(--edge-soft-width) solid var(--edge);
     border-radius: var(--radius-pill);
     transition: background-color 150ms;
   }
 
-  .hero-chip:hover { background-color: var(--hero-chip-hover); }
+  .hero-chip:hover { background-color: color-mix(in srgb, var(--block-plain) 80%, var(--block-yellow)); }
 
   /*
    * `bg-surface/70` cannot be used for this: Tailwind bakes the *theme* value
@@ -283,7 +348,7 @@ body {
   /* Inputs inherit theme colours instead of being re-skinned per theme. */
   .field {
     width: 100%;
-    border: 1px solid var(--color-line-2);
+    border: var(--edge-soft-width) solid var(--edge);
     border-radius: var(--radius-tile);
     padding: 0.625rem 0.875rem;
     font-size: 1rem;
@@ -299,7 +364,7 @@ body {
   .field:focus {
     outline: none;
     border-color: var(--color-solid);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-solid) 18%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-solid) 22%, transparent);
   }
 
   /* Horizontal card rails: scrollable, snapping, no visible scrollbar. */
