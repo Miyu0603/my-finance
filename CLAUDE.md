@@ -29,7 +29,7 @@ src/
     ledger.js              ALL money mutations, as pure (state, input) => state functions
     ledger.test.js         behaviour tests for every ledger rule and every undo path
     storage.js             the only module that touches localStorage; normalises untrusted input
-    cards.js               credit-card due-date and paid-this-month logic
+    cards.js               due dates, and payment state derived from the transaction log
     cards.test.js
     currency.js            currency list, symbols, formatMoney, sumByCurrency
     moneyDisplay.js        MoneyFormatContext — the privacy toggle's single choke point
@@ -70,6 +70,16 @@ across a TWD and a USD account is meaningless, and it was a real bug.
 **Money moves only through `lib/ledger.js`.** Components collect input and show errors;
 they never touch `balance`, `shares` or `cost` directly. Each `apply*` throws a `LedgerError`
 whose message is written for the user — `runLedger()` in `App.jsx` turns that into a toast.
+
+**Card payment state is derived from the log, never stored on the card.**
+`paidThisMonth()` / `outstandingThisMonth()` in `lib/cards.js` add up that card's
+`card-payment` entries for the current calendar month. The old `lastPaidDate`
+boolean could not tell a 3,000 instalment from a full 8,420 settlement, so a
+partial payment marked the card settled and the remaining 5,420 vanished from
+the dashboard. Deriving it also means undo needs no bookkeeping — drop the entry
+and the figure follows. A payment carries its own date and account, so it can be
+backdated and paid from somewhere other than the card's linked account without
+re-binding it.
 
 **Every transaction must be undoable, without recomputation.** Each entry stores what an undo
 needs: `prevLastPaidDate` on a card payment, `costRemoved` on a sell, `before`/`after` on an

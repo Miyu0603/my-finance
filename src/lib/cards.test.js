@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { nextDueDate, daysUntilDue, isPaidThisMonth } from './cards'
+import { nextDueDate, daysUntilDue, isPaidThisMonth, isPartiallyPaid, paidThisMonth, outstandingThisMonth } from './cards'
 
 const on = (y, m, d) => new Date(y, m - 1, d)
 
@@ -46,23 +46,59 @@ describe('daysUntilDue', () => {
   })
 })
 
-describe('isPaidThisMonth', () => {
+describe('payment state derived from the log', () => {
   const today = on(2026, 8, 28)
+  const card = { id: 'c1', monthlyAmount: '8420' }
+  const payment = (amount, date) => ({ type: 'card-payment', cardId: 'c1', amount, date: date.toISOString() })
 
-  it('is false without a payment', () => {
-    expect(isPaidThisMonth({}, today)).toBe(false)
+  it('is unpaid with no payments', () => {
+    expect(paidThisMonth(card, [], today)).toBe(0)
+    expect(outstandingThisMonth(card, [], today)).toBe(8420)
+    expect(isPaidThisMonth(card, [], today)).toBe(false)
   })
 
-  it('is true for a payment made this calendar month', () => {
-    expect(isPaidThisMonth({ lastPaidDate: on(2026, 8, 2).toISOString() }, today)).toBe(true)
+  /**
+   * The regression this replaced a boolean for: paying 3,000 of an 8,420 bill
+   * used to mark the card settled and drop the remaining 5,420 off the
+   * dashboard entirely.
+   */
+  it('keeps the remainder visible after a partial payment', () => {
+    const log = [payment(3000, on(2026, 8, 20))]
+    expect(paidThisMonth(card, log, today)).toBe(3000)
+    expect(outstandingThisMonth(card, log, today)).toBe(5420)
+    expect(isPaidThisMonth(card, log, today)).toBe(false)
+    expect(isPartiallyPaid(card, log, today)).toBe(true)
   })
 
-  it('is false for last month and for the same month a year ago', () => {
-    expect(isPaidThisMonth({ lastPaidDate: on(2026, 7, 30).toISOString() }, today)).toBe(false)
-    expect(isPaidThisMonth({ lastPaidDate: on(2025, 8, 30).toISOString() }, today)).toBe(false)
+  it('adds up several payments in the same month', () => {
+    const log = [payment(3000, on(2026, 8, 10)), payment(5420, on(2026, 8, 25))]
+    expect(paidThisMonth(card, log, today)).toBe(8420)
+    expect(outstandingThisMonth(card, log, today)).toBe(0)
+    expect(isPaidThisMonth(card, log, today)).toBe(true)
+    expect(isPartiallyPaid(card, log, today)).toBe(false)
+  })
+
+  it('ignores payments from other months and other cards', () => {
+    const log = [
+      payment(8420, on(2026, 7, 15)),
+      { type: 'card-payment', cardId: 'other', amount: 8420, date: on(2026, 8, 15).toISOString() },
+      { type: 'expense', accountId: 'a1', amount: 8420, date: on(2026, 8, 15).toISOString() },
+    ]
+    expect(paidThisMonth(card, log, today)).toBe(0)
+    expect(isPaidThisMonth(card, log, today)).toBe(false)
+  })
+
+  it('never reports a negative remainder when overpaid', () => {
+    const log = [payment(9000, on(2026, 8, 20))]
+    expect(outstandingThisMonth(card, log, today)).toBe(0)
+    expect(isPaidThisMonth(card, log, today)).toBe(true)
+  })
+
+  it('is not "paid" when there is no bill to pay', () => {
+    expect(isPaidThisMonth({ id: 'c1', monthlyAmount: '' }, [], today)).toBe(false)
   })
 
   it('ignores an unparseable date', () => {
-    expect(isPaidThisMonth({ lastPaidDate: 'not-a-date' }, today)).toBe(false)
+    expect(paidThisMonth(card, [{ type: 'card-payment', cardId: 'c1', amount: 100, date: 'nope' }], today)).toBe(0)
   })
 })

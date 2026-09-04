@@ -7,6 +7,11 @@ import { genId } from './id'
 import { num, round2 } from './money'
 import { emptyState, SCHEMA_VERSION } from './ledger'
 
+/** Fixed palette: each fill is contrast-checked against its ink in both themes. */
+export const BLOCK_COLORS = ['yellow', 'purple', 'blue', 'green', 'peach', 'plain']
+
+const color = (v) => (BLOCK_COLORS.includes(v) ? v : '')
+
 const STORAGE_KEY = 'my-finance-data'
 
 const str = (v) => (typeof v === 'string' ? v : v == null ? '' : String(v))
@@ -19,6 +24,7 @@ function normalizeAccount(raw) {
     purpose: str(raw.purpose),
     note: str(raw.note),
     currency: str(raw.currency) || 'TWD',
+    color: color(raw.color),
     balance: round2(num(raw.balance)),
   }
 }
@@ -33,7 +39,7 @@ function normalizeCard(raw) {
     annualFee: str(raw.annualFee),
     note: str(raw.note),
     monthlyAmount: str(raw.monthlyAmount),
-    lastPaidDate: raw.lastPaidDate ? str(raw.lastPaidDate) : null,
+    color: color(raw.color),
   }
 }
 

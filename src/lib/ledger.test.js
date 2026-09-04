@@ -15,7 +15,7 @@ function seed() {
       { id: 'twd2', bank: '玉山', currency: 'TWD', balance: 5000, lastFour: '2222' },
       { id: 'usd', bank: '國泰', currency: 'USD', balance: 1000, lastFour: '3333' },
     ],
-    cards: [{ id: 'card', name: '樂天卡', accountId: 'twd', monthlyAmount: '3500', lastPaidDate: null }],
+    cards: [{ id: 'card', name: '樂天卡', accountId: 'twd', monthlyAmount: '3500' }],
     investments: [
       { id: 's-tw', name: '0050', market: 'tw', shares: 1000, cost: 50000 },
       { id: 's-us', name: 'VOO', market: 'us', shares: 10, cost: 5000 },
@@ -132,14 +132,27 @@ describe('applyCardPayment', () => {
   it('deducts the amount passed in, not the stored monthly amount', () => {
     const next = applyCardPayment(seed(), { cardId: 'card', amount: 4210, date: DATE })
     expect(balanceOf(next, 'twd')).toBe(95790)
-    expect(next.cards[0].lastPaidDate).toBe(DATE)
-    expect(lastTx(next).prevLastPaidDate).toBe(null)
+    expect(lastTx(next)).toMatchObject({ type: 'card-payment', accountId: 'twd', amount: 4210, date: DATE })
   })
 
-  it('refuses an unlinked card', () => {
+  it('refuses an unlinked card with no account given', () => {
     const state = seed()
     state.cards[0].accountId = ''
     expect(() => applyCardPayment(state, { cardId: 'card', amount: 100, date: DATE })).toThrow(LedgerError)
+  })
+
+  it('accepts a one-off account override without changing the card', () => {
+    const next = applyCardPayment(seed(), { cardId: 'card', accountId: 'twd2', amount: 1000, date: DATE })
+    expect(balanceOf(next, 'twd2')).toBe(4000)
+    expect(balanceOf(next, 'twd')).toBe(100000)
+    expect(next.cards[0].accountId).toBe('twd')
+    expect(lastTx(next).accountId).toBe('twd2')
+  })
+
+  it('records the date it is given rather than today', () => {
+    const backdated = '2026-08-15T00:00:00.000Z'
+    const next = applyCardPayment(seed(), { cardId: 'card', amount: 500, date: backdated })
+    expect(lastTx(next).date).toBe(backdated)
   })
 })
 
@@ -187,12 +200,10 @@ describe('revertTransaction', () => {
     expect(balanceOf(back, 'twd')).toBe(100000)
   })
 
-  it('undoes a card payment and restores the previous paid date', () => {
-    const state = seed()
-    state.cards[0].lastPaidDate = '2026-07-15T00:00:00.000Z'
-    const { back } = roundTrip(state, s => applyCardPayment(s, { cardId: 'card', amount: 3500, date: DATE }))
+  it('undoes a card payment', () => {
+    const { back } = roundTrip(seed(), s => applyCardPayment(s, { cardId: 'card', amount: 3500, date: DATE }))
     expect(balanceOf(back, 'twd')).toBe(100000)
-    expect(back.cards[0].lastPaidDate).toBe('2026-07-15T00:00:00.000Z')
+    expect(back.transactions).toHaveLength(0)
   })
 
   it('undoes a manual adjustment', () => {

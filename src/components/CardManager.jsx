@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import { genId } from '../lib/id'
+import { BLOCK_COLORS } from '../lib/storage'
 
 import { currencyOf, sumByCurrency } from '../lib/currency'
-import { daysUntilDue, isPaidThisMonth, monthlyAmountOf } from '../lib/cards'
+import { daysUntilDue, isPaidThisMonth, isPartiallyPaid, monthlyAmountOf, outstandingThisMonth, paidThisMonth } from '../lib/cards'
 import { useMoneyFormat } from '../lib/moneyDisplay'
-import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButton } from './ui'
+import { Modal, ConfirmDialog, TextField, SelectField, ColorField, PrimaryButton, GhostButton } from './ui'
 import { IconCard, IconEdit, IconTrash, IconCheck, IconPlus } from './icons'
 
 const SKINS = ['brick-purple', 'brick-peach', 'brick-green', 'brick-yellow', 'brick-blue', 'brick-plain']
 const ICON_BG = ['bg-violet-500', 'bg-rose-500', 'bg-emerald-500', 'bg-amber-500', 'bg-blue-500', 'bg-fuchsia-500']
 
-const emptyCard = { name: '', issuer: '', accountId: '', dueDay: '', annualFee: '', note: '', monthlyAmount: '' }
+const emptyCard = { name: '', issuer: '', accountId: '', dueDay: '', annualFee: '', note: '', monthlyAmount: '', color: '' }
 
-export default function CardManager({ cards, accounts, onChange, onPayCard }) {
+export default function CardManager({ cards, accounts, transactions = [], onChange, onPayCard }) {
   const formatMoney = useMoneyFormat()
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(emptyCard)
@@ -23,6 +24,7 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
     setForm({
       name: card.name, issuer: card.issuer, accountId: card.accountId || '', dueDay: card.dueDay || '',
       annualFee: card.annualFee || '', note: card.note || '', monthlyAmount: card.monthlyAmount || '',
+      color: card.color || '',
     })
     setEditing(card.id)
   }
@@ -32,7 +34,7 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
     if (!name) return
     const next = { ...form, name, issuer: form.issuer.trim() }
     onChange(editing === 'new'
-      ? [...cards, { ...next, id: genId(), lastPaidDate: null }]
+      ? [...cards, { ...next, id: genId() }]
       : cards.map(c => (c.id === editing ? { ...c, ...next } : c)))
     setEditing(null)
   }
@@ -41,10 +43,11 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
   const currencyFor = (card) => currencyOf(accountOf(card))
 
   // Cards can be settled from accounts in different currencies, so never one total.
+  // Outstanding, not the whole bill: a part-paid card still owes the remainder.
   const dueTotals = sumByCurrency(
-    cards.filter(c => monthlyAmountOf(c) > 0 && !isPaidThisMonth(c)),
+    cards.filter(c => outstandingThisMonth(c, transactions) > 0),
     currencyFor,
-    monthlyAmountOf,
+    c => outstandingThisMonth(c, transactions),
   )
   const linkedCount = cards.filter(c => c.accountId).length
 
@@ -108,6 +111,9 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
             </div>
             <TextField label="備註" placeholder="海外 3% 回饋" value={form.note}
               onChange={v => setForm(f => ({ ...f, note: v }))} />
+            <ColorField label="顏色" value={form.color} options={BLOCK_COLORS}
+              hint="選「自動」就依順序配色"
+              onChange={v => setForm(f => ({ ...f, color: v }))} />
           </div>
         </Modal>
       )}
@@ -120,12 +126,15 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
       ) : (
         <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {cards.map((card, index) => {
-            const paid = isPaidThisMonth(card)
+            const paid = isPaidThisMonth(card, transactions)
+            const partial = isPartiallyPaid(card, transactions)
+            const settled = paidThisMonth(card, transactions)
+            const owing = outstandingThisMonth(card, transactions)
             const days = daysUntilDue(card.dueDay)
             const amount = monthlyAmountOf(card)
             const account = accountOf(card)
             return (
-              <div key={card.id} className={`brick ${SKINS[index % SKINS.length]} rounded-card p-4 hover:shadow-md transition group relative overflow-hidden`}>
+              <div key={card.id} className={`brick ${card.color ? `brick-${card.color}` : SKINS[index % SKINS.length]} rounded-card p-4 hover:shadow-md transition group relative overflow-hidden`}>
                 <div className="absolute -right-4 -bottom-4 opacity-[0.06]" aria-hidden="true">
                   <IconCard className="w-20 h-20" />
                 </div>
@@ -150,10 +159,15 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
                   {card.issuer && <div className="text-[11px] text-ink-4">{card.issuer}</div>}
 
                   <div className="mt-2">
-                    <div className="text-[10px] text-muted">本月應繳</div>
+                    <div className="text-[10px] text-muted">{partial ? '本月尚欠' : '本月應繳'}</div>
                     <div className="text-lg font-bold text-ink-2">
-                      {amount > 0 ? formatMoney(amount, currencyFor(card)) : '--'}
+                      {amount > 0 ? formatMoney(partial ? owing : amount, currencyFor(card)) : '--'}
                     </div>
+                    {settled > 0 && (
+                      <div className="text-[10px] text-muted">
+                        已繳 {formatMoney(settled, currencyFor(card))}{partial && ` / 帳單 ${formatMoney(amount, currencyFor(card))}`}
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-1 mt-1.5 text-[11px]">
@@ -177,12 +191,12 @@ export default function CardManager({ cards, accounts, onChange, onPayCard }) {
                     <div className="mt-2">
                       {paid ? (
                         <p className="flex items-center gap-1 text-[11px] tint-emerald px-2.5 py-1 rounded-pill">
-                          <IconCheck className="w-3 h-3" /><span className="font-medium">本月已繳</span>
+                          <IconCheck className="w-3 h-3" /><span className="font-medium">本月已繳清</span>
                         </p>
                       ) : (
                         <button onClick={() => onPayCard(card.id)}
-                          className={`w-full text-[11px] font-medium px-3 py-1.5 rounded-pill transition cursor-pointer ${days === 0 ? 'bg-red-500 text-white hover:bg-red-600' : 'veil text-ink-3'}`}>
-                          {days === 0 ? '今天到期 — 立即繳款' : '手動繳款'}
+                          className={`w-full text-[11px] font-medium px-3 py-1.5 rounded-pill transition cursor-pointer ${days === 0 ? 'bg-solid text-on-solid hover:bg-solid-hover' : 'veil text-ink-3'}`}>
+                          {partial ? '繼續繳款' : days === 0 ? '今天到期 — 立即繳款' : '記一筆繳款'}
                         </button>
                       )}
                     </div>

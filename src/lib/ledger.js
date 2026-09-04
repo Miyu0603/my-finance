@@ -144,20 +144,25 @@ export function applyInvestTx(state, { type, stockId, accountId, shares, amount,
 
 /* ---------- credit cards ---------- */
 
-export function applyCardPayment(state, { cardId, amount, date }) {
+/**
+ * A payment is a dated entry against an account, not a flag on the card. The
+ * account defaults to the card's linked one but can be overridden for a single
+ * payment, and the date is the caller's — settling on the 15th and recording it
+ * on the 18th should read as the 15th.
+ */
+export function applyCardPayment(state, { cardId, accountId, amount, date }) {
   const card = state.cards.find(c => c.id === cardId) || fail('找不到信用卡')
-  const account = findAccount(state, card.accountId) || fail('這張卡尚未綁定扣款帳戶')
+  const payFrom = accountId || card.accountId
+  const account = findAccount(state, payFrom) || fail('請選擇扣款帳戶')
   const amt = round2(amount)
   if (!(amt > 0)) fail('繳款金額必須大於 0')
   requireFunds(account, amt)
 
-  const accounts = shiftBalance(state.accounts, card.accountId, -amt)
-  const cards = state.cards.map(c => (c.id === cardId ? { ...c, lastPaidDate: date } : c))
+  const accounts = shiftBalance(state.accounts, payFrom, -amt)
   return withTx(state, accounts, {
-    type: 'card-payment', cardId, cardName: card.name, accountId: card.accountId,
-    amount: amt, currency: currencyOf(account),
-    prevLastPaidDate: card.lastPaidDate ?? null, date,
-  }, { cards })
+    type: 'card-payment', cardId, cardName: card.name, accountId: payFrom,
+    amount: amt, currency: currencyOf(account), date,
+  })
 }
 
 /* ---------- manual balance correction ---------- */
@@ -186,7 +191,7 @@ export function applyBalanceAdjustment(state, { accountId, newBalance, date }) {
 export function revertTransaction(state, txId) {
   const tx = state.transactions.find(t => t.id === txId) || fail('找不到這筆紀錄')
   let accounts = state.accounts
-  let cards = state.cards
+  const cards = state.cards
   let investments = state.investments
 
   switch (tx.type) {
@@ -200,9 +205,9 @@ export function revertTransaction(state, txId) {
     case 'exchange':
       accounts = shiftBalance(accounts, tx.fromId, num(tx.fromAmount))
       accounts = shiftBalance(accounts, tx.toId, -num(tx.toAmount)); break
+    // Paid-state is derived from the log, so dropping the entry is the whole undo.
     case 'card-payment':
       accounts = shiftBalance(accounts, tx.accountId, num(tx.amount))
-      cards = cards.map(c => (c.id === tx.cardId ? { ...c, lastPaidDate: tx.prevLastPaidDate ?? null } : c))
       break
     case 'invest-buy':
     case 'invest-sell': {

@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { genId } from '../lib/id'
+import { BLOCK_COLORS } from '../lib/storage'
 import { num, round2 } from '../lib/money'
 import { CURRENCIES, currencyOf, sumByCurrency } from '../lib/currency'
 import { useMoneyFormat } from '../lib/moneyDisplay'
-import { Modal, ConfirmDialog, TextField, SelectField, PrimaryButton, GhostButton } from './ui'
+import { Modal, ConfirmDialog, TextField, SelectField, ColorField, PrimaryButton, GhostButton } from './ui'
 import { IconBank, IconEdit, IconTrash, IconTransfer, IconReceipt, IconExchange, IconPlus, IconDots } from './icons'
 
 const ICON_BG = ['bg-blue-500', 'bg-emerald-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500']
 
-const emptyAccount = { bank: '', lastFour: '', purpose: '', note: '', balance: '', currency: 'TWD' }
+const emptyAccount = { bank: '', lastFour: '', purpose: '', note: '', balance: '', currency: 'TWD', color: '' }
 
 export default function AccountManager({ accounts, onSave, onRemove, onTransfer, onTransaction, onExchange }) {
   const formatMoney = useMoneyFormat()
@@ -22,6 +23,7 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
     setForm({
       bank: account.bank, lastFour: account.lastFour, purpose: account.purpose,
       note: account.note || '', balance: String(account.balance ?? ''), currency: currencyOf(account),
+      color: account.color || '',
     })
     setEditing(account.id)
   }
@@ -113,6 +115,9 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
               onChange={v => setForm(f => ({ ...f, purpose: v }))} />
             <TextField label="備註" placeholder="任何補充" value={form.note}
               onChange={v => setForm(f => ({ ...f, note: v }))} />
+            <ColorField label="顏色" value={form.color} options={BLOCK_COLORS}
+              hint="用在總覽的帳戶卡；選「自動」就依順序配色"
+              onChange={v => setForm(f => ({ ...f, color: v }))} />
           </div>
         </Modal>
       )}

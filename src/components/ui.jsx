@@ -146,6 +146,35 @@ export function SelectField({ label, hint, value, onChange, children, ...select 
   )
 }
 
+const COLOR_LABELS = { yellow: '黃', purple: '紫', blue: '藍', green: '綠', peach: '桃', plain: '白' }
+
+/**
+ * A fixed palette rather than a free colour picker: every fill here is already
+ * contrast-checked against its ink in both themes, which an arbitrary hex is not.
+ * The empty value keeps the existing behaviour of assigning a colour by position.
+ */
+export function ColorField({ label, value, onChange, options, hint }) {
+  return (
+    <Field label={label} hint={hint}>
+      {() => (
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => onChange('')} aria-pressed={!value} aria-label="自動配色"
+            className={`px-3.5 py-1.5 rounded-pill text-xs font-semibold transition cursor-pointer ${!value ? 'pill-solid' : 'pill-outline hover:bg-surface-3'}`}>
+            自動
+          </button>
+          {options.map(code => (
+            <button key={code} type="button" onClick={() => onChange(code)}
+              aria-pressed={value === code} aria-label={COLOR_LABELS[code] || code}
+              className={`brick brick-${code} w-9 h-9 rounded-pill cursor-pointer transition flex items-center justify-center text-[11px] font-bold ${value === code ? 'ring-2 ring-offset-2 ring-[var(--edge)] ring-offset-[var(--color-surface)]' : ''}`}>
+              {value === code ? '✓' : ''}
+            </button>
+          ))}
+        </div>
+      )}
+    </Field>
+  )
+}
+
 export function ErrorNote({ children }) {
   if (!children) return null
   return <p role="alert" className="text-sm text-red-500 tint-red px-3.5 py-2.5 rounded-tile">{children}</p>
