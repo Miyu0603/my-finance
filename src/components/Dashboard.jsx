@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { readPref, writePref } from '../lib/storage'
 import { currencyOf, sumByCurrency } from '../lib/currency'
-import { daysUntilDue, isPaidThisMonth, monthlyAmountOf } from '../lib/cards'
+import { daysUntilDue, isPaidThisMonth, isPartiallyPaid, monthlyAmountOf, outstandingThisMonth } from '../lib/cards'
 import { marketCurrency } from '../lib/ledger'
 import TransactionRow from './TransactionRow'
 import {
@@ -178,20 +178,21 @@ export default function Dashboard({
     : cashTotals.filter(entry => entry.currency === activeCurrency)
 
   const investTotals = sumByCurrency(investments, i => marketCurrency(i.market), i => i.cost)
-  const unpaidCards = cards.filter(c => monthlyAmountOf(c) > 0 && !isPaidThisMonth(c))
+  const unpaidCards = cards.filter(c => outstandingThisMonth(c, transactions) > 0)
+  // What is still owed this month, so a part-paid bill keeps its remainder.
   const dueTotals = sumByCurrency(
     unpaidCards,
     card => currencyOf(accounts.find(a => a.id === card.accountId)),
-    monthlyAmountOf,
+    card => outstandingThisMonth(card, transactions),
   )
   const payableCards = cards.filter(c => monthlyAmountOf(c) > 0)
-  const paidCount = payableCards.filter(c => isPaidThisMonth(c)).length
+  const paidCount = payableCards.filter(c => isPaidThisMonth(c, transactions)).length
 
   const upcomingCards = cards
     .map(card => ({ card, days: daysUntilDue(card.dueDay) }))
     .filter(entry => entry.days !== null)
     .sort((a, b) => a.days - b.days)
-  const nextDue = upcomingCards.find(({ card }) => !isPaidThisMonth(card) && monthlyAmountOf(card) > 0)
+  const nextDue = upcomingCards.find(({ card }) => outstandingThisMonth(card, transactions) > 0)
 
   // Totals per currency, so a bank's share is measured against its own currency.
   const currencyTotal = new Map(cashTotals.map(({ currency, total }) => [currency, total]))
@@ -260,7 +261,7 @@ export default function Dashboard({
                   </div>
                 </div>
                 <div className="text-[17px] font-extrabold text-ink shrink-0">
-                  {formatMoney(monthlyAmountOf(nextDue.card), currencyOf(accounts.find(a => a.id === nextDue.card.accountId)))}
+                  {formatMoney(outstandingThisMonth(nextDue.card, transactions), currencyOf(accounts.find(a => a.id === nextDue.card.accountId)))}
                 </div>
               </div>
               <div className="text-[12px] font-semibold text-accent mt-2">
@@ -384,7 +385,9 @@ export default function Dashboard({
             {upcomingCards.map(({ card, days }) => {
               const account = accounts.find(a => a.id === card.accountId)
               const amount = monthlyAmountOf(card)
-              const paid = isPaidThisMonth(card)
+              const paid = isPaidThisMonth(card, transactions)
+              const owing = outstandingThisMonth(card, transactions)
+              const partial = isPartiallyPaid(card, transactions)
               return (
                 <div key={card.id} className="px-4 py-3 border-t border-line first:border-t-0 flex items-center gap-2.5">
                   <div className={`w-9 h-9 rounded-tile border-2 border-[var(--edge)] flex items-center justify-center shrink-0 ${paid ? 'brick-green' : days <= 3 ? 'brick-peach' : 'brick-plain'}`}>
@@ -398,10 +401,12 @@ export default function Dashboard({
                   </div>
                   <div className="text-right">
                     <div className="font-extrabold text-ink text-sm">
-                      {amount > 0 ? formatMoney(amount, currencyOf(account)) : '--'}
+                      {amount > 0 ? formatMoney(paid ? amount : owing, currencyOf(account)) : '--'}
                     </div>
                     {paid
-                      ? <span className="text-[11px] font-semibold text-emerald-600">已繳</span>
+                      ? <span className="text-[11px] font-semibold text-emerald-600">已繳清</span>
+                      : partial
+                      ? <span className="text-[11px] font-semibold text-accent">部分已繳</span>
                       : <span className={`text-[11px] font-semibold ${days <= 3 ? 'text-accent' : 'text-muted'}`}>
                           {days === 0 ? '今天' : `${days} 天後`}
                         </span>}

@@ -105,8 +105,8 @@ export default function App() {
   const handleInvestTx = (input) => runLedger(
     s => applyInvestTx(s, { ...input, date: now() }),
     input.type === 'buy' ? '買進已記錄' : '賣出已記錄')
-  const handleCardPayment = (cardId, amount) => runLedger(
-    s => applyCardPayment(s, { cardId, amount, date: now() }), '繳款已記錄')
+  const handleCardPayment = (cardId, input) => runLedger(
+    s => applyCardPayment(s, { cardId, ...input }), '繳款已記錄')
   const handleRevert = (txId) => runLedger(s => revertTransaction(s, txId), '已復原這筆紀錄')
 
   const toggleAmounts = () => setAmountsHidden(prev => {
@@ -180,7 +180,8 @@ export default function App() {
               onChange={updateInvestments} onInvestTx={handleInvestTx} />
           )}
           {tab === 'cards' && (
-            <CardManager cards={state.cards} accounts={state.accounts} onChange={updateCards} onPayCard={setPayingCardId} />
+            <CardManager cards={state.cards} accounts={state.accounts} transactions={state.transactions}
+              onChange={updateCards} onPayCard={setPayingCardId} />
           )}
           {tab === 'settings' && (
             <SettingsPage state={state} onReplaceState={commit} darkMode={darkMode} setDarkMode={setDarkMode}
@@ -202,7 +203,7 @@ export default function App() {
           onExchange={handleExchange} onClose={() => setExchangeAccount(null)} />
       )}
       {payingCard && (
-        <CardPaymentModal card={payingCard} accounts={state.accounts}
+        <CardPaymentModal card={payingCard} accounts={state.accounts} transactions={state.transactions}
           onSubmit={handleCardPayment} onClose={() => setPayingCardId(null)} />
       )}
       {historyOpen && (
