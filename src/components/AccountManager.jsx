@@ -3,6 +3,7 @@ import { genId } from '../lib/id'
 import { BLOCK_COLORS } from '../lib/storage'
 import { num, round2 } from '../lib/money'
 import { CURRENCIES, currencyOf, sumByCurrency } from '../lib/currency'
+import { accountFreshness, describeFreshness, staleAccounts } from '../lib/freshness'
 import { useMoneyFormat } from '../lib/moneyDisplay'
 import { Modal, ConfirmDialog, TextField, SelectField, ColorField, PrimaryButton, GhostButton } from './ui'
 import { IconBank, IconEdit, IconTrash, IconTransfer, IconReceipt, IconExchange, IconPlus, IconDots } from './icons'
@@ -17,7 +18,14 @@ const groupColor = (accountsInGroup) => {
 
 const emptyAccount = { bank: '', lastFour: '', purpose: '', note: '', balance: '', currency: 'TWD', color: '' }
 
-export default function AccountManager({ accounts, onSave, onRemove, onTransfer, onTransaction, onExchange }) {
+const FRESHNESS_TONE = {
+  fresh: 'text-muted',
+  aging: 'text-warn font-medium',
+  stale: 'text-accent font-semibold',
+  unknown: 'text-muted',
+}
+
+export default function AccountManager({ accounts, transactions = [], onSave, onRemove, onTransfer, onTransaction, onExchange }) {
   const formatMoney = useMoneyFormat()
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(emptyAccount)
@@ -50,6 +58,7 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
   })
 
   const totals = sumByCurrency(accounts, currencyOf, a => a.balance)
+  const stale = staleAccounts(accounts, transactions)
 
   // Exchange needs a same-bank account in a *different* currency to land in.
   const exchangeTargets = (account) =>
@@ -83,6 +92,11 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
         <div className="min-w-0">
           <h1 className="text-xl md:text-2xl font-bold text-ink">銀行帳戶</h1>
           <p className="text-muted text-sm mt-1">管理你的所有銀行帳戶</p>
+          {stale.length > 0 && (
+            <p className="text-[12px] text-accent font-semibold mt-1">
+              {stale.length} 個帳戶超過 30 天沒有紀錄，餘額可能已經不準
+            </p>
+          )}
           {totals.length > 0 && (
             <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
               {totals.map(({ currency, total }) => (
@@ -148,6 +162,7 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
               <div>
                 {byBank.get(bankName).map(account => {
                   const currency = currencyOf(account)
+                  const freshness = accountFreshness(account, transactions)
                   const label = `${bankName} ${currency}${account.lastFour ? ` ···${account.lastFour}` : ''}`
                   return (
                     <div key={account.id} className="flex items-center px-4 py-3 border-t border-line-soft first:border-t-0 hover:bg-surface-2 transition group">
@@ -163,7 +178,12 @@ export default function AccountManager({ accounts, onSave, onRemove, onTransfer,
                             {account.purpose || (currency === 'TWD' ? '台幣帳戶' : '外幣帳戶')}
                           </span>
                         </div>
-                        {account.note && <p className="text-muted text-[11px] mt-0.5 truncate pl-0.5">{account.note}</p>}
+                        <p className="text-[11px] mt-0.5 truncate pl-0.5">
+                          <span className={FRESHNESS_TONE[freshness.level]} title="以最後一筆異動計算">
+                            {describeFreshness(freshness)}
+                          </span>
+                          {account.note && <span className="text-muted"> · {account.note}</span>}
+                        </p>
                       </div>
                       <div className="text-right mr-2 text-sm font-bold text-ink-2">
                         {formatMoney(account.balance, currency)}

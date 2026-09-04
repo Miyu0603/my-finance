@@ -25,6 +25,7 @@ function normalizeAccount(raw) {
     note: str(raw.note),
     currency: str(raw.currency) || 'TWD',
     color: color(raw.color),
+    createdAt: raw.createdAt ? str(raw.createdAt) : null,
     balance: round2(num(raw.balance)),
   }
 }

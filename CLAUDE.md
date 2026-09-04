@@ -30,6 +30,7 @@ src/
     ledger.test.js         behaviour tests for every ledger rule and every undo path
     storage.js             the only module that touches localStorage; normalises untrusted input
     cards.js               due dates, and payment state derived from the transaction log
+    freshness.js           how long since each account's balance was last touched
     cards.test.js
     currency.js            currency list, symbols, formatMoney, sumByCurrency
     moneyDisplay.js        MoneyFormatContext — the privacy toggle's single choke point

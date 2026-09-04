@@ -3,6 +3,7 @@ import { readPref, writePref } from '../lib/storage'
 import { currencyOf, sumByCurrency } from '../lib/currency'
 import { daysUntilDue, isPaidThisMonth, isPartiallyPaid, monthlyAmountOf, outstandingThisMonth } from '../lib/cards'
 import { marketCurrency } from '../lib/ledger'
+import { staleAccounts, STALE_DAYS } from '../lib/freshness'
 import TransactionRow from './TransactionRow'
 import {
   IconBank, IconCard, IconCalendar, IconCheck, IconArrowRight, IconTrendUp,
@@ -169,6 +170,9 @@ export default function Dashboard({
     byBank.get(account.bank).push(account)
   })
 
+  // A hand-kept balance is only as good as the last time it was touched.
+  const stale = staleAccounts(accounts, transactions)
+
   const cashTotals = sumByCurrency(accounts, currencyOf, a => a.balance)
   const currencyOptions = cashTotals.map(entry => entry.currency)
   // A saved currency can disappear when its last account is deleted.
@@ -284,6 +288,17 @@ export default function Dashboard({
         <section>
           <SectionHeader title="我的帳戶" actionLabel="全部"
             onAction={accounts.length ? () => onNavigate('accounts') : undefined} />
+          {stale.length > 0 && (
+            <button onClick={() => onNavigate('accounts')}
+              className="brick brick-peach rounded-tile w-full text-left px-3.5 py-2.5 mb-3 cursor-pointer hover:opacity-90 transition">
+              <span className="text-[12px] font-semibold">
+                {stale.length} 個帳戶超過 {STALE_DAYS} 天沒有紀錄
+              </span>
+              <span className="block text-[11px] opacity-75 mt-0.5">
+                對一下銀行的實際餘額，不符就直接改，會留下校正紀錄
+              </span>
+            </button>
+          )}
           {accounts.length === 0 ? (
             <EmptyCard icon={<IconBank className="w-8 h-8 mx-auto" />} text="尚無帳戶" />
           ) : (

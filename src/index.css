@@ -43,6 +43,8 @@
   --color-on-solid: #ffffff;
   /* The same orange as body text, darkened to clear AA on cream. */
   --color-accent: #b8360c;
+  /* Mid-severity notice (a balance going stale), tuned as text not as a fill. */
+  --color-warn: #8a5a04;
 
   --color-scrim: rgb(28 28 28 / 0.45);
 
@@ -165,6 +167,7 @@
   --color-solid: #e4551f;
   --color-solid-hover: #d4400f;
   --color-accent: #ff8f63;
+  --color-warn: #f0bd57;
   --color-on-solid: #ffffff;
 
   --color-scrim: rgb(0 0 0 / 0.7);
